@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<title>Drag && Drop Feature</title>
+  		<link rel="stylesheet" href="jquery-ui-1.11.3.custom/jquery-ui.css">
+		<script src="jquery-ui-1.11.3.custom/external/jquery/jquery.js"></script>
+		<script src="jquery-ui-1.11.3.custom/jquery-ui.js"></script>
+		<style>
+
+			.draggable { 
+				width: 100px; 
+				z-index: 3;
+				position: static; left: 0; top: 0;
+			}
+			.droppable { 
+				width: 400px;  
+				height: 400px; 
+				margin: 10px; 
+				/*background: green;*/
+				z-index: 1;
+			}
+			.or-op {
+				position: relative;
+				border-top-right-radius: 10px;
+				border-bottom-left-radius: 10px;
+			}
+			.op{
+				width: 150px;
+				height: 150px;
+				background: blue;
+				z-index:3;
+			}
+			.dragdrop-field{
+				background: yellow;
+			}
+			.query-gen{
+				/*background: gray;*/
+				height: 500px;
+				width:600px;
+			}
+			.resizable { width: 150px; height: 150px; padding: 0.5em; }
+  			.resizable h5 { text-align: center; margin: 0; }
+		</style>
+		<script>
+		$(function() {
+			$( ".draggable" ).draggable({
+				drag: function(event, ui) {
+					$( this )
+						zIndex:500;
+				}
+			});
+			$( ".droppable" ).droppable({
+				drop: function( event, ui ) {
+					var current=$(ui.draggable).clone();
+					$(ui.draggable).remove();
+					$(this).append(current);
+					console.log(current);
+					$(current).css("left", 0);
+					$(current).css("top", 0);
+					current.draggable({revert:true});
+				}
+			});
+			$( ".resizable" ).resizable();
+		});
+		</script>
+	</head>
+	<body>
+		<div class="query-gen">
+			<div class="dragdrop">
+				<div class="dragdrop-main-cont droppable">
+					<h3>QUERY</h3>
+					<p></p>
+				</div>
+				<div class="dragdrop-field-cont">
+					<div class="dragdrop-field draggable">Student Number</div><br>
+					<div class="dragdrop-field draggable">First Name</div><br>
+					<div class="dragdrop-field draggable">Last Name</div><br>
+					<div class="dragdrop-field draggable">Middle Name</div><br>
+					<div class="dragdrop-field draggable">Course</div><br>
+				</div>
+				<div class="op droppable draggable resizable">
+					<span>and</span><br>
+					<span>and</span><br>
+					<span>and</span><br>
+				</div>
+				<div class="op or-op droppable draggable resizable">
+					<span>or</span><br>
+					<span>or</span><br>
+					<span>or</span><br>
+				</div>
+				<!-- <div class="where-op op draggable">where </div> -->
+			</div>
+		</div>
+	</body>
+</html>

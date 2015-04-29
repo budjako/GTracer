@@ -1,0 +1,1 @@
+3_25_15_1_58 - resizable working within query

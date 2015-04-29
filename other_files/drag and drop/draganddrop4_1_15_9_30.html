@@ -1,0 +1,135 @@
+<html lang="en"><head>
+	<title>jQuery UI Droppable - Greedy Demo</title>
+		<link rel="stylesheet" href="jquery-ui-1.11.3.custom/jquery-ui.css">
+		<script src="jquery-ui-1.11.3.custom/external/jquery/jquery.js"></script>
+		<script src="jquery-ui-1.11.3.custom/jquery-ui.js"></script>
+	<style type="text/css">
+		.draggable { 
+			width: 100px;  padding: 0.5em; float: left; margin: 3px; 
+			min-height: 18px;
+			border: 1px solid black;
+			z-index: 1;
+		}
+		.droppable, .droppable2 { 
+			width: 500px; height: 500px; padding: 0.5em; float: left; margin: 3px; 
+			border: 1px solid black;
+			z-index: 1;
+		}
+		.droppable-inner, .droppable2-inner { 
+			width: 170px; height: 60px; padding: 0.5em; float: left; margin: 3px; 
+			border: 1px solid black;
+			z-index: 1;
+		}
+		.hovering{
+			border: 2px solid black;
+		}
+		.active{
+			background: violet;
+		}
+	</style>
+	<script type="text/javascript">
+		
+
+		$(function() {
+			function handleDropEvent(event, ui){
+				if(! $(ui.draggable).hasClass('clone')){
+					var clone = $(ui.draggable).clone();
+					clone.children('.rem').html("X");
+					clone.css('top', 0).css('left', 0).css('clear', 'both');
+					clone.addClass('clone');
+					$(this).append(clone);
+					
+					if(clone.attr('class').search(/droppable/) != -1){
+						console.log("clone is droppable!");
+						clone.droppable({
+							greedy: true,
+							activeClass: 'active',
+							hoverClass: 'hovering',
+							drop: handleDropEvent
+						});
+					}
+					if($(ui.draggable).hasClass('resizable')){
+						console.log("clone is resizable!");
+						clone.resizable({ 
+							handles: {
+								'e': '.ui-resizable-e', 
+								's': '.ui-resizable-s',
+								'se':'.ui-resizable-se'
+							}
+						});
+					}
+					if($(ui.draggable).hasClass('draggable')){
+						console.log("clone is draggable!");
+						clone.draggable();
+					}
+				}
+				else{
+					var item=$(ui.draggable).detach();
+					item.css('top', 0).css('left', 0).css('clear', 'both');
+					$(this).append(item);
+				}
+			}
+
+			$(".draggable").draggable({
+				helper: 'clone',
+				revert: true,
+				revertDuration: 0,
+				drag: function(event, ui) {
+					$( this ).css('z-index', 5);
+				},
+				stop: function(event, ui){
+					$(this).css('z-index', 2);
+				}
+			});
+
+			$(".droppable2").droppable({
+				greedy: true,
+				activeClass: 'active',
+				hoverClass: 'hovering',
+				drop: handleDropEvent
+			});
+
+			$(".droppable2-inner").droppable({
+				greedy: true,
+				activeClass: 'active',
+				hoverClass: 'hovering',
+				drop: handleDropEvent
+			});
+
+			$( ".resizable" ).resizable({
+				resize: function(event, ui){
+					$(this).resizable({ 
+						handles: {
+							'e': '.ui-resizable-e', 
+							's': '.ui-resizable-s',
+							'se':'.ui-resizable-se'
+						}
+					});
+				}
+			});
+
+			$(document).on('click', '.rem', function(){
+				$(this).parent().remove();
+			});
+
+		});
+
+
+	</script>
+	</head>
+	<body style="cursor: auto;">
+		<div class="demo">
+				
+			<div class="draggable"  style="position: relative; left: 0; top: 0;">Student Number<span class="rem"></span></div>
+			<div class="draggable"  style="position: relative; left: 0; top: 0;">First Name<span class="rem"></span></div>
+			<div class="draggable"  style="position: relative; left: 0; top: 0;">Last Name<span class="rem"></span></div>
+			<div class="draggable"  style="position: relative; left: 0; top: 0;">Middle Name<span class="rem"></span></div>
+			<div class="draggable"  style="position: relative; left: 0; top: 0;">Course<span class="rem"></span></div>
+
+			<div class="draggable droppable2-inner resizable">And</div>
+			<div class="draggable droppable2-inner resizable">Or</div>
+
+			<div class="droppable2 resizable">Query</div>
+		</div>
+	</body>
+</html>
