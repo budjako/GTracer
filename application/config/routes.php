@@ -38,10 +38,10 @@
 |
 */
 
-$route['default_controller'] = 'pages/index';
-// $route['pages/view/(:any)'] = 'pages/view/$1';
+$route['default_controller'] = 'controller_list_alumni';
+$route['(:any)'] = '/$1/index';
 // $route['background/index/(:any)'] = 'background/index/$1';
-$route['404_override'] = 'pages/index';
+// $route['404_override'] = 'pages/index';
 
 
 /* End of file routes.php */

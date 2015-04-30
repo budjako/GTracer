@@ -4,8 +4,7 @@
 
 	function get_data(){  
 		$.ajax({
-			//url: "http://localhost/zurbano_module/index.php/controller_search_book/get_book_data",    //EDIT THIS URL IF YOU ARE USING A DIFFERENT ONE. This url refers to the path where search/get_book_data is found
-			url: base_url+"controller_list_alumni/get_alumni_data",     //EDIT THIS URL IF YOU ARE USING A DIFFERENT ONE. This url refers to the path where search/get_book_data is found
+			url: base_url+"controller_list_alumni/get_alumni_data",
 
 			type: 'POST',
 			data: serialize_form(),

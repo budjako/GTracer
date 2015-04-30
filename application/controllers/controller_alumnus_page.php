@@ -8,7 +8,7 @@ class Controller_alumnus_page extends CI_Controller {
 
 	function index($stdno) {
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		 
 		//get data needed

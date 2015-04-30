@@ -4,7 +4,7 @@ class Controller_basic_search extends CI_Controller {
 
 	function index() {
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		
 		$this->load->library('pagination');

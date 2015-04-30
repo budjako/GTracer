@@ -16,24 +16,27 @@ class Controller_login extends Controller_log {
 	}
 
 	public function index($banned = FALSE) {
+		// var_dump($banned);
+		if($this->session->userdata('logged_in') == TRUE){
+			redirect('controller_list_alumni', 'refresh');// redirect to controller_search_book
+		}
+
 		if($banned){
 			$data['titlepage']="UPLB OSA GTracer - User Ban";
-			$data['mess']="You are currently banned. Please contact any system administrator.<br><a href='".base_url()."controller_login/index'>Return to login page</a>";
-			// $this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Banned).');
+			$data['mess']="You are currently banned. Please contact any system administrator.<br><a href='".base_url()."controller_login'>Return to login page</a>";
 			$this->load->view("header", $data); 					//displays the header
 			$this->load->view("view_message", $data); 				//displays the home page
 			$this->load->view("footer"); 					//displays the footer
 			return;
 		}
 
-		if($this->session->userdata('logged_in') == TRUE){
-			redirect('controller_list_alumni/index', 'refresh');// redirect to controller_search_book
-		}
 		// Store values in variables from project created in Google Developer Console
 		$client_id = '*****';
 		$client_secret = '*****';
-		$redirect_uri = 'http://127.0.0.1/GTracer/index.php/controller_login/index';
+		$redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
 		$simple_api_key = '*****';
+
+
 		// Create Client Request to access Google API
 		try{
 			$client = new Google_Client();
@@ -152,28 +155,19 @@ class Controller_login extends Controller_log {
 	}
 
 	function check_email($email){
-		// echo $email;
 		return $this->model_user->check_email($email);
 	}
 
 	function get_eno($email){
 		return $this->model_user->get_eno($email);
-		// var_dump($result);
-		// echo $result[0]->emp_no;
 	}
 
 	function is_admin($eno){
 		return $this->model_user->is_admin($eno);			//returns true or false
-		// var_dump($result);
-		// echo $result[0]->emp_no;
-		// return $result[0]->admin;
 	}
 
 	function is_banned($eno){
 		return $this->model_user->is_banned($eno);		//returns true or false
-		// var_dump($result);
-		// echo $result[0]->emp_no;
-		// return $result[0]->ban;
 	}
 
 	function login($eno, $email, $is_admin){
@@ -181,16 +175,18 @@ class Controller_login extends Controller_log {
 		$sess_array = array('eno' => $eno, 'is_admin' => $is_admin, 'is_banned' => $is_banned);
 		//set session with value from database
 		$this->session->set_userdata('logged_in', $sess_array);
-		$this->add_log($eno, 'Log in', 'Employee '.$eno.' logged in.');
-
+		if($is_banned) $this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Banned).');
+		else $this->add_log($eno, 'Log in', 'Employee '.$eno.' logged in.');
+		// var_dump($this->session->all_userdata());
+		// var_dump($is_banned);
 		if($is_banned){
 			$eno=$this->session->userdata('logged_in')['eno'];
-			$this->add_log($eno, 'Log out', 'Employee '.$eno.' logged out.');
+			$this->add_log($eno, 'Log out', 'Employee '.$eno.' was forced to logged out  (Status: Banned).');
 	 		$this->session->unset_userdata('logged_in');
 	 		$this->session->sess_destroy();
 	 		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/1', 'refresh');
 		}
-		else redirect('controller_list_alumni/index', 'refresh');
+		else redirect('controller_list_alumni', 'refresh');
 		
 	}
 
@@ -200,7 +196,7 @@ class Controller_login extends Controller_log {
 		$this->add_log($eno, 'Log out', 'Employee '.$eno.' logged out.');
  		$this->session->unset_userdata('logged_in');
  		$this->session->sess_destroy();
- 		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index', 'refresh');
+ 		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/0', 'refresh');
 	}
 }
 ?>

@@ -7,7 +7,7 @@ $(document).ready( function() {
 
 		$.ajax({
 			type: "POST",
-			url: "ban/"+empno,
+			url: base_url + 'controller_users/ban/'+empno,
 			data: {empno: empno},
 
 			success: function(data) {
@@ -28,7 +28,7 @@ $(document).on("click", ".admin", function(e) {
 
 		$.ajax({
 			type: "POST",
-			url: "admin/"+empno,
+			url: base_url + 'controller_users/admin/'+empno,
 			data: {empno: empno},
 
 			success: function(data) {
@@ -40,118 +40,6 @@ $(document).on("click", ".admin", function(e) {
 Number			}
 		});
 	});
-
-	// $(".enosort").click(function(){
-	// 	event.preventDefault();
-
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: "set_order_sort/emp_no/asc",
-	// 		success: function(data){
-	// 			console.log(data);
-	// 			window.document.location  = 'index';
-	// 		},
-	// 		error: function(err) {
-	// 			console.log(err);
-	// 		}
-	// 	});
-	// });
-
-	// $(".namesort").click(function(){
-	// 	event.preventDefault();
-
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: "set_order_sort/name/asc",
-	// 		success: function(data){
-	// 			console.log(data);
-	// 			window.document.location  = 'index';
-	// 		},
-	// 		error: function(err) {
-	// 			console.log(err);
-	// 		}
-	// 	});
-	// });
-
-	// $(".emailsort").click(function(){
-	// 	event.preventDefault();
-
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: "set_order_sort/email/asc",
-	// 		success: function(data){
-	// 			console.log(data);
-	// 			window.document.location  = 'index';
-	// 		},
-	// 		error: function(err) {
-	// 			console.log(err);
-	// 		}
-	// 	});
-	// });
-
-	// $(".snosort").click(function(){
-	// 	event.preventDefault();
-
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: "set_order_sort/student_no/asc",
-	// 		success: function(data){
-	// 			console.log(data);
-	// 			window.document.location  = 'index';
-	// 		},
-	// 		error: function(err) {
-	// 			console.log(err);
-	// 		}
-	// 	});
-	// });
-
-	// $(".lsort").click(function(){
-	// 	event.preventDefault();
-
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: "set_order_sort/lastname/asc",
-	// 		success: function(data){
-	// 			console.log(data);
-	// 			window.document.location  = 'index';
-	// 		},
-	// 		error: function(err) {
-	// 			console.log(err);
-	// 		}
-	// 	});
-	// });
-
-	// $(".fsort").click(function(){
-	// 	event.preventDefault();
-
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: "set_order_sort/firstname/asc",
-	// 		success: function(data){
-	// 			console.log(data);
-	// 			window.document.location  = 'index';
-	// 		},
-	// 		error: function(err) {
-	// 			console.log(err);
-	// 		}
-	// 	});
-	// });
-
-	// $(".msort").click(function(){
-	// 	event.preventDefault();
-
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: "set_order_sort/midname/asc",
-	// 		success: function(data){
-	// 			console.log(data);
-	// 			window.document.location  = 'index';
-	// 		},
-	// 		error: function(err) {
-	// 			console.log(err);
-	// 		}
-	// 	});
-	// });
 
 	$(".exportlog").click(function(){
 		// event.preventDefault();

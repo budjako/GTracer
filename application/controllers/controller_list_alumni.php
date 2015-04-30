@@ -10,7 +10,7 @@ class Controller_list_alumni extends CI_Controller {
 
 	public function index() {
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');
+			redirect('controller_login', 'refresh');
 		}
 		$data['titlepage'] = "UPLB OSA GTracer - View List of Alumni"; //title page
 
@@ -25,7 +25,7 @@ class Controller_list_alumni extends CI_Controller {
 
 	public function get_alumni_data(){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		$this->input->post('serialised_form');
 		$sort_by = addslashes($this->input->post('sort_by')); 

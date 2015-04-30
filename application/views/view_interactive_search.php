@@ -148,8 +148,8 @@
 		<h3>Interactive Search</h3>
 		<div class="notes">
 			<h5>Notes:</h5>
-			<span>Supervisor values: 1 for yes</span>
-			<span>remove a constraint</span>
+			<span>Supervisor values: 1 for yes</span><br>
+			<span>remove a constraint</span><br>
 		</div>
 		<div class="dragdrop">
 			<fieldset class="fields">

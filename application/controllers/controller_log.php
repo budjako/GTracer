@@ -11,7 +11,7 @@ class Controller_log extends CI_Controller{
 
 	function index($empno = FALSE){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		else if(! $this->session->userdata('logged_in')['is_admin']){
 			$data['titlepage'] = "UPLB OSA GTracer - Insufficient Privilege"; //title page
@@ -36,10 +36,10 @@ class Controller_log extends CI_Controller{
 
 	public function get_log_data(){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_log/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_log', 'refresh');// redirect to controller_search_book
 		}
 
 		$result['logs']=$this->model_logs->get_activity();
@@ -48,7 +48,7 @@ class Controller_log extends CI_Controller{
 		}
 		else{
 			if($this->session->userdata('logged_in') == FALSE){
-				redirect('controller_login/index', 'refresh');// redirect to controller_search_book
+				redirect('controller_login', 'refresh');// redirect to controller_search_book
 			}
 
 			$this->input->post('serialised_form');
@@ -81,10 +81,10 @@ class Controller_log extends CI_Controller{
 	
 	public function spec_user($empno = FALSE){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_list_alumni/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_list_alumni', 'refresh');// redirect to controller_search_book
 		}
 
 		$this->input->post('serialised_form');
@@ -161,7 +161,7 @@ class Controller_log extends CI_Controller{
 	// sample: $this->add_log("Admin $session_user verified account of $account_number.", "Verify User Account");
 	function add_log($empno, $activity, $actdetails){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		$this->model_logs->add_log($empno, $activity, $actdetails);
 	}

@@ -8,7 +8,7 @@ class Controller_geocode_test extends CI_Controller {
 
 	public function index() {
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');
+			redirect('controller_login', 'refresh');
 		}
 		$data['titlepage'] = "UPLB OSA GTracer - Map Results"; //title page
 
