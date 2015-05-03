@@ -257,18 +257,20 @@ class Jquery_pagination{
 
 		function getAJAXlink( $count, $text) {
 
-		if( $this->div == '')
-			return '<a href="'. $this->anchor_class . ' ' . $this->base_url . $count . '">'. $text .'</a>';
-			
-		if( $this->additional_param == '' )
+			if( $this->div == '')
+				return '<a href="'. $this->anchor_class . ' ' . $this->base_url . $count . '">'. $text .'</a>';
+				
+			if( $this->additional_param == '' )
 				$this->additional_param = "{'t' : 't'}";
 
-				return "<a href=\"#\"
-						 " . $this->anchor_class . "
-										onclick=\"$.post('". $this->base_url . $count ."', ". $this->additional_param .", function(data){
-										$('". $this->div . "').html(data);" . $this->js_rebind ."; }); return false;\">"
-								. $text .'</a>';
+			return "<a href=\"#\" onclick=\"$.post('". $this->base_url . $count ."', ". $this->additional_param .", function(data){ $('". $this->div . "').html(data); }); return false;\">" . $text ."</a>";
 		}
+
+		/*return "<a href=\"#\"
+					" . $this->anchor_class . "
+					onclick=\"$.post('". $this->base_url . $count ."', ". $this->additional_param .", function(data){
+					$('". $this->div . "').html(data);" . $this->js_rebind ."; }); return false;\">"
+					. $text .'</a>';*/
 		
 }
 // END Pagination Class

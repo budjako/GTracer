@@ -4,12 +4,20 @@
 			$this->load->database();
 		}
 
-		public function get_data($sql){
+		public function get_data_count($sql){
 			// echo "<br>".$sql;
 			// var_dump($sql);
-			$query=$this->db->query($sql/*." LIMIT 0,30;"*/) or die(mysqli_error());
+			$query=$this->db->query($sql) or die(mysqli_error());
 			// var_dump($query);
-			return $query->result();
+			return count($query->result());
+		}
+
+		public function get_data($sql, $limit, $start){
+			// echo "<br>".$sql;
+			// var_dump($sql);
+			$query=$this->db->query($sql." LIMIT ".$start.",".$limit) or die(mysqli_error());
+			// var_dump($query);
+			return $query->result_array();
 		}
 	}
 ?>

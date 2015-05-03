@@ -1,27 +1,30 @@
 <script type="text/javascript">
-	var base_url = "<?php echo base_url() ?>";
 
-	$(document).ready(function(){
-		$(".submit-query").click(function get_data(event){  
-			var values=getValues();
+	$(document).ready(function() {
+	    $(".submit-query").click(function get_data(event) {
+	        var base_url = "<?php echo base_url(); ?>";
+	        getValues();
 
-			if(! values) return false;
-			event.preventDefault();
-			console.log(values);
-			$.ajax({
-				url: base_url+"controller_interactive_search/query",
-				type: 'POST',
-				data: {"values" : values},
+	        event.preventDefault();
+	        $.ajax({
+	            url: base_url + "controller_interactive_search/query",
+	            type: 'POST',
+	            data: serialize_form(),
 
-				success: function(result){
-					$('#change_here').html(result);
-				},
-				error: function(err){
-					$('#change_here').html(err);
-				}
-			});
-		});
+	            success: function(result) {
+	                $('#change_here').html(result);
+	            },
+	            error: function(err) {
+	                $('#change_here').html(err);
+	            }
+	        });
+	    });
 	});
+
+	function serialize_form()
+	{
+		return $("#interactivesearch").serialize();
+	}
 
 	function getValues(){											// getting the query
 		if(! validateValues()) return false;
@@ -39,17 +42,15 @@
 				querystring+=":Val("+child.children('.compare').val()+","+child.children('.value').val()+")";
 			}
 			else if(child.children('.op').length > 0){				// and or or operation
-				// console.log(child.children('.op').children('.operator'));
 				var operator=child.children('.op').children('.operator')[0].innerText;
 				querystring+=":"+operator+"(";
 				var retval=operationValues(child.children('.op'), operator);
-				//Or(Val(,)) etc.
-				// console.log(retval);
 				if(! retval) return false; 
 				else querystring+=retval+")";
 			}
 		}
-		return querystring;
+		$("#values").val(querystring);
+		return true;
 	}
 
 	function operationValues(op, operator){									// within and and or operations --  recursive function
@@ -75,30 +76,27 @@
 		}
 		if(item.children('.op').length > 0){
 			console.log("Parent: ");
-			// console.log()	
 			console.log(item);
 			var childop=item.children('.op');
 			console.log("Children: ");
 			console.log(childop);
 			console.log(childop.length);
 			if(childop.length > 0){	
-				// for(var i=0; i<childop.length; i++){	
-					var val=new Array();
-					for (var l=0; l<childop.length; l++) {
-						console.log("children of l: "+l);
-						console.log(childop[l]);
-						val.push(operationValues(childop[l], childop.children('.operator')[0].innerText));
-					};
-					console.log(val);
+				var val=new Array();
+				for (var l=0; l<childop.length; l++) {
+					console.log("children of l: "+l);
+					console.log(childop[l]);
+					val.push(operationValues(childop[l], childop.children('.operator')[0].innerText));
+				}
+				console.log(val);
 
-					for(var l=0; l<val.length; l++){
-						if(/*l>0 && (*/i>0 || j==1)/*)*/ querystring+=",";
-						querystring+=childop.children('.operator')[0].innerText+"(";
-						querystring+=val[l]+")";
-					}
+				for(var l=0; l<val.length; l++){
+					if(i>0 || j==1) querystring+=",";
+					querystring+=childop.children('.operator')[0].innerText+"(";
+					querystring+=val[l]+")";
+				}
 
-					if(! querystring) return false;
-				// }
+				if(! querystring) return false;
 				j=0;
 			}
 		}
@@ -112,7 +110,7 @@
 			var querystring=child.children('.view')[0].innerText;
 			// console.log(querystring);
 			// console.log(querystring.match(/^[A-Za-z0-9_\- ]*$/));
-			if(! querystring.match(/^[A-Za-z0-9_\- ]*$/)){
+			if(! querystring.match(/^[A-Za-z0-9_\-\s]*$/)){
 				alert("Fix Values Query!");
 				return false;
 			}
@@ -124,21 +122,20 @@
 					comparestring=compare[j].value;
 					// console.log(comparestring);
 					// console.log(comparestring.match(/^[A-Za-z0-9_\- ]*$/));
-					if(! comparestring.match(/^[A-Za-z0-9_\- ]*$/)){
+					if(! comparestring.match(/^[A-Za-z0-9_\-\s]*$/)){
 						alert("Fix Values Compare!");
 						return false;
 					}
 					valuestring=value[j].value;
 					// console.log(valuestring);
 					// console.log(valuestring.match(/^[A-Za-z0-9_\- @\.%]*$/));
-					if(! valuestring.match(/^[A-Za-z0-9_\- @\.%]*$/)){
+					if(! valuestring.match(/^[A-Za-z0-9_\-\s@\.%]*$/)){
 						alert("Fix Values Value!");
 						return false;
 					}
 				}
 			}
 		}
-
 		return true;
 	}
 </script>
@@ -231,150 +228,27 @@
 				<div class="draggable ui-draggable ui-draggable-handle clone" style="z-index: 5; top: 0px; left: 0px; clear: both;">First Name<span class="caret" data-toggle="dropdown"></span> <span class="rem">X</span></div>
 				<div class="draggable ui-draggable ui-draggable-handle clone" style="z-index: 5; top: 0px; left: 0px; clear: both;">Last Name<span class="caret" data-toggle="dropdown"></span> <span class="rem">X</span></div> -->
 				
-				
-				<div class="draggable ui-draggable ui-draggable-handle clone open" style="top: 0px; left: 0px; clear: both; z-index: 2;">
+				<!-- <div class="draggable ui-draggable ui-draggable-handle ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
 					<span class="rem opt">X</span>				
-					<span class="lbl view" aria-expanded="true">Student Number</span>
-					<div class="op" style="display: table;">
-						<span class="rem opt">X</span>
-						<span class="caret opt" data-toggle="dropdown" aria-expanded="false"></span>
-						<span class="lbl operator dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Or</span>
-						<ul class="dropdown-menu">
-							<li class="dropdown-item add-cons"><a>Add Constraint</a></li>
-							<li class="dropdown-item and"><a>Multiple Constraints (And)</a></li></ul><br>		
-						<select class="compare">
-							<option>Equals</option>			
-							<option>Not Equals</option>			
-							<option>Less Than</option>			
-							<option>Greater Than</option>			
-							<option>Less Than or Equal</option>			
-							<option>Greater Than or Equal</option>			
-							<option>Like</option>			
-							<option>Not Like</option>		
-						</select>		
-						<input type="text" class="value" value="2011-29712"><br>		
-						<select class="compare">			
-							<option>Equals</option>			
-							<option>Not Equals</option>			
-							<option>Less Than</option>			
-							<option>Greater Than</option>			
-							<option>Less Than or Equal</option>			
-							<option>Greater Than or Equal</option>			
-							<option>Like</option>			
-							<option>Not Like</option>		
-						</select>		
-						<input type="text" class="value" value="2011-53005">
-						<div class="op" style="display: table;">
-							<span class="rem opt">X</span>
-							<span class="caret opt" data-toggle="dropdown" aria-expanded="false"></span>
-							<span class="lbl operator dropdown-toggle" data-toggle="dropdown" aria-expanded="true">And</span>
-							<ul class="dropdown-menu">
-								<li class="dropdown-item add-cons"><a>Add Constraint</a></li>
-								<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>
-							</ul><br>		
-							<select class="compare">			
-								<option>Equals</option>			
-								<option>Not Equals</option>			
-								<option>Less Than</option>			
-								<option>Greater Than</option>			
-								<option>Less Than or Equal</option>			
-								<option>Greater Than or Equal</option>			
-								<option>Like</option>			
-								<option>Not Like</option>		
-							</select>		
-							<input type="text" class="value" value="2011-36586"><br>		
-							<select class="compare">			
-								<option>Equals</option>			
-								<option>Not Equals</option>			
-								<option>Less Than</option>			
-								<option>Greater Than</option>			
-								<option>Less Than or Equal</option>			
-								<option>Greater Than or Equal</option>			
-								<option>Like</option>			
-								<option>Not Like</option>		
-							</select>		
-							<input type="text" class="value" value="2011-33788">
-						</div>
-						
-					</div>
-				</div>
-				<div class="draggable ui-draggable ui-draggable-handle clone open" style="top: 0px; left: 0px; clear: both;">
-					<span class="rem opt">X</span>				
-					<span class="lbl view" aria-expanded="true">Last Name</span>
-					<div class="op resizable" style="display: table;">
-						<span class="rem opt">X</span>
-						<span class="caret opt" data-toggle="dropdown" aria-expanded="false"></span>
-						<span class="lbl operator dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Or</span>
-						<ul class="dropdown-menu">
-							<li class="dropdown-item add-cons"><a>Add Constraint</a></li>
-							<li class="dropdown-item and"><a>Multiple Constraints (And)</a></li>
-						</ul><br>		
-						<select class="compare">			
-							<option>Equals</option>			
-							<option>Not Equals</option>			
-							<option>Less Than</option>			
-							<option>Greater Than</option>			
-							<option>Less Than or Equal</option>			
-							<option>Greater Than or Equal</option>			
-							<option>Like</option>			
-							<option>Not Like</option>		
-						</select>		
-						<input type="text" class="value" value="Dela Rosa"><br>		
-						<select class="compare">			
-							<option>Equals</option>			
-							<option>Not Equals</option>			
-							<option>Less Than</option>			
-							<option>Greater Than</option>			
-							<option>Less Than or Equal</option>			
-							<option>Greater Than or Equal</option>			
-							<option>Like</option>			
-							<option>Not Like</option>		
-						</select>		
-						<input type="text" class="value" value="De Guzman">
-						<div class="op resizable" style="display: table;">
-							<span class="rem opt">X</span>
-							<span class="caret opt" data-toggle="dropdown" aria-expanded="false"></span>
-							<span class="lbl operator dropdown-toggle" data-toggle="dropdown" aria-expanded="true">And</span>
-							<ul class="dropdown-menu">
-								<li class="dropdown-item add-cons"><a>Add Constraint</a></li>
-								<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>
-							</ul><br>		
-							<select class="compare">			
-								<option>Equals</option>			
-								<option>Not Equals</option>			
-								<option>Less Than</option>			
-								<option>Greater Than</option>			
-								<option>Less Than or Equal</option>			
-								<option>Greater Than or Equal</option>			
-								<option>Like</option>			
-								<option>Not Like</option>		
-							</select>		
-							<input type="text" class="value" value="Lomibao"><br>		
-							<select class="compare">			
-								<option>Equals</option>			
-								<option>Not Equals</option>			
-								<option>Less Than</option>			
-								<option>Greater Than</option>			
-								<option>Less Than or Equal</option>			
-								<option>Greater Than or Equal</option>			
-								<option>Like</option>			
-								<option>Not Like</option>		
-							</select>		
-							<input type="text" class="value" value="Contreras">
-						</div>
-					</div>
-				</div>
+					<span class="caret opt" data-toggle="dropdown"></span>
+					<span class="lbl view dropdown-toggle" data-toggle="dropdown">Student Number</span>
+					<ul class="dropdown-menu">					
+						<li class="dropdown-item single"><a>Single Constraint</a></li>
+						<li class="dropdown-item and"><a>Multiple Constraints (And)</a></li>					
+						<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>				
+					</ul>
+				</div> -->
 			</fieldset>
 		</div>
-		<center><form name="interactivesearch" id="interactivesearch">
-			<!-- <input type="radio" name="result-view" id="table" value="table" checked="checked"><label for="table">Table</label></input>
-			<input type="radio" name="result-view" id="chart" value="chart"><label for="chart">Chart</label></input>
-			<input type="radio" name="result-view" id="map" value="map"><label for="map">Map</label></input>
-			<input type="hidden" name="string" id="string" value="asdf"></input> -->
-			
+		<center>
+			<form name="interactivesearch" id="interactivesearch">
+				<!-- <input type="radio" name="result-view" id="table" value="table" checked="checked"><label for="table">Table</label></input>
+				<input type="radio" name="result-view" id="chart" value="chart"><label for="chart">Chart</label></input>
+				<input type="radio" name="result-view" id="map" value="map"><label for="map">Map</label></input> -->
+				<input type="hidden" name="values" id="values"></input>
 				<input type="submit" style="float: right;" class="submit-query btn btn-default" value="Submit Query" ></input>
-			
-		</form></center>
+			</form>
+		</center>
 		<div id="change_here"></div>
 	</div>
 </div>

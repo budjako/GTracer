@@ -36,7 +36,7 @@ class Controller_login extends Controller_log {
 		$redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
 		$simple_api_key = '*****';
 
-
+		
 		// Create Client Request to access Google API
 		try{
 			$client = new Google_Client();

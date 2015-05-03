@@ -46,6 +46,9 @@ class Controller_list_alumni extends CI_Controller {
 		$data['result'] = $this->model_list_alumni->get_alumni_paginate($config['per_page'], $page, $sort_by, $order_by);
 		//display data from database
 		
+		ini_set('xdebug.var_display_max_depth', 10);
+		ini_set('xdebug.var_display_max_children', 256);
+		ini_set('xdebug.var_display_max_data', 1024);
 		//initialize the configuration of the ajax_pagination
 		$this->jquery_pagination->initialize($config);
 		//create links for pagination

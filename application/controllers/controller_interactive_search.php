@@ -3,7 +3,9 @@
 class Controller_interactive_search extends CI_Controller {
 	function __construct(){
 		parent::__construct();
-		$this->load->model('model_interactive_search');
+		$this->load->model('model_interactive_search');	
+		$this->load->library('Jquery_pagination');
+		$this->load->library('pagination');
 	}
 
 	function index() {
@@ -118,7 +120,7 @@ class Controller_interactive_search extends CI_Controller {
 		$selct=0;
 		$school=0;
 		$company=0;
-		var_dump($arr);
+		// var_dump($arr);
 
 		// while ($field=current($arr)) {					// $field as items in array: [0], [1], etc.
 		$fields=array_keys($arr);
@@ -127,7 +129,7 @@ class Controller_interactive_search extends CI_Controller {
 		// 	$item = $arr[$fields[$i]];
 		// 	echo "ITEEEEEEMMMMMM! <br>$item<br>";
 		foreach ($fields as $item){
-			var_dump($item);
+			// var_dump($item);
 			$details=$this->to_table_name($item);
 			if(! in_array($details[0], $tables)) $tables[]=$details[0];		// list of table names involved
 			$selected[]=$details[1];										// list of field names involved
@@ -139,7 +141,7 @@ class Controller_interactive_search extends CI_Controller {
 			// echo "$selct<br>";
 			$selct++;
 			// set conditions
-			var_dump($arr);
+			// var_dump($arr);
 			if($arr[$item]!=null){
 				if(array_key_exists('Value', $arr[$item])){		// Single Constraint
 					$val=$this->cond_value($arr[$item]['Value'], $details);
@@ -237,8 +239,8 @@ class Controller_interactive_search extends CI_Controller {
 	}
 
 	function cond_or($arr, $details){								// recursive function
-		echo "cond_or<br>";
-		var_dump($arr);
+		// echo "cond_or<br>";
+		// var_dump($arr);
 		$whole="";
 		$strand="";
 		$strval="";
@@ -270,14 +272,14 @@ class Controller_interactive_search extends CI_Controller {
 			}
 		}
 
-		echo "<br>$whole<br>";
+		// echo "<br>$whole<br>";
 
 		return "(".$whole.")";
 	}
 
 	function cond_and($arr, $details){							// recursive function
-		echo "cond_and<br>";
-		var_dump($arr);
+		// echo "cond_and<br>";
+		// var_dump($arr);
 		$whole="";
 		$stror="";
 		$strval="";
@@ -309,7 +311,7 @@ class Controller_interactive_search extends CI_Controller {
 			}
 		}
 
-		echo "<br>$whole<br>";
+		// echo "<br>$whole<br>";
 
 		return "(".$whole.")";
 	}
@@ -327,7 +329,7 @@ class Controller_interactive_search extends CI_Controller {
 	}
 
 	function to_table_name($str){
-		echo $str."<br>";
+		// echo $str."<br>";
 		$graduate=array("Student Number" => "student_no", "First Name" => "firstname", "Last Name" => "lastname", "Middle Name" => "midname", "Sex" => "sex", "Birth Date" => "bdate", "Email" => "email", "Mobile No" => "mobileno", "Tel No" => "telno");
 		$educationalbg=array("Year Level" => "level", "Batch" => "batch", "Class" => "class", "Course" => "course");
 		$school=array("School Name" => "name", "School Address" => "address");
@@ -355,7 +357,12 @@ class Controller_interactive_search extends CI_Controller {
 	}
 
 	public function query(){					// validate values 
-		$str = $this->input->post('values');
+		if($this->session->userdata('logged_in') == FALSE){
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
+		}
+		// echo "POST";
+		$this->input->post('serialised_form');
+		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		ini_set('xdebug.var_display_max_depth', 10);
 		ini_set('xdebug.var_display_max_children', 256);
@@ -366,6 +373,9 @@ class Controller_interactive_search extends CI_Controller {
 			echo "Empty query";
 			return;
 		}
+
+		// LEXICAL ANALYSIS
+
 		$fields=explode("&", $str);
 		// var_dump($fields);
 
@@ -387,8 +397,48 @@ class Controller_interactive_search extends CI_Controller {
 
 		// var_dump($arr);
 		$sql=$this->create_query($arr);
-		echo "<br>search for: $sql";
-		$results=$this->model_interactive_search->get_data($sql);
-		var_dump($results);
+		// echo "<br>search for: $sql";
+
+
+		$config['base_url'] = base_url().'controller_interactive_search/query';
+		$config['total_rows'] = $config['total_rows'] = $this->model_interactive_search->get_data_count($sql);
+		$config['per_page'] = '20';
+		$config['div'] = '#change_here';
+		$config['additional_param']  = 'serialize_form()';
+		
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		// echo "<br>Page: $page<br>";
+		$data['result'] = $this->model_interactive_search->get_data($sql, $config['per_page'], $page);
+		//display data from database
+		
+		//initialize the configuration of the ajax_pagination
+		$this->jquery_pagination->initialize($config);
+		//create links for pagination
+		$data['links'] = $this->jquery_pagination->create_links();
+		// var_dump($data['links']);
+		$this->print_results($data['result'],$data['links']);
 	}
-}  
+
+	public function print_results($result, $links){
+		echo $links;
+		// var_dump($result);
+		if($result!=null){
+			$keys=array_keys($result[0]);
+			echo "<table class='table table-hover table-bordered'>";
+			foreach($keys as $key){
+				echo "<th>$key</th>";
+			}
+		}
+		foreach ($result as $row){
+
+			echo "<tr>";
+			foreach($keys as $key){
+				echo "<td>".$row[$key]."</td>";
+			}
+			echo "</tr>";
+		} 
+		echo "</table>";
+		echo $links;
+
+	}
+}	
