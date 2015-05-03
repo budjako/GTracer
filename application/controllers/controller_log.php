@@ -15,7 +15,8 @@ class Controller_log extends CI_Controller{
 		}
 		else if(! $this->session->userdata('logged_in')['is_admin']){
 			$data['titlepage'] = "UPLB OSA GTracer - Insufficient Privilege"; //title page
-			$data['mess'] = "You have insufficient privileges.";
+			$data['header'] = "Insufficient Privileges";
+			$data['body'] = "You have insufficient privileges. If you think this is an error, please contact the administrator.";
 			$this->load->view("header", $data);
 			$this->load->view("navigation");
 			$this->load->view("view_message", $data);

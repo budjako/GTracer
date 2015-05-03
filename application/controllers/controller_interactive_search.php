@@ -9,9 +9,9 @@ class Controller_interactive_search extends CI_Controller {
 	}
 
 	function index() {
-		// if($this->session->userdata('logged_in') == FALSE){
-		// 	redirect('controller_login', 'refresh');// redirect to controller_search_book
-		// }
+		if($this->session->userdata('logged_in') == FALSE){
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
+		}
 		
 		$data['titlepage'] = "UPLB OSA GTracer - Interactive Search"; //title page  
 

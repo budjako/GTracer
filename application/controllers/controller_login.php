@@ -23,7 +23,8 @@ class Controller_login extends Controller_log {
 
 		if($banned){
 			$data['titlepage']="UPLB OSA GTracer - User Ban";
-			$data['mess']="You are currently banned. Please contact any system administrator.<br><a href='".base_url()."controller_login'>Return to login page</a>";
+			$data['header']="Status: Banned";
+			$data['body']="You are currently banned. Please contact any system administrator.<br><a href='".base_url()."controller_login'>Return to login page</a>";
 			$this->load->view("header", $data); 					//displays the header
 			$this->load->view("view_message", $data); 				//displays the home page
 			$this->load->view("footer"); 					//displays the footer
@@ -36,7 +37,6 @@ class Controller_login extends Controller_log {
 		$redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
 		$simple_api_key = '*****';
 
-		
 		// Create Client Request to access Google API
 		try{
 			$client = new Google_Client();
@@ -93,13 +93,15 @@ class Controller_login extends Controller_log {
 				$this->load->view("footer"); 					//displays the footer
 			}
 		} catch(Google_Auth_Exception $e){
-			$data['mess']="Google Login Error: Try to login again.<br><a href='".base_url()."controller_login/index'>Return to Login page</a>";
+			$data['header']="Google Login Error";
+			$data['body']="Try to login again.<br><a href='".base_url()."controller_login/index'>Return to Login page</a>";
 			$this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Banned).');
 			$this->load->view("header", $data); 					//displays the header
 			$this->load->view("view_message", $data); 				//displays the home page
 			$this->load->view("footer"); 					//displays the footer
 		} catch(Google_IO_Exception $con_err){
-			$data['mess']="Connection error. Check your internet connection then try to login again.<br><a href='".base_url()."controller_login/index'>Return to Login page</a>";
+			$data['header']="Connection error";
+			$data['body']="Check your internet connection then try to login again.<br><a href='".base_url()."controller_login/index'>Return to Login page</a>";
 			$this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Banned).');
 			$this->load->view("header", $data); 					//displays the header
 			$this->load->view("view_message", $data); 				//displays the home page
@@ -122,7 +124,7 @@ class Controller_login extends Controller_log {
 		$data['lname'] = $this->input->post('lname');
 		$data['email'] = $this->input->post('email');
 
-		if ($this->form_validation->run() === FALSE)
+		if (! $this->form_validation->run())
 		{
 			$data['msg'] = validation_errors();
 			$this->load->view("header", $data); 				//displays the header
@@ -132,7 +134,6 @@ class Controller_login extends Controller_log {
 		else
 		{
 			$this->model_user->add_user($data);						// Save data to database
-			$this->add_log($data['eno'], 'Register user', 'Employee '.$data['eno'].' information stored. Info[ Employee Number: '.$data['eno'].', Name: '.$data['fname'].' '.$data['lname'].', Email: '.$data['email'].']');
 			$this->login($data['eno'], $data['email'], 0);								// Log in user 
 		}
 	} 
@@ -168,6 +169,14 @@ class Controller_login extends Controller_log {
 
 	function is_banned($eno){
 		return $this->model_user->is_banned($eno);		//returns true or false
+	}
+
+	function eno_available($eno){
+		if(! $this->model_user->exists($eno)){
+			echo "Employee Number is available.";
+		}
+		else echo "Employee Number is not available.";
+		return;
 	}
 
 	function login($eno, $email, $is_admin){

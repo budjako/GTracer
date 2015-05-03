@@ -3,7 +3,6 @@
 		<center>
 			<h3>GTracer: An Online UPLB Graduate Tracer</h3>
 			<div id="content">
-				<?php var_dump($this->session->all_userdata())?>
 				<a href="<?php echo $authUrl; ?>">
 					<img id="google_signin" src="<?php echo base_url(); ?>mod/img/g_login.png" width="100%" >
 				</a>

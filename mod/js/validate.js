@@ -83,12 +83,12 @@ function validateEmail(){
 // EDIT USER INFORMATION
 
 function validateEditInfo(){
-	if(validateENo() && validateEditFname() && validateEditLname()){
-		return true;
+	if(validateENo() && validateEditFname() && validateEditLname() /*&& validateEditLname()*/){
+		if($("#enolog").text()=="Employee Number is available."){
+			return true;
+		}
 	}
-	else{
-		return false;
-	}
+	return false;
 }
 
 function validateENo(){

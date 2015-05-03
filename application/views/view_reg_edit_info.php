@@ -1,35 +1,76 @@
+<script type="text/javascript">
+
+	$(document).ready( function() {
+		
+		$("#eno").blur(function (){ 
+			if(! validateENo()){
+				$('#enolog').text("");
+				return false;
+			}
+			var eno=$('#eno').val();
+			$.ajax({
+				url: base_url+"controller_login/eno_available/"+eno,
+				type: 'POST',
+
+				success: function(result){
+					$('#enolog').text(result);
+				},
+				error: function(err){
+					$('#enolog').text(err);
+				}
+			});
+		});
+	});
+</script>
+
 <div id="content-box" class="fill-space content-box clearfix">
 	<div class="inner-content">
-		<h3>View Reg Edit Info</h3>
-			<div id="content">
+		<div id="content">
+			<h3>User Information</h3>
+			<p>
 				<?php 
-					// var_dump($userData);
-					// echo "<hr />";
-					// var_dump($this->session->all_userdata());
 					echo validation_errors();
-					$attrib=array('name' => 'editinfo', 'id' => 'editinfo');
+					$attrib=array('name' => 'editinfo', 'id' => 'editinfo', 'class' => 'form-horizontal');
 					echo form_open('controller_login/edit_info_form', $attrib);
 					if(isset($msg)){
 						echo $msg;
 					}
 				?>
 
-					<label for="eno">Employee Number</label>
-					<input type="text" name="eno" onblur="validateENo()" value="<?php if(isset($eno)) echo $eno; ?>"/>
-					<span name="enoerr"></span></br>
-					<label for="fname">First Name</label>
-					<input type="text" name="fname" onblur="validateEditFname()" value="<?php if(isset($userData)) echo $userData->given_name; else echo $fname; ?>"/>
-					<span name="fnameerr"></span></br>
-					<label for="lname">Last Name</label>
-					<input type="text" name="lname" onblur="validateEditLname()" value="<?php if(isset($userData)) echo $userData->family_name; else echo $lname; ?>" />
-					<span name="lnameerr"></span></br>
-					<label type="email">Email Address</label>
-					<input type="email" name="email" onblur="validateEditEmail()" value="<?php if(isset($userData)) echo $userData->email; else echo $email; ?>"/>
-					<span name="emailerr"></span></br>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="eno">Employee Number</label>
+						<div class="col-sm-10">
+							<input class="form-control" type="text" name="eno" id="eno"/>
+							<span id="enolog"></span><span name="enoerr"></span></br>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="fname">First Name</label>
+						<div class="col-sm-10">
+							<input class="form-control" type="text" name="fname" onblur="validateEditFname()" value="<?php if(isset($userinfo)) echo $userinfo->given_name; else echo $fname; ?>"/>
+							<span name="fnameerr"></span></br>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="lname">Last Name</label>
+						<div class="col-sm-10">
+							<input class="form-control" type="text" name="lname" onblur="validateEditLname()" value="<?php if(isset($userinfo)) echo $userinfo->family_name; else echo $lname; ?>" />
+							<span name="lnameerr"></span></br>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="email" type="email">Email Address</label>
+						<div class="col-sm-10">
+							<input class="form-control" type="email" name="email" onblur="validateEditEmail()" value="<?php if(isset($userinfo)) echo $userinfo->email; else echo $email; ?>"/>
+							<span name="emailerr"></span></br>
+						</div>
+					</div>
 
-					<input type="submit" name="submit" onclick="return validateEditInfo()" value="Save" />
+					<input type="submit" name="submit" class="button-search col-sm-offset-2 btn btn-default" onclick="return validateEditInfo()" value="Save" />
 				</form>
-			</div>
+			</p>
+		</div>
 		<script type="text/javascript" src="<?php echo base_url(); ?>mod/js/validate.js"></script>
 	</div>
 </div>
+

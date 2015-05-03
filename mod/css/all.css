@@ -8,6 +8,7 @@ normalize*/ article,aside,details,figcaption,figure,footer,header,hgroup,main,na
 	width: 100%;
 	float: left;
 	height: 409px;
+	margin-left: 50px;
 }
 
 .content-header {

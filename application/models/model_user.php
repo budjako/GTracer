@@ -6,6 +6,8 @@
 
 		public function add_user($data){
 			$query=$this->db->query("INSERT INTO staff(emp_no, name, email) VALUES ('".$data["eno"]."','".$data["fname"]." ".$data['lname']."', '".$data['email']."');");
+			$sql="INSERT INTO `log` (`empno`, `activity`, `actdetails`, `time`) VALUES ('".$data["eno"]."', 'Register user', 'Employee ".$data['eno']." information stored. Info[ Employee Number: ".$data['eno'].", Name: ".$data['fname']." ".$data['lname'].", Email: ".$data['email']."]', sysdate(3))";
+			$query = $this->db->query($sql) or die(mysql_error());
 			return;
 		}
 

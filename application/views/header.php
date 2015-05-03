@@ -13,6 +13,9 @@
 		<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="<?php echo base_url(); ?>mod/img/favicon.ico" >
 		<script type="text/javascript" src="<?php echo base_url(); ?>mod/js/modernizr.custom.js"></script>
 		<script type="text/javascript" src="<?php echo base_url(); ?>mod/js/jquery-2.0.3.js"></script>
+		<script type="text/javascript">
+			var base_url="<?php echo base_url()?>";
+		</script>
 	</head>
 	<body>
 		<div id="container" class="container" >

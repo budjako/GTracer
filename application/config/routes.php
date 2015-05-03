@@ -39,9 +39,8 @@
 */
 
 $route['default_controller'] = 'controller_list_alumni';
-$route['(:any)'] = '/$1/index';
-// $route['background/index/(:any)'] = 'background/index/$1';
-// $route['404_override'] = 'pages/index';
+// $route['(:any)'] = '/$1/index';
+$route['404_override'] = 'controller_page_not_found';
 
 
 /* End of file routes.php */
