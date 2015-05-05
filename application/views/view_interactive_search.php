@@ -143,11 +143,30 @@
 <div id="content-box" class="content-box clearfix">
 	<div class="inner-content">
 		<h3>Interactive Search</h3>
-		<div class="notes">
+		<!-- <div class="notes">
 			<h5>Notes:</h5>
 			<span>Supervisor values: 1 for yes</span><br>
+			<span>Supervisor values: 1 to 6</span><br>
+			<span>0: < 20 000</span><br>
+			<span>1: 20 001 - 40 000</span><br>
+			<span>2: 40 001 - 60 000</span><br>
+			<span>3: 60 001 - 80 000</span><br>
+			<span>4: 80 001 - 100 000</span><br>
+			<span>5: 100 001 - 150 000</span><br>
+			<span>6: >150 001</span><br>
 			<span>remove a constraint</span><br>
-		</div>
+		</div> -->
+		<div id="change_here"></div>
+
+		<center>
+			<form name="interactivesearch" id="interactivesearch">
+				<!-- <input type="radio" name="result-view" id="table" value="table" checked="checked"><label for="table">Table</label></input>
+				<input type="radio" name="result-view" id="chart" value="chart"><label for="chart">Chart</label></input>
+				<input type="radio" name="result-view" id="map" value="map"><label for="map">Map</label></input> -->
+				<input type="hidden" name="values" id="values"></input>
+				<input type="submit" class="submit-query btn btn-default" value="Submit Query" ></input>
+			</form>
+		</center>
 		<div class="dragdrop">
 			<fieldset class="fields">
 				<legend>Fields</legend>
@@ -240,15 +259,5 @@
 				</div> -->
 			</fieldset>
 		</div>
-		<center>
-			<form name="interactivesearch" id="interactivesearch">
-				<!-- <input type="radio" name="result-view" id="table" value="table" checked="checked"><label for="table">Table</label></input>
-				<input type="radio" name="result-view" id="chart" value="chart"><label for="chart">Chart</label></input>
-				<input type="radio" name="result-view" id="map" value="map"><label for="map">Map</label></input> -->
-				<input type="hidden" name="values" id="values"></input>
-				<input type="submit" style="float: right;" class="submit-query btn btn-default" value="Submit Query" ></input>
-			</form>
-		</center>
-		<div id="change_here"></div>
 	</div>
 </div>

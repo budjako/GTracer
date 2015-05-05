@@ -21,7 +21,7 @@
 			if($info['ability'] != null){
 				echo "<div id='ability'><h4>Abilities</h4>";
 				foreach ($info['ability'] as $ability) {
-					echo "<span class='value'>".$ability->ability."</span></br>";
+					echo "<span class='value'>".$ability->ability_name."</span></br>";
 				}
 				echo "</div>";
 			}

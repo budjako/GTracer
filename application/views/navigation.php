@@ -7,6 +7,8 @@
 			<button class="menu-trigger">Menu</button>
 			<ul class="menu menu-toggle clearfix">
 				<li><a href="<?php echo  base_url(); ?>controller_list_alumni"><div class="menu-item">List of all alumni</div></a></li>
+				<li><a href="<?php echo  base_url(); ?>controller_school_approval"><div class="menu-item">School Approvals</div></a></li>
+				<li><a href="<?php echo  base_url(); ?>controller_company_approval"><div class="menu-item">Company Approvals</div></a></li>
 				<li><a href="<?php echo  base_url(); ?>controller_basic_search"><div class="menu-item">Basic Search</div></a></li>
 				<li><a href="<?php echo  base_url(); ?>controller_interactive_search"><div class="menu-item">Interactive Search</div></a></li>
 				<li><a href="<?php echo  base_url(); ?>controller_log"><div class="menu-item">Logs</div></a></li>
@@ -20,6 +22,8 @@
 			<button class="menu-trigger">Menu</button>
 			<ul class="menu menu-toggle clearfix">
 				<li><a href="<?php echo  base_url(); ?>controller_list_alumni"><div class="menu-item">List of all alumni</div></a></li>
+				<li><a href="<?php echo  base_url(); ?>controller_school_approval"><div class="menu-item">School Approvals</div></a></li>
+				<li><a href="<?php echo  base_url(); ?>controller_company_approval"><div class="menu-item">Company Approvals</div></a></li>
 				<li><a href="<?php echo  base_url(); ?>controller_basic_search"><div class="menu-item">Basic Search</div></a></li>
 				<li><a href="<?php echo  base_url(); ?>controller_interactive_search"><div class="menu-item">Interactive Search</div></a></li>
 			</ul>
