@@ -118,6 +118,7 @@ class Controller_interactive_search extends CI_Controller {
 		$condition=array();
 
 		$selct=0;
+		$graduate=0;
 		$school=0;
 		$company=0;
 		// var_dump($arr);
@@ -135,6 +136,7 @@ class Controller_interactive_search extends CI_Controller {
 			$selected[]=$details[1];										// list of field names involved
 			if($selct>0) $sql.=", ";
 			$sql.=$details[0].".".$details[1];
+			if($details[0] == "graduate") $graduate=1;
 			if($details[0] == "company") $company=1;
 			if($details[0] == "school") $school=1;
 			// echo "$sql<br>";
@@ -174,10 +176,10 @@ class Controller_interactive_search extends CI_Controller {
 			if($count2>0) $sql.=", ";
 			if($tables[$count2] == "work") $company=2;
 			if($tables[$count2] == "educationalbg") $school=2;
-			$sql.=$tables[$count2];
+			$sql.="`".$tables[$count2]."`";
 		}
-		if($company == 1) $sql.=", work";
-		if($school == 1) $sql.=", educationalbg";
+		if($company == 1 && $graduate == 1) $sql.=", `work`";
+		if($school == 1 && $graduate == 1) $sql.=", `educationalbg`";
 		if(in_array('graduate', $tables)){
 			if(count($tables)>1){							// link by student number
 				$sql.=" where ";
@@ -356,6 +358,34 @@ class Controller_interactive_search extends CI_Controller {
 		else return false;
 	}
 
+	function to_standard_name($str){
+		// echo $str."<br>";
+		$graduate=array( "student_no" => "Student Number",  "firstname" => "First Name",  "lastname" => "Last Name",  "midname" => "Middle Name",  "sex" => "Sex",  "bdate" => "Birth Date",  "email" => "Email",  "mobileno" => "Mobile No",  "telno" => "Tel No");
+		$educationalbg=array( "level" => "Year Level",  "batch" => "Batch",  "class" => "Class",  "course" => "Course");
+		$school=array( "name" => "School Name",  "address" => "School Address");
+		$work=array( "position" => "Position",  "salary" => "Salary",  "supervisor" => "Supervisor",  "employmentstatus" => "Employment Status",  "datestart" => "Employment Start Date",  "dateend" => "Employment End Date");
+		$company=array( "name" => "Company Name",  "address" => "Company Address");
+		$project=array( "project_title" => "Project Title",  "projectdesc" => "Project Description",  "datestart" => "Project Start Date",  "dateend" => "Project End Date");
+		$publication=array( "publicationtitle" => "Publication Title",  "publicationdate" => "Publication Date",  "publicationdesc" => "Publication Description",  "publicationbody" => "Publisher",  "publicationpeers" => "Peers");
+		$awards=array( "awardtitle" => "Award Title",  "awardbody" => "Awarding Body",  "dategiven" => "Awarding Date");
+		$grant=array( "grant_name" => "Grant Name",  "grantor" => "Grant Awarding Body",  "granttype" => "Grant Type",  "grantyear" => "Grant Effective Year");
+		$others=array( "ability" => "Ability",  "assoc_name" => "Association",  "language" => "Language");
+
+		if(array_key_exists($str, $graduate)) return array("graduate", $graduate[$str]);
+		else if(array_key_exists($str, $educationalbg)) return array("educationalbg", $educationalbg[$str]);
+		else if(array_key_exists($str, $school)) return array("school", $school[$str]);
+		else if(array_key_exists($str, $work)) return array("work", $work[$str]);
+		else if(array_key_exists($str, $company)) return array("company", $company[$str]);
+		else if(array_key_exists($str, $project)) return array("project", $project[$str]);
+		else if(array_key_exists($str, $publication)) return array("publication", $publication[$str]);
+		else if(array_key_exists($str, $awards)) return array("awards", $awards[$str]);
+		else if(array_key_exists($str, $grant)) return array("grant", $grant[$str]);
+		else if($str == "ability_name") return array("ability", "Ability");
+		else if($str == "assoc_name") return array("association", "Association Name");
+		else if($str == "language") return array("language", "Language");
+		else return false;
+	}
+
 	public function query(){					// validate values 
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
@@ -397,8 +427,7 @@ class Controller_interactive_search extends CI_Controller {
 
 		// var_dump($arr);
 		$sql=$this->create_query($arr);
-		// echo "<br>search for: $sql";
-
+		echo "<br>search for: $sql";
 
 		$config['base_url'] = base_url().'controller_interactive_search/query';
 		$config['total_rows'] = $config['total_rows'] = $this->model_interactive_search->get_data_count($sql);
@@ -409,6 +438,7 @@ class Controller_interactive_search extends CI_Controller {
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		// echo "<br>Page: $page<br>";
 		$data['result'] = $this->model_interactive_search->get_data($sql, $config['per_page'], $page);
+		// var_dump($data['result']);
 		//display data from database
 		
 		//initialize the configuration of the ajax_pagination
@@ -426,7 +456,8 @@ class Controller_interactive_search extends CI_Controller {
 			$keys=array_keys($result[0]);
 			echo "<table class='table table-hover table-bordered'>";
 			foreach($keys as $key){
-				echo "<th>$key</th>";
+				$key_table=$this->to_standard_name($key);
+				echo "<th>".$key_table[1]."</th>";
 			}
 		}
 		foreach ($result as $row){

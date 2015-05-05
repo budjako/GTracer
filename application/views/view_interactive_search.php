@@ -32,7 +32,7 @@
 		if(children.length==0) return false;
 		var querystring="";
 		
-		console.log(children.length);
+		// console.log(children.length);
 		for(var i=0; i<children.length; i++){
 			if(i>0) querystring+="&";
 			var child=$(children[i]);
