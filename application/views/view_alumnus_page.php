@@ -52,7 +52,7 @@
 				echo "<div id='education'><h4>Educational Background</h4>";
 				foreach ($info['education'] as $education) {
 					echo "<span class='label'>Name:</span> <span class='value'>".$education->school."</span></br>";
-					echo "<span class='label'>Attended:</span> <span class='value'>".$education->yearstart."-".$education->yearend."</span></br>";
+					echo "<span class='label'>Attended:</span> <span class='value'>".$education->batch."-".$education->class."</span></br>";
 					echo "<span class='label'>Level:</span> <span class='value'>".$education->level."</span></br>";
 					if($education->course != null)
 						echo "<span class='label'>Course:</span> <span class='value'>".$award->course."</span></br>";

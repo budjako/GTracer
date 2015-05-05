@@ -37,7 +37,7 @@ $(document).on("click", ".admin", function(e) {
 			},
 			error: function(err) {
 				console.log(err);
-Number			}
+			}
 		});
 	});
 

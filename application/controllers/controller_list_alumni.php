@@ -67,7 +67,7 @@ class Controller_list_alumni extends CI_Controller {
 		echo "<th>Middle Name</th>";
 		echo "<th>Email Address</th>";
 		foreach ($result as $row){
-			echo "<tr id='".$row->student_no."' class='clickable-row' data-href='".base_url()."controller_alumnus_page/index/".$row->student_no."'><td>".$row->student_no."</td>";
+			echo "<tr id='".$row->student_no."' class='clickable-row' data-href='".base_url()."controller_single/index/student_".$row->student_no."'><td>".$row->student_no."</td>";
 			echo "<td>".$row->lastname."</td>";
 			echo "<td>".$row->firstname."</td>";
 			echo "<td>".$row->midname."</td>";

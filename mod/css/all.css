@@ -884,3 +884,8 @@ label {
 .centersort{
 	padding-right: 50px;
 }
+
+.disabled-button{
+	background: #e6e6e6;
+	border-color: #adadad; 
+}

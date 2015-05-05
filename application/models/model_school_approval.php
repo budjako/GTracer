@@ -13,5 +13,10 @@
 			$query=$this->db->query("SELECT s.school_no, s.name, s.address FROM request r, school s WHERE r.schoolno=s.school_no LIMIT ".$start.",".$limit) or die(mysqli_error());
 			return $query->result_array();
 		}
+
+		public function approve_school($school_no){
+			$query=$this->db->query("DELETE from request where schoolno=".$school_no);
+			return;
+		}
 	}
 ?>

@@ -1,23 +1,23 @@
 <?php
-	class Model_alumni extends CI_Model {
+	class Model_single extends CI_Model {
 		/* OPTIMIZE QUERIES */
 		public function __construct(){
 			$this->load->database();
 		}
 
-		public function get_data($stdno){
+		public function get_stud_data($stdno){
 			if(! $this->exists($stdno)) return false;
 
-			$info['basic']=$this->get_basic_info($stdno);
-			$info['ability']=$this->get_ability($stdno);
-			$info['assoc']=$this->get_assoc($stdno);
-			$info['award']=$this->get_award($stdno);
-			$info['education']=$this->get_education($stdno);
-			$info['grant']=$this->get_grant($stdno);
-			$info['lang']=$this->get_lang($stdno);
-			$info['profexam']=$this->get_prof_exam($stdno);
-			$info['publication']=$this->get_publication($stdno);
-			$info['work']=$this->get_work($stdno);
+			$info['basic']=$this->get_stud_basic_info($stdno);
+			$info['ability']=$this->get_stud_ability($stdno);
+			$info['assoc']=$this->get_stud_assoc($stdno);
+			$info['award']=$this->get_stud_award($stdno);
+			$info['education']=$this->get_stud_education($stdno);
+			$info['grant']=$this->get_stud_grant($stdno);
+			$info['lang']=$this->get_stud_lang($stdno);
+			$info['profexam']=$this->get_stud_prof_exam($stdno);
+			$info['publication']=$this->get_stud_publication($stdno);
+			$info['work']=$this->get_stud_work($stdno);
 
 			return $info;
 		}
@@ -34,7 +34,7 @@
 			}
 		}
 
-		public function get_basic_info($stdno=FALSE){
+		public function get_stud_basic_info($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('graduate');
 				return $query->result_array();
@@ -46,7 +46,7 @@
 			return false;
 		}
 
-		public function get_ability($stdno=FALSE){
+		public function get_stud_ability($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('ability');
 				return $query->result_array();
@@ -58,7 +58,7 @@
 			return false;
 		}
 
-		public function get_assoc($stdno=FALSE){
+		public function get_stud_assoc($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('association');
 				return $query->result_array();
@@ -70,7 +70,7 @@
 			return false;
 		}
 
-		public function get_award($stdno=FALSE){
+		public function get_stud_award($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('award');
 				return $query->result_array();
@@ -84,7 +84,7 @@
 
 		
 
-		public function get_grant($stdno=FALSE){
+		public function get_stud_grant($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('grant');
 				return $query->result_array();
@@ -96,7 +96,7 @@
 			return false;
 		}
 
-		public function get_lang($stdno=FALSE){
+		public function get_stud_lang($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('language');
 				return $query->result_array();
@@ -108,7 +108,7 @@
 			return false;
 		}
 
-		public function get_prof_exam($stdno=FALSE){
+		public function get_stud_prof_exam($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('profexam');
 				return $query->result_array();
@@ -120,7 +120,7 @@
 			return false;
 		}
 
-		public function get_publication($stdno=FALSE){
+		public function get_stud_publication($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('publication');
 				return $query->result_array();
@@ -132,7 +132,7 @@
 			return false;
 		}
 
-		public function get_work($stdno=FALSE){
+		public function get_stud_work($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('work');
 				return $query->result_array();
@@ -150,7 +150,7 @@
 			return false;
 		}
 
-		public function get_education($stdno=FALSE){
+		public function get_stud_education($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('educationalbg');
 				return $query->result_array();
@@ -168,5 +168,26 @@
 			return false;
 		}
 
+		public function get_school_data($school_no){
+			$query=$this->db->query("SELECT * FROM school WHERE school_no=".$school_no);
+			if(empty($query->result())){
+				return false;
+			}
+			else{
+				// echo "does not exist";
+				return $query->result_array()[0];
+			}
+		}
+
+		public function get_company_data($company_no){
+			$query=$this->db->query("SELECT * FROM company WHERE company_no=".$company_no);
+			if(empty($query->result())){
+				return false;
+			}
+			else{
+				// echo "does not exist";
+				return $query->result_array()[0];
+			}
+		}
 	}
 ?>

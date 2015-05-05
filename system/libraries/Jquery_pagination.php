@@ -260,10 +260,13 @@ class Jquery_pagination{
 			if( $this->div == '')
 				return '<a href="'. $this->anchor_class . ' ' . $this->base_url . $count . '">'. $text .'</a>';
 				
-			if( $this->additional_param == '' )
+			if( $this->additional_param != '' )
 				$this->additional_param = "{'t' : 't'}";
 
-			return "<a href=\"#\" onclick=\"$.post('". $this->base_url . $count ."', ". $this->additional_param .", function(data){ $('". $this->div . "').html(data); }); return false;\">" . $text ."</a>";
+			$retval = "<a href=\"#\" onclick=\"$.post('". $this->base_url . $count ."', ";
+			if( $this->additional_param != '' ) $retval.=$this->additional_param .", ";
+			$retval.="function(data){ $('". $this->div . "').html(data); }); return false;\">" . $text ."</a>";
+			return $retval;
 		}
 
 		/*return "<a href=\"#\"

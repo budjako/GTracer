@@ -64,16 +64,16 @@ class Controller_school_approval extends Controller_log {
 		echo "<th>View/Edit</th>";		// view -> edit values 
 		echo "<th>Approve</th>";
 		foreach ($result as $row){
-			echo "<tr id='".$row['school_no']."' class='clickable-row'><td>".$row['name']."</td>";
+			echo "<tr id='".$row['school_no']."' class='clickable-row' data-href='".base_url()."controller_single/index/school_".$row['school_no']."'><td>".$row['name']."</td>";
 			echo "<td>".$row['address']."</td>";
 			echo "<td>";
 			echo "<form method='POST' class='".$row['school_no']."'>";
-			echo "<input type='button' class='ban btn btn-default'";
+			echo "<input type='button' class='view btn btn-default'";
 			echo "value='View/Edit Info'>";
 			echo "</form>";
 			echo "</td><td>";
 			echo "<form method='POST' class='".$row['school_no']."'>";
-			echo "<input type='button' class='ban btn btn-default'";
+			echo "<input type='button' class='approve btn btn-default'";
 			echo "value='Approve'>";
 			echo "</form>";
 			echo "</td></tr>";
@@ -82,41 +82,9 @@ class Controller_school_approval extends Controller_log {
 		echo $links;
 	}
 
-	public function ban($empno){
-		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
-		}
-		else if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_users/index', 'refresh');	// redirect to controller_search_book
-		}
-		// check if current logged in user is an admin
-		if($this->model_user->exists($empno)){
-			$banned=$this->model_user->is_banned($empno);
-			if($banned){	// currently banned
-				$this->model_user->ban($empno, 0);
-				$this->add_log($this->session->userdata('logged_in')['eno'], "Unban user", "Unbanned employee ".$empno.".");
-			}
-			else{
-				$this->model_user->ban($empno, 1);
-				$this->add_log($this->session->userdata('logged_in')['eno'], "Ban user", "Banned employee ".$empno.".");
-			}
-		}
-	}
-
-	public function admin($empno){
-		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
-		}
-		else if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_users/index', 'refresh');	// redirect to controller_search_book
-		}
-		if($this->model_user->exists($empno)){
-			$admin=$this->model_user->is_admin($empno);
-			if(! $admin){
-				$this->model_user->add_admin($empno);
-				$this->add_log($this->session->userdata('logged_in')['eno'], "Add as Admin", "Added employee ".$empno." as a system administrator.");
-			}
-		}
+	public function school_approve($school_no){
+		$this->model_school_approval->approve_school($school_no);
+		return;
 	}
 
 }

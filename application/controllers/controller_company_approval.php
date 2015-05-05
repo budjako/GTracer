@@ -33,7 +33,7 @@ class Controller_company_approval extends Controller_log {
 			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
 		}
 
-		$config['base_url'] = base_url().'controller_approval/get_company_requests';
+		$config['base_url'] = base_url().'controller_company_approval/get_company_requests';
 		$config['total_rows'] = $config['total_rows'] = $this->model_company_approval->get_approval_company_count();
 		$config['per_page'] = '20';
 		$config['div'] = '#change_here_company';
@@ -64,7 +64,7 @@ class Controller_company_approval extends Controller_log {
 		echo "<th>View/Edit</th>";		// view -> edit values 
 		echo "<th>Approve</th>";
 		foreach ($result as $row){
-			echo "<tr id='".$row['company_no']."' class='clickable-row'><td>".$row['name']."</td>";
+			echo "<tr id='".$row['company_no']."' class='clickable-row' data-href='".base_url()."controller_single/index/company_".$row['company_no']."'><td>".$row['name']."</td>";
 			echo "<td>".$row['address']."</td>";
 			echo "<td>";
 				if($row['companytype'] == 0){
@@ -74,18 +74,23 @@ class Controller_company_approval extends Controller_log {
 			echo "</td>";
 			echo "<td>";
 			echo "<form method='POST' class='".$row['company_no']."'>";
-			echo "<input type='button' class='ban btn btn-default'";
+			echo "<input type='button' class=' btn btn-default'";
 			echo "value='View/Edit Info'>";
 			echo "</form>";
 			echo "</td><td>";
 			echo "<form method='POST' class='".$row['company_no']."'>";
-			echo "<input type='button' class='ban btn btn-default'";
+			echo "<input type='button' class='approve btn btn-default'";
 			echo "value='Approve'>";
 			echo "</form>";
 			echo "</td></tr>";
 		} 
 		echo "</table>";
 		echo $links;
+	}
+
+	public function company_approve($company_no){
+		$this->model_company_approval->approve_company($company_no);
+		return;
 	}
 
 }

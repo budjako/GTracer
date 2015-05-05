@@ -3,7 +3,7 @@ $(document).ready(function() {
 		var ev=e;
 		var button = ev.target;
 		ev.stopPropagation();
-		if($(button).hasClass('ban') || $(button).hasClass('admin')) {
+		if($(button).hasClass('ban') || $(button).hasClass('admin') || $(button).hasClass('approve')) {
 			ev.stopPropagation();
 		}	
 		else window.document.location = $(this).data("href");

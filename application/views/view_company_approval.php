@@ -1,5 +1,4 @@
 <script type="text/javascript">
-	var base_url = "<?php echo base_url() ?>";
 	window.onload=get_data_company();
 
 	function get_data_company(){  
@@ -15,6 +14,28 @@
 			}
 		});
 	}
+
+	$(document).ready(function(){
+		$(document).on("click", ".approve", function(event){
+			event.preventDefault();
+			var company_no = $(this).parent()[0].getAttribute('class');
+			var item=$(this);
+			
+			$.ajax({
+				url: base_url+"controller_company_approval/company_approve/"+company_no,
+				type: 'POST',
+
+				success: function(result){
+					item.addClass("disabled-button");
+					item.val("Approved");
+					item.attr("disabled", "disabled");
+				},
+				error: function(err){
+					$('#change_here_company').html(err);
+				}
+			});
+		})
+	})
 </script>
 
 <div id="content-box" class="content-box clearfix">
