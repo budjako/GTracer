@@ -193,7 +193,7 @@ class Controller_interactive_search extends CI_Controller {
 					}
 					else if ($tables[$count3] == "school"){
 						if($count4>0) $sql.=" and ";
-						$sql.="(graduate.student_no=educationalbg.studentno and educationalbg.school=school.school_no)";
+						$sql.="(graduate.student_no=educationalbg.studentno and educationalbg.schoolno=school.school_no)";
 						$count4++;
 					}
 					else if($tables[$count3] != "graduate"){
@@ -334,14 +334,13 @@ class Controller_interactive_search extends CI_Controller {
 		// echo $str."<br>";
 		$graduate=array("Student Number" => "student_no", "First Name" => "firstname", "Last Name" => "lastname", "Middle Name" => "midname", "Sex" => "sex", "Birth Date" => "bdate", "Email" => "email", "Mobile No" => "mobileno", "Tel No" => "telno");
 		$educationalbg=array("Year Level" => "level", "Batch" => "batch", "Class" => "class", "Course" => "course");
-		$school=array("School Name" => "name", "School Address" => "address");
-		$work=array("Position" => "position", "Salary" => "salary", "Supervisor" => "supervisor", "Employment Status" => "employmentstatus", "Employment Start Date" => "datestart", "Employment End Date" => "dateend");
-		$company=array("Company Name" => "name", "Company Address" => "address");
-		$project=array("Project Title" => "project_title", "Project Description" => "projectdesc", "Project Start Date" => "datestart", "Project End Date" => "dateend");
+		$school=array("School Name" => "schoolname", "School Address" => "schooladdress");
+		$work=array("Position" => "position", "Salary" => "salary", "Supervisor" => "supervisor", "Employment Status" => "employmentstatus", "Employment Start Date" => "workdatestart", "Employment End Date" => "workdateend");
+		$company=array("Company Name" => "companyname", "Company Address" => "companyaddress");
+		$project=array("Project Title" => "project_title", "Project Description" => "projectdesc", "Project Start Date" => "projectdatestart", "Project End Date" => "projectdateend");
 		$publication=array("Publication Title" => "publicationtitle", "Publication Date" => "publicationdate", "Publication Description" => "publicationdesc", "Publisher" => "publicationbody", "Peers" => "publicationpeers");
-		$awards=array("Award Title" => "awardtitle", "Awarding Body" => "awardbody", "Awarding Date" => "dategiven");
+		$awards=array("Award Title" => "awardtitle", "Awarding Body" => "awardbody", "Awarding Date" => "awarddategiven");
 		$grant=array("Grant Name" => "grant_name", "Grant Awarding Body" => "grantor", "Grant Type" => "granttype", "Grant Effective Year" => "grantyear");
-		$others=array("Ability" => "ability", "Association" => "assoc_name", "Language" => "language");
 
 		if(array_key_exists($str, $graduate)) return array("graduate", $graduate[$str]);
 		else if(array_key_exists($str, $educationalbg)) return array("educationalbg", $educationalbg[$str]);
@@ -350,7 +349,7 @@ class Controller_interactive_search extends CI_Controller {
 		else if(array_key_exists($str, $company)) return array("company", $company[$str]);
 		else if(array_key_exists($str, $project)) return array("project", $project[$str]);
 		else if(array_key_exists($str, $publication)) return array("publication", $publication[$str]);
-		else if(array_key_exists($str, $awards)) return array("awards", $awards[$str]);
+		else if(array_key_exists($str, $awards)) return array("award", $awards[$str]);
 		else if(array_key_exists($str, $grant)) return array("grant", $grant[$str]);
 		else if($str == "Ability") return array("ability", "ability_name");
 		else if($str == "Association") return array("association", "assoc_name");
@@ -362,14 +361,13 @@ class Controller_interactive_search extends CI_Controller {
 		// echo $str."<br>";
 		$graduate=array( "student_no" => "Student Number",  "firstname" => "First Name",  "lastname" => "Last Name",  "midname" => "Middle Name",  "sex" => "Sex",  "bdate" => "Birth Date",  "email" => "Email",  "mobileno" => "Mobile No",  "telno" => "Tel No");
 		$educationalbg=array( "level" => "Year Level",  "batch" => "Batch",  "class" => "Class",  "course" => "Course");
-		$school=array( "name" => "School Name",  "address" => "School Address");
-		$work=array( "position" => "Position",  "salary" => "Salary",  "supervisor" => "Supervisor",  "employmentstatus" => "Employment Status",  "datestart" => "Employment Start Date",  "dateend" => "Employment End Date");
-		$company=array( "name" => "Company Name",  "address" => "Company Address");
-		$project=array( "project_title" => "Project Title",  "projectdesc" => "Project Description",  "datestart" => "Project Start Date",  "dateend" => "Project End Date");
+		$school=array( "schoolname" => "School Name",  "schooladdress" => "School Address");
+		$work=array( "position" => "Position",  "salary" => "Salary",  "supervisor" => "Supervisor",  "employmentstatus" => "Employment Status",  "workdatestart" => "Employment Start Date",  "workdateend" => "Employment End Date");
+		$company=array( "companyname" => "Company Name",  "companyaddress" => "Company Address");
+		$project=array( "project_title" => "Project Title",  "projectdesc" => "Project Description",  "projectdatestart" => "Project Start Date",  "projectdateend" => "Project End Date");
 		$publication=array( "publicationtitle" => "Publication Title",  "publicationdate" => "Publication Date",  "publicationdesc" => "Publication Description",  "publicationbody" => "Publisher",  "publicationpeers" => "Peers");
-		$awards=array( "awardtitle" => "Award Title",  "awardbody" => "Awarding Body",  "dategiven" => "Awarding Date");
+		$awards=array( "awardtitle" => "Award Title",  "awardbody" => "Awarding Body",  "awarddategiven" => "Awarding Date");
 		$grant=array( "grant_name" => "Grant Name",  "grantor" => "Grant Awarding Body",  "granttype" => "Grant Type",  "grantyear" => "Grant Effective Year");
-		$others=array( "ability" => "Ability",  "assoc_name" => "Association",  "language" => "Language");
 
 		if(array_key_exists($str, $graduate)) return array("graduate", $graduate[$str]);
 		else if(array_key_exists($str, $educationalbg)) return array("educationalbg", $educationalbg[$str]);
@@ -378,7 +376,7 @@ class Controller_interactive_search extends CI_Controller {
 		else if(array_key_exists($str, $company)) return array("company", $company[$str]);
 		else if(array_key_exists($str, $project)) return array("project", $project[$str]);
 		else if(array_key_exists($str, $publication)) return array("publication", $publication[$str]);
-		else if(array_key_exists($str, $awards)) return array("awards", $awards[$str]);
+		else if(array_key_exists($str, $awards)) return array("award", $awards[$str]);
 		else if(array_key_exists($str, $grant)) return array("grant", $grant[$str]);
 		else if($str == "ability_name") return array("ability", "Ability");
 		else if($str == "assoc_name") return array("association", "Association Name");
@@ -434,12 +432,12 @@ class Controller_interactive_search extends CI_Controller {
 	}
 
 	public function query_chart($sql){
-		$data['result'] = $this->model_interactive_search->get_data($sql, "school.name");
+		$data['result'] = $this->model_interactive_search->get_data($sql, "school.schoolname");
 
 	}
 
 	public function query_map($sql){
-		$data['result'] = $this->model_interactive_search->get_data($sql, "school.name");
+		$data['result'] = $this->model_interactive_search->get_data($sql, "school.schoolname");
 
 	}
 
@@ -453,7 +451,7 @@ class Controller_interactive_search extends CI_Controller {
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		// echo "<br>Page: $page<br>";
 		$data['result'] = $this->model_interactive_search->get_data_paginate($sql, $config['per_page'], $page);
-		var_dump($data['result']);
+		// var_dump($data['result']);
 		//display data from database
 		
 		//initialize the configuration of the ajax_pagination
