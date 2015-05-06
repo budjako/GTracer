@@ -10,7 +10,7 @@
 		}
 
 		public function get_approval_school($limit, $start){
-			$query=$this->db->query("SELECT s.school_no, s.name, s.address FROM request r, school s WHERE r.schoolno=s.school_no LIMIT ".$start.",".$limit) or die(mysqli_error());
+			$query=$this->db->query("SELECT s.school_no, s.schoolname, s.schooladdress FROM request r, school s WHERE r.schoolno=s.school_no LIMIT ".$start.",".$limit) or die(mysqli_error());
 			return $query->result_array();
 		}
 

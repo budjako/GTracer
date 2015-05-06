@@ -428,17 +428,32 @@ class Controller_interactive_search extends CI_Controller {
 		// var_dump($arr);
 		$sql=$this->create_query($arr);
 		echo "<br>search for: $sql";
+		if($this->input->post('result-view') == "table") $this->query_table($sql);
+		if($this->input->post('result-view') == "chart") $this->query_chart($sql);
+		if($this->input->post('result-view') == "map") $this->query_map($sql);
+	}
 
+	public function query_chart($sql){
+		$data['result'] = $this->model_interactive_search->get_data($sql, "school.name");
+
+	}
+
+	public function query_map($sql){
+		$data['result'] = $this->model_interactive_search->get_data($sql, "school.name");
+
+	}
+
+	public function query_table($sql){
 		$config['base_url'] = base_url().'controller_interactive_search/query';
 		$config['total_rows'] = $config['total_rows'] = $this->model_interactive_search->get_data_count($sql);
 		$config['per_page'] = '20';
-		$config['div'] = '#change_here';
+		$config['div'] = '#change_here_table';
 		$config['additional_param']  = 'serialize_form()';
 		
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		// echo "<br>Page: $page<br>";
-		$data['result'] = $this->model_interactive_search->get_data($sql, $config['per_page'], $page);
-		// var_dump($data['result']);
+		$data['result'] = $this->model_interactive_search->get_data_paginate($sql, $config['per_page'], $page);
+		var_dump($data['result']);
 		//display data from database
 		
 		//initialize the configuration of the ajax_pagination

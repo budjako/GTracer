@@ -64,8 +64,8 @@ class Controller_company_approval extends Controller_log {
 		echo "<th>View/Edit</th>";		// view -> edit values 
 		echo "<th>Approve</th>";
 		foreach ($result as $row){
-			echo "<tr id='".$row['company_no']."' class='clickable-row' data-href='".base_url()."controller_single/index/company_".$row['company_no']."'><td>".$row['name']."</td>";
-			echo "<td>".$row['address']."</td>";
+			echo "<tr id='".$row['company_no']."' class='clickable-row' data-href='".base_url()."controller_single/index/company_".$row['company_no']."'><td>".$row['companyname']."</td>";
+			echo "<td>".$row['companyaddress']."</td>";
 			echo "<td>";
 				if($row['companytype'] == 0){
 					echo "Private/Self-Employed";

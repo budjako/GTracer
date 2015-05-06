@@ -41,8 +41,8 @@
 						echo "<span class='label'>Award Name:</span> <span class='value'>".$award->awardtitle."</span></br>";
 					if($award->awardbody != null)
 						echo "<span class='label'>Awarding Body:</span> <span class='value'>".$award->awardbody."</span></br>";
-					if($award->dategiven != null)
-						echo "<span class='label'>Date Given:</span> <span class='value'>".$award->dategiven."</span></br>";
+					if($award->awarddategiven != null)
+						echo "<span class='label'>Date Given:</span> <span class='value'>".$award->awarddategiven."</span></br>";
 				}
 				echo "</div>";
 			}
@@ -51,7 +51,7 @@
 			if($info['education'] != null){
 				echo "<div id='education'><h4>Educational Background</h4>";
 				foreach ($info['education'] as $education) {
-					echo "<span class='label'>Name:</span> <span class='value'>".$education->school."</span></br>";
+					echo "<span class='label'>Name:</span> <span class='value'>".$education->schoolname."</span></br>";
 					echo "<span class='label'>Attended:</span> <span class='value'>".$education->batch."-".$education->class."</span></br>";
 					echo "<span class='label'>Level:</span> <span class='value'>".$education->level."</span></br>";
 					if($education->course != null)
@@ -85,7 +85,7 @@
 				echo "<div id='profexam'><h4>Professional Exams</h4>";
 				foreach ($info['profexam'] as $profexam){ 
 					echo "<span class='label'>Exam Name:</span>  <span class='value'>".$profexam->prof_exam_name."</span></br>";
-					echo "<span class='label'>Date Taken:</span>  <span class='value'>".$profexam->datetaken."</span></br>";
+					echo "<span class='label'>Date Taken:</span>  <span class='value'>".$profexam->profexamdatetaken."</span></br>";
 					echo "<span class='label'>Rating:</span>  <span class='value'>".$profexam->rating."</span></br>";
 				}
 				echo "</div>";
@@ -108,7 +108,7 @@
 				echo "<div id='work'><h4>Work Experience</h4>";
 				foreach ($info['work'] as $work) {
 					echo "<span class='label'>Position:</span> <span class='value'>".$work->position."</span></br>";
-					echo "<span class='value'>".$work->datestart."-".$work->dateend."</span></br>";
+					echo "<span class='value'>".$work->workdatestart."-".$work->workdateend."</span></br>";
 					echo "<span class='label'>Company Name:</span> <span class='value'>".$work->companyname."</span></br>";
 					if($work->salary != null)
 						echo "<span class='label'>Salary:</span> <span class='value'>".$work->salary."</span></br>";

@@ -97,6 +97,9 @@ $(function() {
 			var options=$(str);
 			secparent.prepend(mod);
 			secparent.append(options);
+			console.log(secparent.children('.lbl'));
+			secparent.children('.lbl').addClass("dropdown-toggle");
+			secparent.children('.lbl').attr("data-toggle", "dropdown");
 		}
 	});
 

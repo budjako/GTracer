@@ -36,7 +36,6 @@ fieldset {
 .draggable  { 
 	padding: 0.5em; 
 	min-height: 18px;
-	z-index: 1;	
 	display:inline-block;
 	cursor: move;
 	position: relative;
@@ -49,7 +48,6 @@ fieldset {
 .op { 
 	padding: 0.5em; 
 	border: 1px solid #ddd;
-	z-index: 1;
 	position: relative;
 	margin-top: 5px;
 	margin-bottom: 5px;

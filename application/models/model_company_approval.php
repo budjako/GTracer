@@ -10,7 +10,7 @@
 		}
 
 		public function get_approval_company($limit, $start){
-			$query=$this->db->query("SELECT c.company_no, c.name, c.address, c.companytype FROM request r, company c WHERE r.companyno=c.company_no LIMIT ".$start.",".$limit) or die(mysqli_error());
+			$query=$this->db->query("SELECT c.company_no, c.companyname, c.companyaddress, c.companytype FROM request r, company c WHERE r.companyno=c.company_no LIMIT ".$start.",".$limit) or die(mysqli_error());
 			return $query->result_array();
 		}
 

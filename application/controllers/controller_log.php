@@ -134,7 +134,7 @@ class Controller_log extends CI_Controller{
 			    echo "<tr><td>".$row->empno."</td>";
 				echo "<td>".$row->activity."</td>";
 				echo "<td>".$row->actdetails."</td>";
-				echo "<td>".$row->time."</td></tr>";
+				echo "<td>".$row->timeperformed."</td></tr>";
 
 			} 
 			echo "</table>";

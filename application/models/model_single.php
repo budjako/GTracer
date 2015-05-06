@@ -141,9 +141,9 @@
 			if($query->num_rows()>0){
 				$result=$query->result();
 				foreach ($result as $work) {	// get company name
-					$query_companyname=$this->db->query("SELECT name from company where company_no=".$work->companyno.";");
+					$query_companyname=$this->db->query("SELECT companyname from company where company_no=".$work->companyno.";");
 					if($query_companyname->num_rows()==1)
-						$work->companyname=$query_companyname->result()[0]->name;
+						$work->companyname=$query_companyname->result()[0]->companyname;
 				}
 				return $result;
 			}
@@ -158,10 +158,10 @@
 			$query=$this->db->query("SELECT * from educationalbg where studentno = '".$stdno."';");
 			if($query->num_rows()>0){
 				$result=$query->result();
-				foreach ($result as $education) {	// get company name
-					$query_schoolname=$this->db->query("SELECT name from school where school_no=".$education->school.";");
+				foreach ($result as $education) {	// get school name
+					$query_schoolname=$this->db->query("SELECT schoolname from school where school_no=".$education->schoolno.";");
 					if($query_schoolname->num_rows()==1)
-						$education->school=$query_schoolname->result()[0]->name;
+						$education->schoolname=$query_schoolname->result()[0]->schoolname;
 				}
 				return $result;
 			}

@@ -1,6 +1,6 @@
 <div id="content-box" class="content-box clearfix">
 	<div class="inner-content">
-		<h3><?php  echo $info['name']; ?></h3>
+		<h3><?php  echo $info['schoolname']; ?></h3>
 
 		<p>
 

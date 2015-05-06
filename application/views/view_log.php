@@ -60,7 +60,7 @@
 							<option value="empno">Employee Number</option>
 							<option value="activity">Activity</option>
 							<option value="actdetails">Details</option>
-							<option value="time" selected="selected">Time</option>
+							<option value="timeperformed" selected="selected">Time</option>
 						</select>
 					</span><br>
 					<span>	 
