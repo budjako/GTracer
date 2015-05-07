@@ -26,6 +26,7 @@
 				type: 'POST',
 
 				success: function(result){
+					console.log(result);
 					item.addClass("disabled-button");
 					item.val("Approved");
 					item.attr("disabled", "disabled");

@@ -819,8 +819,11 @@
 							},
 							{
 								"code": "PH",
-								"value": 313,
-								"name": "Philippines"
+								"value": 313
+							},
+							{
+								"code": "PH-LAG",
+								"value": 1000
 							},
 							{
 								"code": "PL",
@@ -1133,6 +1136,7 @@
 								"name": "Zimbabwe"
 							}
 						];
+						console.log(data.length);
 						$('#change_here_map').highcharts('Map', {
 							title: {
 								text: 'Exploration of space Lels'
@@ -1302,7 +1306,6 @@
 		<!-- <div class="notes">
 			<h5>Notes:</h5>
 			<span>Supervisor values: 1 for yes</span><br>
-			<span>Supervisor values: 1 to 6</span><br>
 			<span>0: < 20 000</span><br>
 			<span>1: 20 001 - 40 000</span><br>
 			<span>2: 40 001 - 60 000</span><br>

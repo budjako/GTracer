@@ -15,8 +15,9 @@
 		}
 
 		public function approve_company($company_no){
+			$companyname=$this->db->query("SELECT companyname from company where company_no=".$company_no);
 			$query=$this->db->query("DELETE from request where companyno=".$company_no);
-			return;
+			return $companyname->result_array()[0]['companyname'];
 		}
 	}
 ?>

@@ -83,7 +83,9 @@ class Controller_school_approval extends Controller_log {
 	}
 
 	public function school_approve($school_no){
-		$this->model_school_approval->approve_school($school_no);
+		$schoolname=$this->model_school_approval->approve_school($school_no);
+		$empno=$this->session->userdata('logged_in')['eno'];
+		$this->add_log($empno, "Approve school entry", "Employee ".$empno." approved the entry of school ".$schoolname.".");
 		return;
 	}
 

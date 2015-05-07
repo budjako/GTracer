@@ -15,8 +15,9 @@
 		}
 
 		public function approve_school($school_no){
+			$schoolname=$this->db->query("SELECT schoolname from school where school_no=".$school_no);
 			$query=$this->db->query("DELETE from request where schoolno=".$school_no);
-			return;
+			return $schoolname->result_array()[0]['schoolname'];
 		}
 	}
 ?>

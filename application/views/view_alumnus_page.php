@@ -110,8 +110,17 @@
 					echo "<span class='label'>Position:</span> <span class='value'>".$work->position."</span></br>";
 					echo "<span class='value'>".$work->workdatestart."-".$work->workdateend."</span></br>";
 					echo "<span class='label'>Company Name:</span> <span class='value'>".$work->companyname."</span></br>";
-					if($work->salary != null)
-						echo "<span class='label'>Salary:</span> <span class='value'>".$work->salary."</span></br>";
+					if($work->salary != null){
+						echo "<span class='label'>Salary:</span> <span class='value'>";
+						if($work->salary == 0) echo "< 20 000";
+						else if($work->salary == 1) echo "20 001 - 40 000";
+						else if($work->salary == 2) echo "40 001 - 60 000";
+						else if($work->salary == 3) echo "60 001 - 80 000";
+						else if($work->salary == 4) echo "80 001 - 100 000";
+						else if($work->salary == 5) echo "100 001 - 150 000";
+						else if($work->salary == 6) echo "> 150 001";
+						echo "</span></br>";
+					}
 					if($work->employmentstatus != null)
 						echo "<span class='label'>Employment Status:</span> <span class='value'>".$work->employmentstatus."</span></br>";
 					}

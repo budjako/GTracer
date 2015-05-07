@@ -63,19 +63,9 @@
 
 		public function add_log($empno, $activity, $actdetails){
 			// $time=$this->udate('Y-m-d H:i:s:u'); 
-			$sql="INSERT INTO `log` (`empno`, `activity`, `actdetails`, `time`) VALUES (".$this->db->escape($empno).", ".$this->db->escape($activity).", ".$this->db->escape($actdetails).", sysdate(3))";
+			$sql="INSERT INTO `log` (`empno`, `activity`, `actdetails`, `timeperformed`) VALUES (".$this->db->escape($empno).", ".$this->db->escape($activity).", ".$this->db->escape($actdetails).", sysdate(3))";
 			$query = $this->db->query($sql) or die(mysql_error());
 			return;
-		}
-
-		function udate($format, $utimestamp = null) {
-			if (is_null($utimestamp))
-				$utimestamp = microtime(true);
-
-			$timestamp = floor($utimestamp);
-			$milliseconds = round(($utimestamp - $timestamp) * 1000000);
-
-		  return date(preg_replace('`(?<!\\\\)u`', $milliseconds, $format), $timestamp);
 		}
 
 	}

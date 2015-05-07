@@ -89,7 +89,9 @@ class Controller_company_approval extends Controller_log {
 	}
 
 	public function company_approve($company_no){
-		$this->model_company_approval->approve_company($company_no);
+		$companyname=$this->model_company_approval->approve_company($company_no);
+		$empno=$this->session->userdata('logged_in')['eno'];
+		$this->add_log($empno, "Approve company entry", "Employee ".$empno." approved the entry of company ".$companyname.".");
 		return;
 	}
 
