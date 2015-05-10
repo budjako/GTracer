@@ -20,8 +20,8 @@
 			return $query->result_array();
 		}
 
-		public function get_data($sql, $order_by){
-			$query=$this->db->query($sql." order by ".$order_by) or die(mysqli_error());
+		public function get_data($sql){
+			$query=$this->db->query($sql) or die(mysqli_error());
 			// var_dump($query->result_array());
 			return $query->result_array();
 		}

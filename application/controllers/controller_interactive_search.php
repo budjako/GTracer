@@ -28,93 +28,60 @@ class Controller_interactive_search extends CI_Controller {
 		$count=0;
 
 		while ($i < $len){
-			// echo $i;
-			// echo strpos($str, "Val", $i);
 			if (strpos($str, "And", $i) === $i) {
-				// echo "AND OPERATION!<br>";
-				/*if($array==null) $array[]=array('And'=>null);
-				else */$array[]['And']=null;
-				// var_dump($array);
+				$array[]['And']=null;
 				$op='And';
 				$i+=3;
 				continue;
 			}
 			else if (strpos($str, "Or", $i) === $i) {
-				// echo "OR OPERATION!<br>";
-				/*if($array==null) $array[]=array('Or'=>null);
-				else */$array[]['Or']=null;					// add new item with or as value(another array)
-				// var_dump($array);
+				$array[]['Or']=null;					// add new item with or as value(another array)
+				
 				$op='Or';
 				$i+=2;
 				continue;
 			}
 			else if (strpos($str, "Val", $i) === $i) {
-				// echo "VALUE!asdfasdfasdfasdfasdf<br>";
-				// /*if($array==null) */$array[]['Value']=null;
-				// else $array=array('Value'=>null);
 				if($array==null) $array['Value']=null;
-				// var_dump($array);
 				$op='Value';
 				$i+=3;
 				continue;
 			}
 			else if ($str[$i] === '('){
-				// echo "START OPERATION!<br>";
-				// var_dump($array[$op]);
-				// echo "ETO: $op<br>";
-				// echo "===========<br>";
-				// var_dump($array);
-				// echo "===========<br>";
 				if($op == "Value") $i = $this->recursive_bracket_parser($str, $i+1, $array['Value']);
 				else{
-					// echo "PASS ETO: $op<br>";
 					if(array_key_exists('Value', $array)){
-						// var_dump($array[count($array)-2][$op]);
 						$i = $this->recursive_bracket_parser($str, $i+1, $array[count($array)-2][$op]);
-					
 					}
 					else{
-						// var_dump($array[count($array)-1][$op]);
 						$i = $this->recursive_bracket_parser($str, $i+1, $array[count($array)-1][$op]);
 					}
 				}
-				// echo "<br>ASSIGNING<br>     Given:<br>"; 
-				// echo $op."<br>";
-				// var_dump($array);
 			}
 			else if ($str[$i] == ')'){			// end token return to calling function
 				$i++;
-				// echo "END $op OPERATION!<br>";
-				// echo "TO BE RETURNEDDDD!!";
-				// if($tempstring == null) $retval = array('$i'=>$i, 'query' => $array);
-				// else $retval = array('$i'=>$i, 'query' => $tempstring);
-				// var_dump($retval);
 				if($tempstring != null){
 					if(!isset($array)) $array=array();
 					$array[]=$tempstring;
-					// var_dump($array);
 				}
 				return $i;
 			}
 			else{
 				if($str[$i] == ',' && $tempstring == ""){
-					// echo "Comma not value<br>";
 					$i++;
 					continue;
 				}
 				$tempstring.=$str[$i];
-				// echo $tempstring."<br>";
 				$i++;
 			}
 		}
 		return false;
-		// return array('$i'=>$i, $array);
 	}
 
 	function create_query($arr){
 		$tables=array();
 		$selected=array();
-		$sql="select ";
+		$sql="";
 		$condition=array();
 
 		$selct=0;
@@ -123,12 +90,8 @@ class Controller_interactive_search extends CI_Controller {
 		$company=0;
 		// var_dump($arr);
 
-		// while ($field=current($arr)) {					// $field as items in array: [0], [1], etc.
+		// $item as items in array: [0], [1], etc.
 		$fields=array_keys($arr);
-		// for($i=0; $i<count($fields); $i++){
-		// 	// var_dump($field);
-		// 	$item = $arr[$fields[$i]];
-		// 	echo "ITEEEEEEMMMMMM! <br>$item<br>";
 		foreach ($fields as $item){
 			// var_dump($item);
 			$details=$this->to_table_name($item);
@@ -150,12 +113,7 @@ class Controller_interactive_search extends CI_Controller {
 					$condition[]=$val[0];
 				}
 				else if($arr[$item][0]!=null){
-					/*if(array_key_exists('Value', $arr[$item][0])){
-						// var_dump($arr[$item][0]['Value']);
-						$val=$this->cond_value($arr[$item][$key]['Value'], $details);
-						$condition[]=$val[0];
-					}
-					else */if(array_key_exists('Or', $arr[$item][0])){
+					if(array_key_exists('Or', $arr[$item][0])){
 						// var_dump($arr[$item][0]['Or']);
 						$condition[]=$this->cond_or($arr[$item][0]['Or'], $details);
 
@@ -217,6 +175,12 @@ class Controller_interactive_search extends CI_Controller {
 		}
 		else{
 			echo "<br>Details unconstrained by an alumni.<br>";
+			if(count($condition)>0) $sql.=" where ";
+			for($i=0; $i<count($condition); $i++) {
+				if($i>0) $sql.=" and ";
+				// else $sql.=" where ";
+				$sql.=$condition[$i];
+			}
 		}
 		return $sql;
 	}
@@ -384,7 +348,7 @@ class Controller_interactive_search extends CI_Controller {
 		else return false;
 	}
 
-	public function query(){					// validate values 
+	public function query_table(){					// validate values 
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
@@ -392,11 +356,6 @@ class Controller_interactive_search extends CI_Controller {
 		$this->input->post('serialised_form');
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
-		ini_set('xdebug.var_display_max_depth', 10);
-		ini_set('xdebug.var_display_max_children', 256);
-		ini_set('xdebug.var_display_max_data', 1024);
-		
-
 		if($str == null){
 			echo "Empty query";
 			return;
@@ -424,25 +383,13 @@ class Controller_interactive_search extends CI_Controller {
 		}
 
 		// var_dump($arr);
-		$sql=$this->create_query($arr);
+		$sql="select ";
+		if(count($fields) == 1) $sql.="distinct ";
+		$sql.=$this->create_query($arr);
 		echo "<br>search for: $sql";
-		if($this->input->post('result-view') == "table") $this->query_table($sql);
-		if($this->input->post('result-view') == "chart") $this->query_chart($sql);
-		if($this->input->post('result-view') == "map") $this->query_map($sql);
-	}
+		// $sql="select distinct educationalbg.class, course from `educationalbg`";
 
-	public function query_chart($sql){
-		$data['result'] = $this->model_interactive_search->get_data($sql, "school.schoolname");
-
-	}
-
-	public function query_map($sql){
-		$data['result'] = $this->model_interactive_search->get_data($sql, "school.schoolname");
-
-	}
-
-	public function query_table($sql){
-		$config['base_url'] = base_url().'controller_interactive_search/query';
+		$config['base_url'] = base_url().'controller_interactive_search/query_table';
 		$config['total_rows'] = $config['total_rows'] = $this->model_interactive_search->get_data_count($sql);
 		$config['per_page'] = '20';
 		$config['div'] = '#change_here_table';
@@ -483,6 +430,66 @@ class Controller_interactive_search extends CI_Controller {
 		} 
 		echo "</table>";
 		echo $links;
-
 	}
+	
+	public function query_chart(){
+		// $data['result'] = $this->model_interactive_search->get_data($sql, "school.schoolname");
+		if($this->session->userdata('logged_in') == FALSE){
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
+		}
+		// echo "POST";
+		$this->input->post('serialised_form');
+		$str = addslashes($this->input->post('values')); 
+		// echo $str;
+		if($str == null){
+			echo "Empty query";
+			return;
+		}
+
+		// LEXICAL ANALYSIS
+		$graphingfactor="sex";
+		$fields=explode("&", $str);
+
+		$arr=array();
+		for($i=0; $i<count($fields); $i++) {
+			$temp=explode(":", $fields[$i]);
+			if(isset($temp[1])){
+				$arr[$temp[0]]=null;
+				$this->recursive_bracket_parser($temp[1], 0, $arr/*[count($arr)-1]*/[$temp[0]]);
+			}
+			else $arr[$temp[0]]=null;
+		}
+
+		if(! $arr){
+			// echo "<br><br>Invalid query.";
+			return;
+		}
+
+		$sql="select count(*) as `num`, ";
+		$sql.=$this->create_query($arr);
+		// echo "no group by sql: ".
+		$sql.=" group by ".$graphingfactor;
+		// echo "<br>search for: $sql";
+
+
+		$data['result'] = $this->model_interactive_search->get_data($sql);
+		// var_dump($data['result']);
+		$retval['categories']=array();
+		$retval['count']=array();
+		foreach($data['result'] as $result){
+			$retval['categories'][]=$result[$graphingfactor];
+			$retval['count'][]=$result['num'];
+		}
+
+		// var_dump($retval);
+		echo json_encode($retval);
+		// select graduate.student_no, graduate.firstname, graduate.sex, count(*) as `num` from `graduate` where student_no like "2011-%" group by `sex`
+		// get only graduate.sex and num from results
+	}
+
+
+	public function query_map($sql){
+		$data['result'] = $this->model_interactive_search->get_data($sql, "school.schoolname");
+	}
+
 }	
