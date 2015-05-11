@@ -10,7 +10,7 @@
 		<meta name="keywords" content="uplb, osa, uplbosa, gtracer, graduate" />
 		<meta name="author" content="OSA-COMMIT:CIA" />
 		<link rel="stylesheet" href="<?php echo base_url(); ?>mod/js/jquery-ui-1.11.3.custom/jquery-ui.css">
-		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>mod/css/all.css">
+  		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>mod/css/all.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>mod/css/dragdrop.css">
 		<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="<?php echo base_url(); ?>mod/img/favicon.ico" >
 		<script type="text/javascript" src="<?php echo base_url(); ?>mod/js/modernizr.custom.js"></script>
@@ -22,7 +22,9 @@
 		<script src="<?php echo base_url(); ?>mod/js/highcharts.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/highcharts-more.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/map.js"></script>
-		<script src="http://code.highcharts.com/mapdata/custom/world.js"></script>
+		<script src="<?php echo base_url(); ?>mod/js/modules/data.js"></script>
+		<script src="<?php echo base_url(); ?>mod/js/modules/drilldown.js"></script>
+		<script src="http://code.highcharts.com/mapdata/countries/us/us-all.js"></script>
 
 		<script type="text/javascript">
 			var base_url="<?php echo base_url()?>";

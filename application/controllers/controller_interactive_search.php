@@ -431,14 +431,14 @@ class Controller_interactive_search extends CI_Controller {
 		echo "</table>";
 		echo $links;
 	}
-	
+
 	public function query_chart(){
-		// $data['result'] = $this->model_interactive_search->get_data($sql, "school.schoolname");
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		// echo "POST";
 		$this->input->post('serialised_form');
+		// var_dump($this->input->post());
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		if($str == null){
@@ -447,7 +447,8 @@ class Controller_interactive_search extends CI_Controller {
 		}
 
 		// LEXICAL ANALYSIS
-		$graphingfactor="sex";
+		$graphingfactor=$this->to_table_name($this->input->post('chartgraphingfactor'));
+		$graphingfactor=$graphingfactor[1];		// index 0 is table name, 1 is field name
 		$fields=explode("&", $str);
 
 		$arr=array();
@@ -468,7 +469,7 @@ class Controller_interactive_search extends CI_Controller {
 		$sql="select count(*) as `num`, ";
 		$sql.=$this->create_query($arr);
 		// echo "no group by sql: ".
-		$sql.=" group by ".$graphingfactor;
+		$sql.=" group by `".$graphingfactor."`";
 		// echo "<br>search for: $sql";
 
 
@@ -476,6 +477,9 @@ class Controller_interactive_search extends CI_Controller {
 		// var_dump($data['result']);
 		$retval['categories']=array();
 		$retval['count']=array();
+		$retval['factor']=array($this->input->post('chartgraphingfactor'));
+		$retval['graphtype']=array($this->input->post('graphtype'));
+
 		foreach($data['result'] as $result){
 			$retval['categories'][]=$result[$graphingfactor];
 			$retval['count'][]=$result['num'];
@@ -483,13 +487,64 @@ class Controller_interactive_search extends CI_Controller {
 
 		// var_dump($retval);
 		echo json_encode($retval);
-		// select graduate.student_no, graduate.firstname, graduate.sex, count(*) as `num` from `graduate` where student_no like "2011-%" group by `sex`
-		// get only graduate.sex and num from results
 	}
 
 
-	public function query_map($sql){
-		$data['result'] = $this->model_interactive_search->get_data($sql, "school.schoolname");
+	public function query_map(){	// results on country level
+		if($this->session->userdata('logged_in') == FALSE){
+			redirect('controller_login', 'refresh');// redirect to controller_search_book
+		}
+		// echo "POST";
+		// $this->input->post('serialised_form');
+		// // var_dump($this->input->post());
+		// $str = addslashes($this->input->post('values')); 
+		// // echo $str;
+		// if($str == null){
+		// 	echo "Empty query";
+		// 	return;
+		// }
+
+		// // LEXICAL ANALYSIS
+		// $mapfactor=$this->to_table_name($this->input->post('mapfactor'));
+		// $mapfactor=$mapfactor[1];		// index 0 is table name, 1 is field name
+		// $fields=explode("&", $str);
+
+		// $arr=array();
+		// for($i=0; $i<count($fields); $i++) {
+		// 	$temp=explode(":", $fields[$i]);
+		// 	if(isset($temp[1])){
+		// 		$arr[$temp[0]]=null;
+		// 		$this->recursive_bracket_parser($temp[1], 0, $arr/*[count($arr)-1]*/[$temp[0]]);
+		// 	}
+		// 	else $arr[$temp[0]]=null;
+		// }
+
+		// if(! $arr){
+		// 	// echo "<br><br>Invalid query.";
+		// 	return;
+		// }
+
+		// $sql="select count(*) as `num`, ";
+		// $sql.=$this->create_query($arr);
+		// // echo "no group by sql: ".
+		// $sql.=" group by `".$mapfactor."`";
+		// // echo "<br>search for: $sql";
+
+
+		// $data['result'] = $this->model_interactive_search->get_data($sql);
+		// // var_dump($data['result']);
+		// $retval['categories']=array();
+		// $retval['count']=array();
+		// $retval['factor']=array($this->input->post('mapfactor'));
+		// $retval['graphtype']=array($this->input->post('graphtype'));
+
+		// foreach($data['result'] as $result){
+		// 	$retval['categories'][]=$result[$mapfactor];
+		// 	$retval['count'][]=$result['num'];
+		// }
+
+		// // var_dump($retval);
+		// echo json_encode($retval);
 	}
 
 }	

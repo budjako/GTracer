@@ -40,7 +40,7 @@
 					<div class="draggable original"><span class="lbl view">Sex</span></div>
 					<div class="draggable original"><span class="lbl nongraph view">Birth Date</span></div>
 					<div class="draggable original"><span class="lbl view">Email</span></div>
-					<div class="draggable original"><span class="lbl nongraphview">Mobile No</span></div>
+					<div class="draggable original"><span class="lbl nongraph view">Mobile No</span></div>
 					<div class="draggable original"><span class="lbl nongraph view">Tel No</span></div>
 				</fieldset>
 				<fieldset class="fieldcont educbg">
@@ -104,20 +104,26 @@
 
 			<fieldset class="query ui-droppable">
 				<legend>Query</legend>
-				<!-- <div class="draggable ui-draggable ui-draggable-handle clone" style="z-index: 5; top: 0px; left: 0px; clear: both;">Student Number<span class="caret" data-toggle="dropdown"></span> <span class="rem">X</span></div>
-				<div class="draggable ui-draggable ui-draggable-handle clone" style="z-index: 5; top: 0px; left: 0px; clear: both;">First Name<span class="caret" data-toggle="dropdown"></span> <span class="rem">X</span></div>
-				<div class="draggable ui-draggable ui-draggable-handle clone" style="z-index: 5; top: 0px; left: 0px; clear: both;">Last Name<span class="caret" data-toggle="dropdown"></span> <span class="rem">X</span></div> -->
-				
-				<!-- <div class="draggable ui-draggable ui-draggable-handle ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
+				<div class="draggable ui-draggable ui-draggable-handle ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
 					<span class="rem opt">X</span>				
 					<span class="caret opt" data-toggle="dropdown"></span>
-					<span class="lbl view dropdown-toggle" data-toggle="dropdown">Student Number</span>
+					<span class="lbl nongraph view dropdown-toggle" data-toggle="dropdown">Student Number</span>
 					<ul class="dropdown-menu">					
 						<li class="dropdown-item single"><a>Single Constraint</a></li>
 						<li class="dropdown-item and"><a>Multiple Constraints (And)</a></li>					
 						<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>				
 					</ul>
-				</div> -->
+				</div>
+				<div class="draggable ui-draggable ui-draggable-handle ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
+					<span class="rem opt">X</span>				
+					<span class="caret opt" data-toggle="dropdown"></span>
+					<span class="lbl view dropdown-toggle" data-toggle="dropdown">Sex</span>
+					<ul class="dropdown-menu">					
+						<li class="dropdown-item single"><a>Single Constraint</a></li>
+						<li class="dropdown-item and"><a>Multiple Constraints (And)</a></li>					
+						<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>				
+					</ul>
+				</div>
 			</fieldset>
 		</div>
 	</div>
