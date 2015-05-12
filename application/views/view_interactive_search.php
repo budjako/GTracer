@@ -33,15 +33,15 @@
 				<legend>Fields</legend>
 				<fieldset class="fieldcont">
 					<legend>Basic Info</legend>
-					<div class="draggable basicinfo original ui-draggable ui-draggable-handle ui-draggable-disabled" style="z-index: 2; background: rgb(221, 221, 221);"><span class="lbl nongraph view">Student Number</span></div>
-					<div class="draggable basicinfo original"><span class="lbl view">First Name</span></div>
-					<div class="draggable basicinfo original"><span class="lbl view">Last Name</span></div>
-					<div class="draggable basicinfo original"><span class="lbl view">Middle Name</span></div>
-					<div class="draggable basicinfo original ui-draggable ui-draggable-handle ui-draggable-disabled" style="z-index: 2; background: rgb(221, 221, 221);"><span class="lbl view">Sex</span></div>
-					<div class="draggable basicinfo original"><span class="lbl nongraph view">Birth Date</span></div>
-					<div class="draggable basicinfo original"><span class="lbl view">Email</span></div>
-					<div class="draggable basicinfo original"><span class="lbl nongraph view">Mobile No</span></div>
-					<div class="draggable basicinfo original"><span class="lbl nongraph view">Tel No</span></div>
+					<div class="draggable graduate original"><span class="lbl nongraph view">Student Number</span></div>
+					<div class="draggable graduate original"><span class="lbl view">First Name</span></div>
+					<div class="draggable graduate original"><span class="lbl view">Last Name</span></div>
+					<div class="draggable graduate original"><span class="lbl view">Middle Name</span></div>
+					<div class="draggable graduate original"><span class="lbl view">Sex</span></div>
+					<div class="draggable graduate original"><span class="lbl nongraph view">Birth Date</span></div>
+					<div class="draggable graduate original"><span class="lbl view">Email</span></div>
+					<div class="draggable graduate original"><span class="lbl nongraph view">Mobile No</span></div>
+					<div class="draggable graduate original"><span class="lbl nongraph view">Tel No</span></div>
 				</fieldset>
 				<fieldset class="fieldcont">
 					<legend>Educational Background</legend>
@@ -99,7 +99,7 @@
 
 			<fieldset class="query ui-droppable">
 				<legend>Query</legend>
-				<div class="draggable ui-draggable ui-draggable-handle ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
+				<!-- <div class="draggable graduate ui-draggable ui-draggable-handle includedField ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
 					<span class="rem opt">X</span>				
 					<span class="caret opt" data-toggle="dropdown"></span>
 					<span class="lbl nongraph view dropdown-toggle" data-toggle="dropdown">Student Number</span>
@@ -109,7 +109,7 @@
 						<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>				
 					</ul>
 				</div>
-				<div class="draggable ui-draggable ui-draggable-handle ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
+				<div class="draggable graduate ui-draggable ui-draggable-handle includedField ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
 					<span class="rem opt">X</span>				
 					<span class="caret opt" data-toggle="dropdown"></span>
 					<span class="lbl view dropdown-toggle" data-toggle="dropdown">Sex</span>
@@ -118,7 +118,7 @@
 						<li class="dropdown-item and"><a>Multiple Constraints (And)</a></li>					
 						<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>				
 					</ul>
-				</div>
+				</div> -->
 			</fieldset>
 		</div>
 	</div>

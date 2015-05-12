@@ -541,13 +541,55 @@ $(function() {
 	}
 
 	function disableUnrelatedFields(){
+		var classTabs=['graduate', 'educbg', 'works', 'projects', 'publications', 'awards', 'grant', 'others'];
 		var drags=$(".query").children(".draggable");
+		var included=new Array();
 		// from children of query, identify which groups are possible to include.
 
-		// $(ui.draggable).css("background", "#ddd");
-		// $(ui.draggable).draggable("disable");
-		
+		for(var i=0; i<drags.length; i++){
+			var classification=-1;
+			possible=$(drags[i]).attr('class').split(' ');
 
+			for(var j=0; j<possible.length; j++){
+				if($.inArray(possible[j], classTabs) > -1){
+					if($.inArray(possible[j], included) < 0)
+						included.push(possible[j]);
+					break;
+				}
+			}
+		}
+
+		if($.inArray("graduate", included) < 0){
+			// Note: graduate field is always possible 	
+			for(var j=1; j<classTabs.length; j++){
+				if(classTabs[j] != included[0]){
+					$("."+classTabs[j]).css("background", "#ddd");
+					$("."+classTabs[j]).draggable("disable");
+				}
+			}
+		}
+		else{
+			console.log("OUR SAVIOR HAS ARRIVED!");
+			// enable all other fields except those who have a class of includedField
+			var original = $(".original");
+			for(var j=1; j<original.length; j++){
+				if(! $(original[j]).hasClass('includedField')){
+					$(original[j]).css("background", "");
+					$(original[j]).draggable({
+						helper: 'clone',
+						revert: true,
+						revertDuration: 0,
+						drag: function(event, ui) {
+							$(this).css('z-index', 5);
+						},
+						stop: function(event, ui){
+							$(this).css('z-index', 2);
+						}
+					});
+					$(original[j]).draggable("enable");
+				}
+			}
+		}
 	}
 
 	$(".draggable").draggable({
@@ -593,7 +635,6 @@ $(function() {
 			var options=$(str);
 			secparent.prepend(mod);
 			secparent.append(options);
-			console.log(secparent.children('.lbl'));
 			secparent.children('.lbl').addClass("dropdown-toggle");
 			secparent.children('.lbl').attr("data-toggle", "dropdown");
 		}
