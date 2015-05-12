@@ -1,6 +1,8 @@
 	$(document).ready(function() {
 		$(".submit-query").click(function get_data(event) {
 			event.preventDefault();
+			$('#chartspecs').html("");
+			$('#mapspecs').html("");
 
 			if($(".query").children(".draggable").length < 1){
 				alert("No query!");
@@ -54,14 +56,22 @@
 					alert("No query!");
 					return;
 				}
-
-				var str="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required' checked='checked'><label for='curadd'>Current Address</label></input><br>\
-					<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>\
-					<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>\
-				";
+				var str="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input><br>";
+				var drags=$('.query').children('.draggable');
+				for(var i=0; i<drags.length; i++){
+					console.log($(drags[i]));
+					if($(drags[i]).hasClass('sadd')){
+						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>";
+						else str+="<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>";
+					}
+					else if($(drags[i]).hasClass('cadd')){
+						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>";
+						else str+="<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>";
+					}
+				}
 				options=$(str);
-				$("#chartspecs").append("Select mapping factor:<br>");
-				$("#chartspecs").append(options);
+				$("#mapspecs").append("Select mapping factor:<br>");
+				$("#mapspecs").append(options);
 			}
 		});
 	});
@@ -79,142 +89,181 @@
 			// dataType: 'json',
 
 			success: function(result) {
-				console.log("success");
-				var data = Highcharts.geojson(Highcharts.maps['countries/us/us-all']),
-					// Some responsiveness
-					small = $('#container').width() < 400;
-				console.log(data);
-				// Set drilldown pointers
-				$.each(data, function (i) {
-					// this.drilldown = this.properties['hc-key'];
-					this.value = i; // Non-random bogus data
-				});
-				console.log(data);
+				// console.log(result);
+				$('#change_here_map').html(result);
+				// console.log(Highcharts);
+				// var data = Highcharts.geojson(Highcharts.maps['custom/world']),         // points to be refered to when setting series
+				// 	// Some responsiveness
+				// 	small = $('#container').width() < 400;
 
-				// Instanciate the map
-				$('#change_here_map').highcharts('Map', {
-					chart : {
-						events: {
-							drilldown: function (e) {
-								console.log(e.point.drilldown);
-								if (!e.seriesOptions) {
-									var chart = this,
-										mapKey = 'countries/us/' + e.point.drilldown + '-all',
-										// Handle error, the timeout is cleared on success
-										fail = setTimeout(function () {
-											if (!Highcharts.maps[mapKey]) {
-												chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
-
-												fail = setTimeout(function () {
-													chart.hideLoading();
-												}, 1000);
-											}
-										}, 3000);
-
-									// Show the spinner
-									chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
-
-									// Load the drilldown map
-									$.getScript('http://code.highcharts.com/mapdata/' + mapKey + '.js', function () {
-
-										data = Highcharts.geojson(Highcharts.maps[mapKey]);
-
-										// Set a non-random bogus value
-										$.each(data, function (i) {
-											this.value = i;
-										});
-
-										// Hide loading and add series
-										chart.hideLoading();
-										clearTimeout(fail);
-										chart.addSeriesAsDrilldown(e.point, {
-											name: e.point.name,
-											data: data,
-											dataLabels: {
-												enabled: true,
-												format: '{point.name}'
-											}
-										});
-									});
-								}
+				// console.log(data);
+				// // Set drilldown pointers
+				// $.each(data, function (i) {
+				// 	this.drilldown = this.properties['hc-key'];    
+				// 	this.key= this.properties['hc-key'],                     			// link to drilldown map
+				// 	this.value = i;                                                     // Non-random bogus data    
+				// });
+				// console.log(data);
 
 
-								this.setTitle(null, { text: e.point.name });
-							},
-							drillup: function () {
-								this.setTitle(null, { text: 'USA' });
-							}
-						}
-					},
+				// if ($("#container").highcharts()) {
+				// 	$("#container").highcharts().showLoading('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+				// }
 
-					title : {
-						text : 'Highcharts Map Drilldown'
-					},
+				// // Instantiate the map
+				// function mapReady(){
+				// 	$('#container').highcharts('Map', {
+				// 		chart : {
+				// 			events: {
+				// 				drilldown: function (e) {
+				// 					console.log(e);
+				// 					var key = e.point.key;
 
-					subtitle: {
-						text: 'USA',
-						floating: true,
-						align: 'right',
-						y: 50,
-						style: {
-							fontSize: '16px'
-						}
-					},
+				// 					console.log("mapKey: "+'countries/' + e.point.drilldown + '/' + key + '-all');
+				// 					if (!e.seriesOptions) {
+				// 						var chart = this,
+				// 							mapKey = 'countries/' + e.point.drilldown + '/' + key + '-all',
+				// 							// Handle error, the timeout is cleared on success
+				// 							// fail = setTimeout(function () {
+				// 							// 	if (!Highcharts.maps[mapKey]) {
+				// 							// 		chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
 
-					legend: small ? {} : {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'middle'
-					},
+				// 							// 		fail = setTimeout(function () {
+				// 							// 			chart.hideLoading();
+				// 							// 		}, 1000);
+				// 							// 	} else {
+				// 							// 		$.getScript(javascriptPath, mapReady);
+				// 							// 	}
+				// 							// }, 3000);
+	
+				// 							if ($("#container").highcharts()) {
+				// 								$("#container").highcharts().showLoading('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+				// 							}
+				// 							if (Highcharts.maps[mapKey]) {
+				// 								console.log("Map Ready!");
+				// 								mapReady();
+				// 							} else {
+				// 								console.log("Get Script again!");
+				// 								$.getScript(javascriptPath, mapReady);
+				// 							}
+				// 						// Show the spinner
+				// 						// chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
 
-					colorAxis: {
-						min: 0,
-						minColor: '#E6E7E8',
-						maxColor: '#005645'
-					},
+				// 						// Load the drilldown map
+				// 						console.log(key);
+				// 						console.log(mapKey);
+				// 						$.getScript('http://code.highcharts.com/mapdata/' + mapKey + '.js', function () {
 
-					mapNavigation: {
-						enabled: true,
-						buttonOptions: {
-							verticalAlign: 'bottom'
-						}
-					},
+				// 							data = Highcharts.geojson(Highcharts.maps[mapKey]);
 
-					plotOptions: {
-						map: {
-							states: {
-								hover: {
-									color: '#EEDD66'
-								}
-							}
-						}
-					},
+				// 							// Set a non-random bogus value
+				// 							$.each(data, function (i) {
+				// 								this.drilldown = this.properties['hc-key'];    
+				// 								this.key= this.properties['hc-key'],                     			// link to drilldown map
+				// 								this.value = i;
+				// 							});
+				// 							console.log("new drilldown set");
+				// 							console.log(data);
 
-					series : [{
-						data : data,
-						name: 'USA',
-						dataLabels: {
-							enabled: true,
-							format: '{point.properties.postal-code}'
-						}
-					}],
+				// 							// Hide loading and add series
+				// 							chart.hideLoading();
+				// 							clearTimeout(fail);
+				// 							chart.addSeriesAsDrilldown(e.point, {
+				// 								name: e.point.name,
+				// 								data: data,
+				// 								dataLabels: {
+				// 									enabled: true,
+				// 									format: '{point.name}'
+				// 								}
+				// 							});
+				// 						});
+				// 					}
 
-					drilldown: {
-						//series: drilldownSeries,
-						activeDataLabelStyle: {
-							color: '#FFFFFF',
-							textDecoration: 'none',
-							textShadow: '0 0 3px #000000'
-						},
-						drillUpButton: {
-							relativeTo: 'spacingBox',
-							position: {
-								x: 0,
-								y: 60
-							}
-						}
-					}
-				});
+
+				// 					this.setTitle(null, { text: e.point.name });
+				// 				},
+				// 				drillup: function () {
+				// 					this.setTitle(null, { text: 'USA' });
+				// 				}
+				// 			}
+				// 		},
+
+				// 		title : {
+				// 			text : 'Highcharts Map Drilldown'
+				// 		},
+
+				// 		subtitle: {
+				// 			text: 'World',
+				// 			floating: true,
+				// 			align: 'right',
+				// 			y: 50,
+				// 			style: {
+				// 				fontSize: '16px'
+				// 			}
+				// 		},
+
+				// 		legend: small ? {} : {
+				// 			layout: 'vertical',
+				// 			align: 'right',
+				// 			verticalAlign: 'middle'
+				// 		},
+
+				// 		colorAxis: {
+				// 			min: 0,
+				// 			minColor: '#E6E7E8',
+				// 			maxColor: '#005645'
+				// 		},
+
+				// 		mapNavigation: {
+				// 			enabled: true,
+				// 			buttonOptions: {
+				// 				verticalAlign: 'bottom'
+				// 			}
+				// 		},
+
+				// 		plotOptions: {
+				// 			map: {
+				// 				states: {
+				// 					hover: {
+				// 						color: '#EEDD66'
+				// 					}
+				// 				}
+				// 			}
+				// 		},
+
+				// 		series : [{
+				// 			data : data,
+				// 			name: 'USA',
+				// 			dataLabels: {
+				// 				enabled: true,
+				// 				format: '{point.properties.postal-code}'
+				// 			}
+				// 		}],
+
+				// 		drilldown: {
+				// 			//series: drilldownSeries,
+				// 			activeDataLabelStyle: {
+				// 				color: '#FFFFFF',
+				// 				textDecoration: 'none',
+				// 				textShadow: '0 0 3px #000000'
+				// 			},
+				// 			drillUpButton: {
+				// 				relativeTo: 'spacingBox',
+				// 				position: {
+				// 					x: 0,
+				// 					y: 60
+				// 				}
+				// 			}
+				// 		}
+				// 	});
+				// }
+				// if (Highcharts.maps[mapKey]) {
+				// 	console.log("Map Ready!");
+				// 	mapReady();
+				// } else {
+				// 	console.log("Get Script again!");
+				// 	$.getScript(javascriptPath, mapReady);
+				// }
 			},
 			error: function(err){
 				$("#change_here_map").html(err);

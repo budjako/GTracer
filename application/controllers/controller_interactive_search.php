@@ -78,7 +78,7 @@ class Controller_interactive_search extends CI_Controller {
 		return false;
 	}
 
-	function create_query($arr){
+	function create_query($arr, $mapfactor=null){
 		$tables=array();
 		$selected=array();
 		$sql="";
@@ -130,6 +130,25 @@ class Controller_interactive_search extends CI_Controller {
 		$sql.=" from ";									// include in from all tables involved
 		$count2=0;
 		$tabcount=count($tables);
+
+		if($mapfactor != null){
+			if($mapfactor == "curadd"){
+				if(! in_array("graduate", $tables)){
+					$tables[]="graduate";
+				}
+			}
+			else if($mapfactor == "cadd"){
+				if(! in_array("company", $tables)){
+					$tables[]="company";
+				}
+			}
+			else if($mapfactor == "sadd"){
+				if(! in_array("school", $tables)){
+					$tables[]="school";
+				}
+			}
+		}
+
 		for($count2=0; $count2<$tabcount; $count2++){
 			if($count2>0) $sql.=", ";
 			if($tables[$count2] == "work") $company=2;
@@ -298,9 +317,9 @@ class Controller_interactive_search extends CI_Controller {
 		// echo $str."<br>";
 		$graduate=array("Student Number" => "student_no", "First Name" => "firstname", "Last Name" => "lastname", "Middle Name" => "midname", "Sex" => "sex", "Birth Date" => "bdate", "Email" => "email", "Mobile No" => "mobileno", "Tel No" => "telno");
 		$educationalbg=array("Year Level" => "level", "Batch" => "batch", "Class" => "class", "Course" => "course");
-		$school=array("School Name" => "schoolname", "School Address" => "schooladdress");
+		$school=array("School Name" => "schoolname");
 		$work=array("Position" => "position", "Salary" => "salary", "Supervisor" => "supervisor", "Employment Status" => "employmentstatus", "Employment Start Date" => "workdatestart", "Employment End Date" => "workdateend");
-		$company=array("Company Name" => "companyname", "Company Address" => "companyaddress");
+		$company=array("Company Name" => "companyname");
 		$project=array("Project Title" => "project_title", "Project Description" => "projectdesc", "Project Start Date" => "projectdatestart", "Project End Date" => "projectdateend");
 		$publication=array("Publication Title" => "publicationtitle", "Publication Date" => "publicationdate", "Publication Description" => "publicationdesc", "Publisher" => "publicationbody", "Peers" => "publicationpeers");
 		$awards=array("Award Title" => "awardtitle", "Awarding Body" => "awardbody", "Awarding Date" => "awarddategiven");
@@ -494,45 +513,54 @@ class Controller_interactive_search extends CI_Controller {
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
-		// echo "POST";
-		// $this->input->post('serialised_form');
-		// // var_dump($this->input->post());
-		// $str = addslashes($this->input->post('values')); 
+		var_dump($this->input->post());
+		$str = addslashes($this->input->post('values')); 
 		// // echo $str;
-		// if($str == null){
-		// 	echo "Empty query";
-		// 	return;
-		// }
+		if($str == null){
+			echo "Empty query";
+			return;
+		}
 
 		// // LEXICAL ANALYSIS
-		// $mapfactor=$this->to_table_name($this->input->post('mapfactor'));
-		// $mapfactor=$mapfactor[1];		// index 0 is table name, 1 is field name
-		// $fields=explode("&", $str);
+		$mapfactor=$this->input->post('mapfactor');
+		$fields=explode("&", $str);
 
-		// $arr=array();
-		// for($i=0; $i<count($fields); $i++) {
-		// 	$temp=explode(":", $fields[$i]);
-		// 	if(isset($temp[1])){
-		// 		$arr[$temp[0]]=null;
-		// 		$this->recursive_bracket_parser($temp[1], 0, $arr/*[count($arr)-1]*/[$temp[0]]);
-		// 	}
-		// 	else $arr[$temp[0]]=null;
-		// }
+		$arr=array();
+		for($i=0; $i<count($fields); $i++) {
+			$temp=explode(":", $fields[$i]);
+			if(isset($temp[1])){
+				$arr[$temp[0]]=null;
+				$this->recursive_bracket_parser($temp[1], 0, $arr/*[count($arr)-1]*/[$temp[0]]);
+			}
+			else $arr[$temp[0]]=null;
+		}
 
-		// if(! $arr){
-		// 	// echo "<br><br>Invalid query.";
-		// 	return;
-		// }
+		if(! $arr){
+			echo "<br><br>Invalid query.";
+			return;
+		}
 
-		// $sql="select count(*) as `num`, ";
-		// $sql.=$this->create_query($arr);
-		// // echo "no group by sql: ".
-		// $sql.=" group by `".$mapfactor."`";
-		// // echo "<br>search for: $sql";
+		$sql="select count(*) as `num`, ";
+		if($mapfactor == "curadd"){
+			$sql.="graduate.curaddcountry, graduate.curaddcountrycode, graduate.curaddregion, graduate.curaddregioncode, graduate.curaddprovince, graduate.curaddprovincecode, ";
+		}
+		else if($mapfactor == "cadd"){
+			$sql.="company.caddcountry, company.caddcountrycode, company.caddregion, company.caddregioncode, company.caddprovince, company.caddprovincecode, ";
+		}
+		else if($mapfactor == "sadd"){
+			$sql.="school.saddcountry, school.saddcountrycode, school.saddregion, school.saddregioncode, school.saddprovince, school.saddprovincecode, ";
+		}
+		$sql.=$this->create_query($arr, $mapfactor);
+		// echo "no group by sql: ".
+		// concatenate where in sql
+		if($mapfactor == "curadd") $sql.=" group by graduate.curaddcountry, graduate.curaddcountrycode, graduate.curaddregion, graduate.curaddregioncode, graduate.curaddprovince, graduate.curaddprovincecode";
+		else if($mapfactor == "cadd") $sql.=" group by company.caddcountry, company.caddcountrycode, company.caddregion, company.caddregioncode, company.caddprovince, company.caddprovincecode";
+		else if($mapfactor == "sadd") $sql.=" group by school.saddcountry, school.saddcountrycode, school.saddregion, school.saddregioncode, school.saddprovince, school.saddprovincecode";
+		echo "<br>search for: $sql";
 
 
-		// $data['result'] = $this->model_interactive_search->get_data($sql);
-		// // var_dump($data['result']);
+		$data['result'] = $this->model_interactive_search->get_data($sql);
+		var_dump($data['result']);
 		// $retval['categories']=array();
 		// $retval['count']=array();
 		// $retval['factor']=array($this->input->post('mapfactor'));
