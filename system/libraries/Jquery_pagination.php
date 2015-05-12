@@ -260,8 +260,8 @@ class Jquery_pagination{
 			if( $this->div == '')
 				return '<a href="'. $this->anchor_class . ' ' . $this->base_url . $count . '">'. $text .'</a>';
 				
-			if( $this->additional_param != '' )
-				$this->additional_param = "{'t' : 't'}";
+			// if( $this->additional_param != '' )
+			// 	$this->additional_param = "{'t' : 't'}";
 
 			$retval = "<a href=\"#\" onclick=\"$.post('". $this->base_url . $count ."', ";
 			if( $this->additional_param != '' ) $retval.=$this->additional_param .", ";

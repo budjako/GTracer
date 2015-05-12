@@ -130,7 +130,9 @@ class Controller_interactive_search extends CI_Controller {
 		$sql.=" from ";									// include in from all tables involved
 		$count2=0;
 		$tabcount=count($tables);
-
+		if(! in_array("graduate", $tables)){
+			$sql="distinct ".$sql;
+		}
 		if($mapfactor != null){
 			if($mapfactor == "curadd"){
 				if(! in_array("graduate", $tables)){
@@ -372,6 +374,7 @@ class Controller_interactive_search extends CI_Controller {
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		// echo "POST";
+		// var_dump($this->input->post());
 		$this->input->post('serialised_form');
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
@@ -405,6 +408,10 @@ class Controller_interactive_search extends CI_Controller {
 		$sql="select ";
 		if(count($fields) == 1) $sql.="distinct ";
 		$sql.=$this->create_query($arr);
+		$sort_by=$this->to_table_name($this->input->post('sort_by'));
+		$sort_by=$sort_by[1];
+		$order_by=$this->input->post('order_by');
+		$sql.=" order by ".$sort_by." ".$order_by;
 		echo "<br>search for: $sql";
 		// $sql="select distinct educationalbg.class, course from `educationalbg`";
 
@@ -513,7 +520,7 @@ class Controller_interactive_search extends CI_Controller {
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
-		var_dump($this->input->post());
+		// var_dump($this->input->post());
 		$str = addslashes($this->input->post('values')); 
 		// // echo $str;
 		if($str == null){
