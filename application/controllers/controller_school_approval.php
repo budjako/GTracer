@@ -60,18 +60,16 @@ class Controller_school_approval extends Controller_log {
 		echo $links;
 		echo "<table class='table table-hover table-bordered' >";
 		echo "<th>Name</th>";
-		echo "<th>Address</th>";
-		echo "<th>View/Edit</th>";		// view -> edit values 
+		echo "<th>Country</th>";
+		echo "<th>Region</th>";
+		echo "<th>Province</th>";
 		echo "<th>Approve</th>";
 		foreach ($result as $row){
 			echo "<tr id='".$row['school_no']."' class='clickable-row' data-href='".base_url()."controller_single/index/school_".$row['school_no']."'><td>".$row['schoolname']."</td>";
-			echo "<td>".$row['schooladdress']."</td>";
+			echo "<td>".$row['saddcountry']."</td>";
+			echo "<td>".$row['saddregion']."</td>";
+			echo "<td>".$row['saddprovince']."</td>";
 			echo "<td>";
-			echo "<form method='POST' class='".$row['school_no']."'>";
-			echo "<input type='button' class='view btn btn-default'";
-			echo "value='View/Edit Info'>";
-			echo "</form>";
-			echo "</td><td>";
 			echo "<form method='POST' class='".$row['school_no']."'>";
 			echo "<input type='button' class='approve btn btn-default'";
 			echo "value='Approve'>";

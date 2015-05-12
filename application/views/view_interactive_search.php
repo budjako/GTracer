@@ -31,69 +31,69 @@
 		<div class="dragdrop">
 			<fieldset class="fields">
 				<legend>Fields</legend>
-				<fieldset class="fieldcont basicinfo">
+				<fieldset class="fieldcont">
 					<legend>Basic Info</legend>
-					<div class="draggable original ui-draggable ui-draggable-handle ui-draggable-disabled" style="z-index: 2; background: rgb(221, 221, 221);"><span class="lbl nongraph view">Student Number</span></div>
-					<div class="draggable original"><span class="lbl view">First Name</span></div>
-					<div class="draggable original"><span class="lbl view">Last Name</span></div>
-					<div class="draggable original"><span class="lbl view">Middle Name</span></div>
-					<div class="draggable original ui-draggable ui-draggable-handle ui-draggable-disabled" style="z-index: 2; background: rgb(221, 221, 221);"><span class="lbl view">Sex</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Birth Date</span></div>
-					<div class="draggable original"><span class="lbl view">Email</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Mobile No</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Tel No</span></div>
+					<div class="draggable basicinfo original ui-draggable ui-draggable-handle ui-draggable-disabled" style="z-index: 2; background: rgb(221, 221, 221);"><span class="lbl nongraph view">Student Number</span></div>
+					<div class="draggable basicinfo original"><span class="lbl view">First Name</span></div>
+					<div class="draggable basicinfo original"><span class="lbl view">Last Name</span></div>
+					<div class="draggable basicinfo original"><span class="lbl view">Middle Name</span></div>
+					<div class="draggable basicinfo original ui-draggable ui-draggable-handle ui-draggable-disabled" style="z-index: 2; background: rgb(221, 221, 221);"><span class="lbl view">Sex</span></div>
+					<div class="draggable basicinfo original"><span class="lbl nongraph view">Birth Date</span></div>
+					<div class="draggable basicinfo original"><span class="lbl view">Email</span></div>
+					<div class="draggable basicinfo original"><span class="lbl nongraph view">Mobile No</span></div>
+					<div class="draggable basicinfo original"><span class="lbl nongraph view">Tel No</span></div>
 				</fieldset>
-				<fieldset class="fieldcont educbg">
+				<fieldset class="fieldcont">
 					<legend>Educational Background</legend>
-					<div class="draggable original"><span class="lbl view">Year Level</span></div>
-					<div class="draggable original"><span class="lbl view">Batch</span></div>
-					<div class="draggable original"><span class="lbl view">Class</span></div>
-					<div class="draggable original sadd"><span class="lbl view">Course</span></div>
-					<div class="draggable original sadd"><span class="lbl view">School Name</span></div>
+					<div class="draggable educbg original"><span class="lbl view">Level</span></div>
+					<div class="draggable educbg original"><span class="lbl view">Batch</span></div>
+					<div class="draggable educbg original"><span class="lbl view">Class</span></div>
+					<div class="draggable educbg original sadd"><span class="lbl view">Course</span></div>
+					<div class="draggable educbg original sadd"><span class="lbl view">School Name</span></div>
 				</fieldset>
-				<fieldset class="fieldcont works">
+				<fieldset class="fieldcont">
 					<legend>Work</legend>
-					<div class="draggable original cadd"><span class="lbl view">Position</span></div>
-					<div class="draggable original cadd"><span class="lbl view">Salary</span></div>
-					<div class="draggable original cadd"><span class="lbl view">Supervisor</span></div>
-					<div class="draggable original cadd"><span class="lbl view">Employment Status</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Employment Start Date</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Employment End Date</span></div>
-					<div class="draggable original cadd"><span class="lbl view">Company Name</span></div>
+					<div class="draggable works original cadd"><span class="lbl view">Position</span></div>
+					<div class="draggable works original cadd"><span class="lbl view">Salary</span></div>
+					<div class="draggable works original cadd"><span class="lbl view">Supervisor</span></div>
+					<div class="draggable works original cadd"><span class="lbl view">Employment Status</span></div>
+					<div class="draggable works original"><span class="lbl nongraph view">Employment Start Date</span></div>
+					<div class="draggable works original"><span class="lbl nongraph view">Employment End Date</span></div>
+					<div class="draggable works original cadd"><span class="lbl view">Company Name</span></div>
 				</fieldset>
-				<fieldset class="fieldcont projects">
+				<fieldset class="fieldcont">
 					<legend>Projects</legend>
-					<div class="draggable original"><span class="lbl nongraph view">Project Title</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Project Description</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Project Start Date</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Project End Date</span></div>
+					<div class="draggable projects original"><span class="lbl nongraph view">Project Title</span></div>
+					<div class="draggable projects original"><span class="lbl nongraph view">Project Description</span></div>
+					<div class="draggable projects original"><span class="lbl nongraph view">Project Start Date</span></div>
+					<div class="draggable projects original"><span class="lbl nongraph view">Project End Date</span></div>
 				</fieldset>
-				<fieldset class="fieldcont publications">
+				<fieldset class="fieldcont">
 					<legend>Publications</legend>
-					<div class="draggable original"><span class="lbl nongraph view">Publication Title</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Publication Date</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Publication Description</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Publisher</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Peers</span></div>
+					<div class="draggable publications original"><span class="lbl nongraph view">Publication Title</span></div>
+					<div class="draggable publications original"><span class="lbl nongraph view">Publication Date</span></div>
+					<div class="draggable publications original"><span class="lbl nongraph view">Publication Description</span></div>
+					<div class="draggable publications original"><span class="lbl nongraph view">Publisher</span></div>
+					<div class="draggable publications original"><span class="lbl nongraph view">Peers</span></div>
 				</fieldset>
-				<fieldset class="fieldcont awards">
+				<fieldset class="fieldcont">
 					<legend>Awards</legend>
-					<div class="draggable original"><span class="lbl nongraph view">Award Title</span></div>
-					<div class="draggable original"><span class="lbl view">Awarding Body</span></div>
-					<div class="draggable original"><span class="lbl nongraph view">Awarding Date</span></div>
+					<div class="draggable awards original"><span class="lbl nongraph view">Award Title</span></div>
+					<div class="draggable awards original"><span class="lbl view">Awarding Body</span></div>
+					<div class="draggable awards original"><span class="lbl nongraph view">Awarding Date</span></div>
 				</fieldset>
-				<fieldset class="fieldcont grant">
+				<fieldset class="fieldcont">
 					<legend>Grants</legend>
-					<div class="draggable original"><span class="lbl view">Grant Name</span></div>
-					<div class="draggable original"><span class="lbl view">Grant Awarding Body</span></div>
-					<div class="draggable original"><span class="lbl view">Grant Type</span></div>
-					<div class="draggable original"><span class="lbl view">Grant Effective Year</span></div>
+					<div class="draggable grant original"><span class="lbl view">Grant Name</span></div>
+					<div class="draggable grant original"><span class="lbl view">Grant Awarding Body</span></div>
+					<div class="draggable grant original"><span class="lbl view">Grant Type</span></div>
+					<div class="draggable grant original"><span class="lbl view">Grant Effective Year</span></div>
 				</fieldset>
-				<fieldset class="fieldcont others">
+				<fieldset class="fieldcont">
 					<legend>Others</legend>
-					<div class="draggable original"><span class="lbl view">Ability</span></div>
-					<div class="draggable original"><span class="lbl view">Association</span></div>
-					<div class="draggable original"><span class="lbl view">Language</span></div>
+					<div class="draggable others original"><span class="lbl view">Ability</span></div>
+					<div class="draggable others original"><span class="lbl view">Association</span></div>
+					<div class="draggable others original"><span class="lbl view">Language</span></div>
 				</fieldset>
 			</fieldset>
 

@@ -59,13 +59,16 @@ class Controller_company_approval extends Controller_log {
 		echo $links;
 		echo "<table class='table table-hover table-bordered' >";
 		echo "<th>Name</th>";
-		echo "<th>Address</th>";
+		echo "<th>Country</th>";
+		echo "<th>Region</th>";
+		echo "<th>Province</th>";
 		echo "<th>Type</th>";
-		echo "<th>View/Edit</th>";		// view -> edit values 
 		echo "<th>Approve</th>";
 		foreach ($result as $row){
 			echo "<tr id='".$row['company_no']."' class='clickable-row' data-href='".base_url()."controller_single/index/company_".$row['company_no']."'><td>".$row['companyname']."</td>";
-			echo "<td>".$row['companyaddress']."</td>";
+			echo "<td>".$row['caddcountry']."</td>";
+			echo "<td>".$row['caddregion']."</td>";
+			echo "<td>".$row['caddprovince']."</td>";
 			echo "<td>";
 				if($row['companytype'] == 0){
 					echo "Private/Self-Employed";
@@ -73,11 +76,6 @@ class Controller_company_approval extends Controller_log {
 				else echo "Government";
 			echo "</td>";
 			echo "<td>";
-			echo "<form method='POST' class='".$row['company_no']."'>";
-			echo "<input type='button' class=' btn btn-default'";
-			echo "value='View/Edit Info'>";
-			echo "</form>";
-			echo "</td><td>";
 			echo "<form method='POST' class='".$row['company_no']."'>";
 			echo "<input type='button' class='approve btn btn-default'";
 			echo "value='Approve'>";

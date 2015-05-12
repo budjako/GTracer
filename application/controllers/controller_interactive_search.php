@@ -316,7 +316,7 @@ class Controller_interactive_search extends CI_Controller {
 	function to_table_name($str){
 		// echo $str."<br>";
 		$graduate=array("Student Number" => "student_no", "First Name" => "firstname", "Last Name" => "lastname", "Middle Name" => "midname", "Sex" => "sex", "Birth Date" => "bdate", "Email" => "email", "Mobile No" => "mobileno", "Tel No" => "telno");
-		$educationalbg=array("Year Level" => "level", "Batch" => "batch", "Class" => "class", "Course" => "course");
+		$educationalbg=array("Level" => "level", "Batch" => "batch", "Class" => "class", "Course" => "course");
 		$school=array("School Name" => "schoolname");
 		$work=array("Position" => "position", "Salary" => "salary", "Supervisor" => "supervisor", "Employment Status" => "employmentstatus", "Employment Start Date" => "workdatestart", "Employment End Date" => "workdateend");
 		$company=array("Company Name" => "companyname");
@@ -343,7 +343,7 @@ class Controller_interactive_search extends CI_Controller {
 	function to_standard_name($str){
 		// echo $str."<br>";
 		$graduate=array( "student_no" => "Student Number",  "firstname" => "First Name",  "lastname" => "Last Name",  "midname" => "Middle Name",  "sex" => "Sex",  "bdate" => "Birth Date",  "email" => "Email",  "mobileno" => "Mobile No",  "telno" => "Tel No");
-		$educationalbg=array( "level" => "Year Level",  "batch" => "Batch",  "class" => "Class",  "course" => "Course");
+		$educationalbg=array( "level" => "Level",  "batch" => "Batch",  "class" => "Class",  "course" => "Course");
 		$school=array( "schoolname" => "School Name",  "schooladdress" => "School Address");
 		$work=array( "position" => "Position",  "salary" => "Salary",  "supervisor" => "Supervisor",  "employmentstatus" => "Employment Status",  "workdatestart" => "Employment Start Date",  "workdateend" => "Employment End Date");
 		$company=array( "companyname" => "Company Name",  "companyaddress" => "Company Address");
