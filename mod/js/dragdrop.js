@@ -1,8 +1,12 @@
 $(document).ready(function() {
 	$(".submit-query").click(function get_data(event) {
 		event.preventDefault();
+		$("#tablespecs").html("");
+		$("#change_here_table").html("");
 		$('#chartspecs').html("");
+		$("#change_here_chart").html("");
 		$('#mapspecs').html("");
+		$("#change_here_map").html("");
 
 		if($(".query").children(".draggable").length < 1){
 			alert("No query!");
@@ -85,9 +89,12 @@ $(document).ready(function() {
 
 function serialize_form()
 {
-	console.log("serialize interactivesearch");
 	return $("#interactivesearch").serialize();
 }
+
+$(document).on("change","input:radio[name ='result-view']", function(){
+	$("#tablespecs").html("");
+});
 
 $(document).on("change","#sort_by", function(){
 	$.ajax({
@@ -120,6 +127,7 @@ $(document).on("change","input:radio[name='order_by']", function(){
 });
 
 $(document).on("change","input:radio[name ='result-view']", function(){
+	$('#chartspecs').html("");
 	$('#chartspecs').html("");
 	$('#mapspecs').html("");
 });
@@ -408,11 +416,6 @@ $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 		}
 	});
 });
-
-function serialize_form()
-{
-	return $("#interactivesearch").serialize();
-}
 
 function getValues(){											// getting the query
 	if(! validateValues()) return false;
