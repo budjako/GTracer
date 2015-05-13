@@ -143,179 +143,167 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 		success: function(result) {
 			// console.log(result);
 			$('#change_here_map').html(result);
-			// console.log(Highcharts);
-			// var data = Highcharts.geojson(Highcharts.maps['custom/world']),         // points to be refered to when setting series
-			// 	// Some responsiveness
-			// 	small = $('#container').width() < 400;
+
+			console.log(Highcharts);
+			var mappath=new Array();
+			var mapCount=0;
+			$.each(Highcharts.mapDataIndex, function (mapGroup, maps) {
+		        if (mapGroup !== "version") {
+		            // mapOptions += '<option class="option-header">' + mapGroup + '</option>';
+		            $.each(maps, function (desc, path) {
+		                mappath.push(path);
+		                mapCount += 1;
+		            });
+		        }
+		    });
+			console.log(mappath);
+
+			var data = Highcharts.geojson(Highcharts.maps['custom/world']),         // points to be refered to when setting series
+				// Some responsiveness
+				small = $('#change_here_map').width() < 400;
 
 			// console.log(data);
-			// // Set drilldown pointers
-			// $.each(data, function (i) {
-			// 	this.drilldown = this.properties['hc-key'];    
-			// 	this.key= this.properties['hc-key'],                     			// link to drilldown map
-			// 	this.value = i;                                                     // Non-random bogus data    
-			// });
-			// console.log(data);
+			// Set drilldown pointers
+			$.each(data, function (i) {
+				this.drilldown = this.properties['hc-key'];    
+				this.key= this.properties['hc-key'],                     			// link to drilldown map
+				this.value = i;                                                     // Non-random bogus data    
+			});
+			console.log(data);
 
+			// Instantiate the map
+			$('#change_here_map').highcharts('Map', {
+				chart : {
+						events: {
+							drilldown: function (e) {
+								console.log(e);
+								var key = e.point.key;
+								var country;
+								if(typeof e.point.parentcountry !== 'undefined') country=e.point.parentcountry;
+								else country=e.point.key;
 
-			// if ($("#container").highcharts()) {
-			// 	$("#container").highcharts().showLoading('<i class="fa fa-spinner fa-spin fa-2x"></i>');
-			// }
+								console.log("mapKey: "+'countries/' + country + '/' + key + '-all');	// for countries only 
+								if (!e.seriesOptions) {
+									var chart = this,
+										mapKey = 'countries/' + country + '/' + key + '-all',			// for countries only
+										// Handle error, the timeout is cleared on success
+										fail = setTimeout(function () {
+											if (!Highcharts.maps[mapKey]) {
+												chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
 
-			// // Instantiate the map
-			// function mapReady(){
-			// 	$('#container').highcharts('Map', {
-			// 		chart : {
-			// 			events: {
-			// 				drilldown: function (e) {
-			// 					console.log(e);
-			// 					var key = e.point.key;
+												fail = setTimeout(function () {
+													chart.hideLoading();
+												}, 1000);
+											}
+										}, 3000);
 
-			// 					console.log("mapKey: "+'countries/' + e.point.drilldown + '/' + key + '-all');
-			// 					if (!e.seriesOptions) {
-			// 						var chart = this,
-			// 							mapKey = 'countries/' + e.point.drilldown + '/' + key + '-all',
-			// 							// Handle error, the timeout is cleared on success
-			// 							// fail = setTimeout(function () {
-			// 							// 	if (!Highcharts.maps[mapKey]) {
-			// 							// 		chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
+									// Show the spinner
+									chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
 
-			// 							// 		fail = setTimeout(function () {
-			// 							// 			chart.hideLoading();
-			// 							// 		}, 1000);
-			// 							// 	} else {
-			// 							// 		$.getScript(javascriptPath, mapReady);
-			// 							// 	}
-			// 							// }, 3000);
+									// Load the drilldown map
+									$.getScript('http://code.highcharts.com/mapdata/' + mapKey + '.js', function () {
+										data = Highcharts.geojson(Highcharts.maps[mapKey]);
 
-			// 							if ($("#container").highcharts()) {
-			// 								$("#container").highcharts().showLoading('<i class="fa fa-spinner fa-spin fa-2x"></i>');
-			// 							}
-			// 							if (Highcharts.maps[mapKey]) {
-			// 								console.log("Map Ready!");
-			// 								mapReady();
-			// 							} else {
-			// 								console.log("Get Script again!");
-			// 								$.getScript(javascriptPath, mapReady);
-			// 							}
-			// 						// Show the spinner
-			// 						// chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
+										// Set a non-random bogus value
+										$.each(data, function (i) {
+											var temppath = 'countries/' + country + '/' + this.properties['hc-key'] + '-all.js'; 
+											if($.inArray(temppath, mappath) > -1){
+												this.drilldown = this.properties['hc-key'];    
+											}
+											this.key= this.properties['hc-key'],                     			// link to drilldown map
+											this.value = i;
+											this.parentcountry=country;
+										});
+										console.log("new drilldown set");
+										console.log(data);
 
-			// 						// Load the drilldown map
-			// 						console.log(key);
-			// 						console.log(mapKey);
-			// 						$.getScript('http://code.highcharts.com/mapdata/' + mapKey + '.js', function () {
+										// Hide loading and add series
+										chart.hideLoading();
+										clearTimeout(fail);
+										chart.addSeriesAsDrilldown(e.point, {
+											name: e.point.name,
+											data: data,
+											dataLabels: {
+												enabled: true,
+												format: '{point.name}'
+											}
+										});
+									})
+								}
 
-			// 							data = Highcharts.geojson(Highcharts.maps[mapKey]);
+								this.setTitle(null, { text: e.point.name });
+							}
+						}
+					},
 
-			// 							// Set a non-random bogus value
-			// 							$.each(data, function (i) {
-			// 								this.drilldown = this.properties['hc-key'];    
-			// 								this.key= this.properties['hc-key'],                     			// link to drilldown map
-			// 								this.value = i;
-			// 							});
-			// 							console.log("new drilldown set");
-			// 							console.log(data);
+					title : {
+						text : 'Query Mapped Results'
+					},
 
-			// 							// Hide loading and add series
-			// 							chart.hideLoading();
-			// 							clearTimeout(fail);
-			// 							chart.addSeriesAsDrilldown(e.point, {
-			// 								name: e.point.name,
-			// 								data: data,
-			// 								dataLabels: {
-			// 									enabled: true,
-			// 									format: '{point.name}'
-			// 								}
-			// 							});
-			// 						});
-			// 					}
+					// subtitle: {
+					// 	text: 'World',
+					// 	floating: true,
+					// 	align: 'right',
+					// 	y: 50,
+					// 	style: {
+					// 		fontSize: '16px'
+					// 	}
+					// },
 
+					legend: small ? {} : {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'middle'
+					},
 
-			// 					this.setTitle(null, { text: e.point.name });
-			// 				},
-			// 				drillup: function () {
-			// 					this.setTitle(null, { text: 'USA' });
-			// 				}
-			// 			}
-			// 		},
+					colorAxis: {
+						min: 0,
+	                    stops: [
+	                        [0, '#EFEFFF'],
+	                        [0.5, Highcharts.getOptions().colors[0]],
+	                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).brighten(-0.5).get()]
+	                    ]
+					},
 
-			// 		title : {
-			// 			text : 'Highcharts Map Drilldown'
-			// 		},
+					mapNavigation: {
+						enabled: true,
+						buttonOptions: {
+							verticalAlign: 'bottom'
+						}
+					},
 
-			// 		subtitle: {
-			// 			text: 'World',
-			// 			floating: true,
-			// 			align: 'right',
-			// 			y: 50,
-			// 			style: {
-			// 				fontSize: '16px'
-			// 			}
-			// 		},
+					plotOptions: {
+						map: {
+							states: {
+								hover: {
+									color: '#EEDD66'
+								}
+							}
+						}
+					},
 
-			// 		legend: small ? {} : {
-			// 			layout: 'vertical',
-			// 			align: 'right',
-			// 			verticalAlign: 'middle'
-			// 		},
+					series : [{
+						data : data,
+						name: 'World',
+						dataLabels: {
+							enabled: true,
+							format: '{point.name}'
+						}
+					}],
 
-			// 		colorAxis: {
-			// 			min: 0,
-			// 			minColor: '#E6E7E8',
-			// 			maxColor: '#005645'
-			// 		},
-
-			// 		mapNavigation: {
-			// 			enabled: true,
-			// 			buttonOptions: {
-			// 				verticalAlign: 'bottom'
-			// 			}
-			// 		},
-
-			// 		plotOptions: {
-			// 			map: {
-			// 				states: {
-			// 					hover: {
-			// 						color: '#EEDD66'
-			// 					}
-			// 				}
-			// 			}
-			// 		},
-
-			// 		series : [{
-			// 			data : data,
-			// 			name: 'USA',
-			// 			dataLabels: {
-			// 				enabled: true,
-			// 				format: '{point.properties.postal-code}'
-			// 			}
-			// 		}],
-
-			// 		drilldown: {
-			// 			//series: drilldownSeries,
-			// 			activeDataLabelStyle: {
-			// 				color: '#FFFFFF',
-			// 				textDecoration: 'none',
-			// 				textShadow: '0 0 3px #000000'
-			// 			},
-			// 			drillUpButton: {
-			// 				relativeTo: 'spacingBox',
-			// 				position: {
-			// 					x: 0,
-			// 					y: 60
-			// 				}
-			// 			}
-			// 		}
-			// 	});
-			// }
-			// if (Highcharts.maps[mapKey]) {
-			// 	console.log("Map Ready!");
-			// 	mapReady();
-			// } else {
-			// 	console.log("Get Script again!");
-			// 	$.getScript(javascriptPath, mapReady);
-			// }
+					drilldown: {
+						activeDataLabelStyle: {
+							textDecoration: 'none'
+						},
+						drillUpButton: {
+							relativeTo: 'spacingBox',
+							position: {
+								x: 0,
+								y: 60
+							}
+						}
+					}
+			});
 		},
 		error: function(err){
 			$("#change_here_map").html(err);
