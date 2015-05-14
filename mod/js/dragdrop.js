@@ -22,7 +22,7 @@ $(document).ready(function() {
 
 			var str="<span>Sort by \
 					<select id = 'sort_by' name ='sort_by'>";
-			console.log(str);
+			// console.log(str);
 			var drags=$(".query").children(".draggable");
 			for(i=0; i<drags.length; i++){
 				dragval=$(drags[i]).children('.lbl').text();
@@ -34,7 +34,7 @@ $(document).ready(function() {
 					<input type='radio' id='order_by_desc' value='desc' name='order_by'><label for='order_by_desc'>Descending</label></input> \
 				</span>";
 
-			console.log(str);
+			// console.log(str);
 			var options=$(str);
 			$("#tablespecs").append(options);
 		}
@@ -138,15 +138,30 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 		url: base_url + "controller_interactive_search/query_map",
 		type: 'POST',
 		data: serialize_form(),
-		// dataType: 'json',
+		dataType: 'json',
 
 		success: function(result) {
-			// console.log(result);
 			$('#change_here_map').html(result);
+			var items=$.parseJSON(JSON.stringify(result));
+			
 
-			console.log(Highcharts);
+			var queryres=items['result'];
+			var countryvalues=items['country'];
+			var provincevalues=items['province'];
 			var mappath=new Array();
 			var mapCount=0;
+
+			function getQueryValue(countryname){
+				if(countryvalues[countryname]) return countryvalues[countryname];
+				else return 0;
+			}
+
+			function getProvinceValue(provincename){
+				if(provincevalues[provincename]) return provincevalues[provincename];
+				else return 0;
+			}
+
+
 			$.each(Highcharts.mapDataIndex, function (mapGroup, maps) {
 		        if (mapGroup !== "version") {
 		            // mapOptions += '<option class="option-header">' + mapGroup + '</option>';
@@ -156,157 +171,145 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 		            });
 		        }
 		    });
-			console.log(mappath);
 
 			var data = Highcharts.geojson(Highcharts.maps['custom/world']),         // points to be refered to when setting series
-				// Some responsiveness
-				small = $('#change_here_map').width() < 400;
+			// Some responsiveness
+			small = $('#change_here_map').width() < 400;
 
 			// console.log(data);
 			// Set drilldown pointers
 			$.each(data, function (i) {
 				this.drilldown = this.properties['hc-key'];    
 				this.key= this.properties['hc-key'],                     			// link to drilldown map
-				this.value = i;                                                     // Non-random bogus data    
+				this.value = getQueryValue(this.name);                                                     // Non-random bogus data    
 			});
-			console.log(data);
 
 			// Instantiate the map
 			$('#change_here_map').highcharts('Map', {
 				chart : {
-						events: {
-							drilldown: function (e) {
-								console.log(e);
-								var key = e.point.key;
-								var country;
-								if(typeof e.point.parentcountry !== 'undefined') country=e.point.parentcountry;
-								else country=e.point.key;
+					events: {
+						drilldown: function (e) {
+							console.log(e);
+							var key = e.point.key;
+							var country;
+							if(typeof e.point.parentcountry !== 'undefined') country=e.point.parentcountry;
+							else country=e.point.key;
 
-								console.log("mapKey: "+'countries/' + country + '/' + key + '-all');	// for countries only 
-								if (!e.seriesOptions) {
-									var chart = this,
-										mapKey = 'countries/' + country + '/' + key + '-all',			// for countries only
-										// Handle error, the timeout is cleared on success
-										fail = setTimeout(function () {
-											if (!Highcharts.maps[mapKey]) {
-												chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
+							console.log("mapKey: "+'countries/' + country + '/' + key + '-all');	// for countries only 
+							if (!e.seriesOptions) {
+								var chart = this,
+									mapKey = 'countries/' + country + '/' + key + '-all',			// for countries only
+									// Handle error, the timeout is cleared on success
+									fail = setTimeout(function () {
+										if (!Highcharts.maps[mapKey]) {
+											chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
 
-												fail = setTimeout(function () {
-													chart.hideLoading();
-												}, 1000);
-											}
-										}, 3000);
+											fail = setTimeout(function () {
+												chart.hideLoading();
+											}, 1000);
+										}
+									}, 3000);
 
-									// Show the spinner
-									chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
+								// Show the spinner
+								chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
 
-									// Load the drilldown map
-									$.getScript('http://code.highcharts.com/mapdata/' + mapKey + '.js', function () {
-										data = Highcharts.geojson(Highcharts.maps[mapKey]);
+								// Load the drilldown map
+								$.getScript('http://code.highcharts.com/mapdata/' + mapKey + '.js', function () {
+									data = Highcharts.geojson(Highcharts.maps[mapKey]);
 
-										// Set a non-random bogus value
-										$.each(data, function (i) {
-											var temppath = 'countries/' + country + '/' + this.properties['hc-key'] + '-all.js'; 
-											if($.inArray(temppath, mappath) > -1){
-												this.drilldown = this.properties['hc-key'];    
-											}
-											this.key= this.properties['hc-key'],                     			// link to drilldown map
-											this.value = i;
-											this.parentcountry=country;
-										});
-										console.log("new drilldown set");
-										console.log(data);
+									// Set a non-random bogus value
+									$.each(data, function (i) {
+										// var temppath = 'countries/' + country + '/' + this.properties['hc-key'] + '-all.js'; 
+										// if($.inArray(temppath, mappath) > -1){
+										// 	this.drilldown = this.properties['hc-key'];    
+										// }
+										this.key= this.properties['hc-key'],                     			// link to drilldown map
+										this.value = getProvinceValue(this.name);
+										this.parentcountry=country;
+									});
+									console.log("new drilldown set");
+									console.log(data);
 
-										// Hide loading and add series
-										chart.hideLoading();
-										clearTimeout(fail);
-										chart.addSeriesAsDrilldown(e.point, {
-											name: e.point.name,
-											data: data,
-											dataLabels: {
-												enabled: true,
-												format: '{point.name}'
-											}
-										});
-									})
-								}
-
-								this.setTitle(null, { text: e.point.name });
+									// Hide loading and add series
+									chart.hideLoading();
+									clearTimeout(fail);
+									chart.addSeriesAsDrilldown(e.point, {
+										name: e.point.name,
+										data: data,
+										dataLabels: {
+											enabled: true,
+											format: '{point.name}'
+										}
+									});
+								})
 							}
+
+							this.setTitle(null, { text: e.point.name });
 						}
-					},
+					}
+				},
 
-					title : {
-						text : 'Query Mapped Results'
-					},
+				title : {
+					text : 'Query Mapped Results'
+				},
 
-					// subtitle: {
-					// 	text: 'World',
-					// 	floating: true,
-					// 	align: 'right',
-					// 	y: 50,
-					// 	style: {
-					// 		fontSize: '16px'
-					// 	}
-					// },
+				legend: small ? {} : {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
 
-					legend: small ? {} : {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'middle'
-					},
+				colorAxis: {
+					min: 0,
+                    stops: [
+                        [0, '#EFEFFF'],
+                        [0.5, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).brighten(-0.5).get()]
+                    ]
+				},
 
-					colorAxis: {
-						min: 0,
-	                    stops: [
-	                        [0, '#EFEFFF'],
-	                        [0.5, Highcharts.getOptions().colors[0]],
-	                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).brighten(-0.5).get()]
-	                    ]
-					},
+				mapNavigation: {
+					enabled: true,
+					buttonOptions: {
+						verticalAlign: 'bottom'
+					}
+				},
 
-					mapNavigation: {
-						enabled: true,
-						buttonOptions: {
-							verticalAlign: 'bottom'
-						}
-					},
-
-					plotOptions: {
-						map: {
-							states: {
-								hover: {
-									color: '#EEDD66'
-								}
-							}
-						}
-					},
-
-					series : [{
-						data : data,
-						name: 'World',
-						dataLabels: {
-							enabled: true,
-							format: '{point.name}'
-						}
-					}],
-
-					drilldown: {
-						activeDataLabelStyle: {
-							textDecoration: 'none'
-						},
-						drillUpButton: {
-							relativeTo: 'spacingBox',
-							position: {
-								x: 0,
-								y: 60
+				plotOptions: {
+					map: {
+						states: {
+							hover: {
+								color: '#EEDD66'
 							}
 						}
 					}
+				},
+
+				series : [{
+					data : data,
+					name: 'World',
+					dataLabels: {
+						enabled: true,
+						format: '{point.name}'
+					}
+				}],
+
+				drilldown: {
+					activeDataLabelStyle: {
+						textDecoration: 'none'
+					},
+					drillUpButton: {
+						relativeTo: 'spacingBox',
+						position: {
+							x: 0,
+							y: 60
+						}
+					}
+				}
 			});
 		},
 		error: function(err){
-			$("#change_here_map").html(err);
+			$("#change_here_map").html("may error "+err);
 		}
 	});
 });
@@ -429,7 +432,7 @@ function getValues(){											// getting the query
 		}
 	}
 	$("#values").val(querystring);
-	console.log(querystring);
+	// console.log(querystring);
 	return true;
 }
 
@@ -437,10 +440,10 @@ function operationValues(op, operator){									// within and and or operations 
 	var querystring="";
 	var item=$(op);
 	var j=0;
-	console.log("OPERATION VALUES!!!");
-	console.log("operator: "+operator);
-	console.log("operationValues: ");
-	console.log(item);
+	// console.log("OPERATION VALUES!!!");
+	// console.log("operator: "+operator);
+	// console.log("operationValues: ");
+	// console.log(item);
 	if(item.children('.compare').length + item.children('.op').length < 2){
 		alert("For operations, supply at least two possible values (value/operation)");
 		return false;
@@ -452,23 +455,23 @@ function operationValues(op, operator){									// within and and or operations 
 			if(i>0) querystring+=",";
 			querystring+="Val("+item.children('.compare')[i].value+","+item.children('.value')[i].value+")";
 		}
-		console.log("Compare: "+querystring);
+		// console.log("Compare: "+querystring);
 	}
 	if(item.children('.op').length > 0){
-		console.log("Parent: ");
-		console.log(item);
+		// console.log("Parent: ");
+		// console.log(item);
 		var childop=item.children('.op');
-		console.log("Children: ");
-		console.log(childop);
-		console.log(childop.length);
+		// console.log("Children: ");
+		// console.log(childop);
+		// console.log(childop.length);
 		if(childop.length > 0){	
 			var val=new Array();
 			for (var l=0; l<childop.length; l++) {
-				console.log("children of l: "+l);
-				console.log(childop[l]);
+				// console.log("children of l: "+l);
+				// console.log(childop[l]);
 				val.push(operationValues(childop[l], childop.children('.operator')[0].innerText));
 			}
-			console.log(val);
+			// console.log(val);
 
 			for(var l=0; l<val.length; l++){
 				if(i>0 || j==1) querystring+=",";
@@ -597,7 +600,7 @@ $(function() {
 		if($.inArray("graduate", included) < 0){
 			// Note: graduate field is always possible 	
 			for(var j=1; j<classTabs.length; j++){
-				if(classTabs[j] != included[0]){
+				if(classTabs[j] != included[0] || classTabs[j] == "others"){
 					$("."+classTabs[j]).css("background", "#ddd");
 					$("."+classTabs[j]).draggable("disable");
 				}

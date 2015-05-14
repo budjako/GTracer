@@ -524,7 +524,7 @@ class Controller_interactive_search extends CI_Controller {
 		$str = addslashes($this->input->post('values')); 
 		// // echo $str;
 		if($str == null){
-			echo "Empty query";
+			// echo "Empty query";
 			return;
 		}
 
@@ -543,43 +543,53 @@ class Controller_interactive_search extends CI_Controller {
 		}
 
 		if(! $arr){
-			echo "<br><br>Invalid query.";
+			// echo "<br><br>Invalid query.";
 			return;
 		}
 
 		$sql="select count(*) as `num`, ";
 		if($mapfactor == "curadd"){
-			$sql.="graduate.curaddcountry, graduate.curaddcountrycode, graduate.curaddregion, graduate.curaddregioncode, graduate.curaddprovince, graduate.curaddprovincecode, ";
+			$sql.="graduate.curaddcountry as country, graduate.curaddcountrycode as countrycode, graduate.curaddregion as region, graduate.curaddregioncode as regioncode, graduate.curaddprovince as province, graduate.curaddprovincecode as provincecode, ";
 		}
 		else if($mapfactor == "cadd"){
-			$sql.="company.caddcountry, company.caddcountrycode, company.caddregion, company.caddregioncode, company.caddprovince, company.caddprovincecode, ";
+			$sql.="company.caddcountry as country, company.caddcountrycode as countrycode, company.caddregion as region, company.caddregioncode as regioncode, company.caddprovince as province, company.caddprovincecode as provincecode, ";
 		}
 		else if($mapfactor == "sadd"){
-			$sql.="school.saddcountry, school.saddcountrycode, school.saddregion, school.saddregioncode, school.saddprovince, school.saddprovincecode, ";
+			$sql.="school.saddcountry as country, school.saddcountrycode as countrycode, school.saddregion as region, school.saddregioncode as regioncode, school.saddprovince as province, school.saddprovincecode as provincecode, ";
 		}
 		$sql.=$this->create_query($arr, $mapfactor);
 		// echo "no group by sql: ".
 		// concatenate where in sql
-		if($mapfactor == "curadd") $sql.=" group by graduate.curaddcountry, graduate.curaddcountrycode, graduate.curaddregion, graduate.curaddregioncode, graduate.curaddprovince, graduate.curaddprovincecode";
-		else if($mapfactor == "cadd") $sql.=" group by company.caddcountry, company.caddcountrycode, company.caddregion, company.caddregioncode, company.caddprovince, company.caddprovincecode";
-		else if($mapfactor == "sadd") $sql.=" group by school.saddcountry, school.saddcountrycode, school.saddregion, school.saddregioncode, school.saddprovince, school.saddprovincecode";
-		echo "<br>search for: $sql";
+		// if($mapfactor == "curadd") $sql.=" group by graduate.curaddcountry, graduate.curaddcountrycode, graduate.curaddregion, graduate.curaddregioncode, graduate.curaddprovince, graduate.curaddprovincecode";
+		// else if($mapfactor == "cadd") $sql.=" group by company.caddcountry, company.caddcountrycode, company.caddregion, company.caddregioncode, company.caddprovince, company.caddprovincecode";
+		// else if($mapfactor == "sadd") $sql.=" group by school.saddcountry, school.saddcountrycode, school.saddregion, school.saddregioncode, school.saddprovince, school.saddprovincecode";
+		// echo "<br>search for: $sql";
+		$sql.=" group by country, countrycode, region, regioncode, province, provincecode";
 
-
+		// echo $sql;
 		$data['result'] = $this->model_interactive_search->get_data($sql);
-		var_dump($data['result']);
-		// $retval['categories']=array();
-		// $retval['count']=array();
-		// $retval['factor']=array($this->input->post('mapfactor'));
-		// $retval['graphtype']=array($this->input->post('graphtype'));
+		// var_dump($data['result']);	// return a country level json
+		$data['country']=array();
+		$data['region']=array();
+		$data['province']=array();
 
-		// foreach($data['result'] as $result){
-		// 	$retval['categories'][]=$result[$mapfactor];
-		// 	$retval['count'][]=$result['num'];
-		// }
-
-		// // var_dump($retval);
-		// echo json_encode($retval);
+		foreach ($data['result'] as $item) {
+			if(isset($data['country'][$item['country']])){
+				$data['country'][$item['country']]+=$item['num'];
+			}
+			else{
+				$data['country'][$item['country']]=$item['num'];
+			}
+		}
+		foreach ($data['result'] as $item) {
+			if(isset($data['province'][$item['province']])){
+				$data['province'][$item['province']]+=$item['num'];
+			}
+			else{
+				$data['province'][$item['province']]=$item['num'];
+			}
+		}
+		echo json_encode($data);
 	}
 
 }	
