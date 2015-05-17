@@ -171,7 +171,7 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 		            });
 		        }
 		    });
-
+		    $('#change_here_map').css("height", "800px");
 			var data = Highcharts.geojson(Highcharts.maps['custom/world']),         // points to be refered to when setting series
 			// Some responsiveness
 			small = $('#change_here_map').width() < 400;
@@ -440,10 +440,6 @@ function operationValues(op, operator){									// within and and or operations 
 	var querystring="";
 	var item=$(op);
 	var j=0;
-	// console.log("OPERATION VALUES!!!");
-	// console.log("operator: "+operator);
-	// console.log("operationValues: ");
-	// console.log(item);
 	if(item.children('.compare').length + item.children('.op').length < 2){
 		alert("For operations, supply at least two possible values (value/operation)");
 		return false;
@@ -455,23 +451,14 @@ function operationValues(op, operator){									// within and and or operations 
 			if(i>0) querystring+=",";
 			querystring+="Val("+item.children('.compare')[i].value+","+item.children('.value')[i].value+")";
 		}
-		// console.log("Compare: "+querystring);
 	}
 	if(item.children('.op').length > 0){
-		// console.log("Parent: ");
-		// console.log(item);
 		var childop=item.children('.op');
-		// console.log("Children: ");
-		// console.log(childop);
-		// console.log(childop.length);
 		if(childop.length > 0){	
 			var val=new Array();
 			for (var l=0; l<childop.length; l++) {
-				// console.log("children of l: "+l);
-				// console.log(childop[l]);
 				val.push(operationValues(childop[l], childop.children('.operator')[0].innerText));
 			}
-			// console.log(val);
 
 			for(var l=0; l<val.length; l++){
 				if(i>0 || j==1) querystring+=",";
@@ -491,9 +478,7 @@ function validateValues(){
 	for(var i=0; i<children.length; i++){
 		var child=$(children[i]);
 		var querystring=child.children('.view')[0].innerText;
-		// console.log(querystring);
-		// console.log(querystring.match(/^[A-Za-z0-9_\- ]*$/));
-		if(! querystring.match(/^[A-Za-z0-9_\-\s]*$/)){
+		if(! querystring.match(/^[A-Za-z0-9_\-\sñÑ]*$/)){
 			alert("Fix Values Query!");
 			return false;
 		}
@@ -503,16 +488,12 @@ function validateValues(){
 			var value=child.find('.value');
 			for(var j=0; j<comparelength; j++){
 				comparestring=compare[j].value;
-				// console.log(comparestring);
-				// console.log(comparestring.match(/^[A-Za-z0-9_\- ]*$/));
 				if(! comparestring.match(/^[A-Za-z0-9_\-\s]*$/)){
 					alert("Fix Values Compare!");
 					return false;
 				}
 				valuestring=value[j].value;
-				// console.log(valuestring);
-				// console.log(valuestring.match(/^[A-Za-z0-9_\- @\.%]*$/));
-				if(! valuestring.match(/^[A-Za-z0-9_\-\s@\.%]*$/)){
+				if(! valuestring.match(/^[A-Za-z0-9_\-\s@\.%ñÑ]*$/)){
 					alert("Fix Values Value!");
 					return false;
 				}
@@ -600,14 +581,44 @@ $(function() {
 		if($.inArray("graduate", included) < 0){
 			// Note: graduate field is always possible 	
 			for(var j=1; j<classTabs.length; j++){
-				if(classTabs[j] != included[0] || classTabs[j] == "others"){
-					$("."+classTabs[j]).css("background", "#ddd");
-					$("."+classTabs[j]).draggable("disable");
+				if(classTabs[j] != included[0]  || classTabs[j] == "others"){
+					$("."+classTabs[j]+":not(.clone)").css("background", "#ddd");
+					$("."+classTabs[j]+":not(.clone)").draggable("disable");
+				}
+			}
+			//conflicting values, must remove other elements from the query
+			var drags=$(".query").children(".draggable");
+			if(drags.length>1){
+				for(var j=1; j<drags.length; j++){
+					$(drags[j]).remove();
 				}
 			}
 		}
 		else{
 			console.log("OUR SAVIOR HAS ARRIVED!");
+			// enable all other fields except those who have a class of includedField
+			var original = $(".original");
+			for(var j=1; j<original.length; j++){
+				if(! $(original[j]).hasClass('includedField')){
+					$(original[j]).css("background", "");
+					$(original[j]).draggable({
+						helper: 'clone',
+						revert: true,
+						revertDuration: 0,
+						drag: function(event, ui) {
+							$(this).css('z-index', 5);
+						},
+						stop: function(event, ui){
+							$(this).css('z-index', 2);
+						}
+					});
+					$(original[j]).draggable("enable");
+				}
+			}
+		}
+		if(included.length == 0){
+			//enable all
+			console.log("CLEAR!");
 			// enable all other fields except those who have a class of includedField
 			var original = $(".original");
 			for(var j=1; j<original.length; j++){
@@ -651,6 +662,7 @@ $(function() {
 			var views=$('.view');
 			for(var i=0; i<views.length; i++){
 				if($(views[i]).text()==$(this).parent().children('.view').text()){
+					$(views[i]).parent().removeClass('includedField');
 					$(views[i]).parent().draggable("enable");
 					$(views[i]).parent().css("background","");
 				}
@@ -676,6 +688,7 @@ $(function() {
 			secparent.children('.lbl').addClass("dropdown-toggle");
 			secparent.children('.lbl').attr("data-toggle", "dropdown");
 		}
+		disableUnrelatedFields();
 	});
 
 	$(document).on('click', '.single', function(){

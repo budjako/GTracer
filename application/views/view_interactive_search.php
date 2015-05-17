@@ -21,12 +21,14 @@
 			<form name="interactivesearch" id="interactivesearch">
 				<input type="hidden" name="values" id="values"></input>
 				<input type="submit" class="submit-query btn btn-default" value="Submit Query" ></input><br>
-				<input type="radio" name="result-view" id="table" value="table" checked="checked"><label for="table">Table</label></input>
-				<input type="radio" name="result-view" id="chart" value="chart"><label for="chart">Chart</label></input>
-				<input type="radio" name="result-view" id="map" value="map"><label for="map">Map</label></input>
-				<div id="tablespecs"></div>
-				<div id="chartspecs"></div>
-				<div id="mapspecs"></div>
+				<div id="querychoices">
+					<input type="radio" name="result-view" id="table" value="table" checked="checked"><label for="table">Table</label></input>
+					<input type="radio" name="result-view" id="chart" value="chart"><label for="chart">Chart</label></input>
+					<input type="radio" name="result-view" id="map" value="map"><label for="map">Map</label></input>
+					<div id="tablespecs"></div>
+					<div id="chartspecs"></div>
+					<div id="mapspecs"></div>
+				</div>
 			</form>
 		</center>
 		<div class="dragdrop">

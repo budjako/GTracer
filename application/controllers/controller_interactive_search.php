@@ -130,7 +130,7 @@ class Controller_interactive_search extends CI_Controller {
 		$sql.=" from ";									// include in from all tables involved
 		$count2=0;
 		$tabcount=count($tables);
-		if(! in_array("graduate", $tables)){
+		if(! in_array("graduate", $tables) && $mapfactor == null){
 			$sql="distinct ".$sql;
 		}
 		if($mapfactor != null){
@@ -195,7 +195,7 @@ class Controller_interactive_search extends CI_Controller {
 			}
 		}
 		else{
-			echo "<br>Details unconstrained by an alumni.<br>";
+			// echo "<br>Details unconstrained by an alumni.<br>";
 			if(count($condition)>0) $sql.=" where ";
 			for($i=0; $i<count($condition); $i++) {
 				if($i>0) $sql.=" and ";
@@ -379,7 +379,7 @@ class Controller_interactive_search extends CI_Controller {
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		if($str == null){
-			echo "Empty query";
+			// echo "Empty query";
 			return;
 		}
 
@@ -400,7 +400,7 @@ class Controller_interactive_search extends CI_Controller {
 		}
 
 		if(! $arr){
-			echo "<br><br>Invalid query.";
+			// echo "<br><br>Invalid query.";
 			return;
 		}
 
@@ -412,7 +412,7 @@ class Controller_interactive_search extends CI_Controller {
 		$sort_by=$sort_by[1];
 		$order_by=$this->input->post('order_by');
 		$sql.=" order by ".$sort_by." ".$order_by;
-		echo "<br>search for: $sql";
+		// echo "<br>search for: $sql";
 		// $sql="select distinct educationalbg.class, course from `educationalbg`";
 
 		$config['base_url'] = base_url().'controller_interactive_search/query_table';

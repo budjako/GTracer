@@ -22,6 +22,9 @@
 	position: relative;
 	border: 1px solid black;
 }
+#querychoices {
+	padding: 5px;
+}
 fieldset {
 	margin-bottom: 10px;
 	border: 1px solid black;
