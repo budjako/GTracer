@@ -19,5 +19,33 @@
 			$query=$this->db->query("DELETE from request where companyno=".$company_no);
 			return $companyname->result_array()[0]['companyname'];
 		}
+
+		public function edit_company($details){
+			$countryname=$this->get_country_name($details['country']);
+			if($details['state']=="-1"){
+				$query=$this->db->query("UPDATE `company` SET `companyname`='".$details['cname']."', `companytype`='".$details['ctype']."', `caddcountry`='".$countryname."', `caddcountrycode`='".$details['country']."' where `company_no`='".$details['cno']."';") or die(mysqli_error());
+			}
+			else{
+				$statename=$this->get_state_name($details['state']);
+				$query=$this->db->query("UPDATE `company` SET `companyname`='".$details['cname']."', `companytype`='".$details['ctype']."', `caddcountry`='".$countryname."', `caddcountrycode`='".$details['country']."', `caddprovince`='".$statename."', `caddprovincecode`='".$details['state']."' where `company_no`='".$details['cno']."';") or die(mysqli_error());
+			}
+			return;
+		}
+
+		private function get_country_name($alpha_2){
+			$this->db->select('name');
+			$this->db->from('meta_country');
+			$this->db->where('alpha_2', $alpha_2);
+			$query = $this->db->get();
+			return $query->result()[0]->name;
+		}
+
+		private function get_state_name($iso_code){
+			$this->db->select('name');
+			$this->db->from('meta_province');
+			$this->db->where('iso_code', $iso_code);
+			$query =  $this->db->get();
+			return $query->result()[0]->name;
+		}
 	}
 ?>

@@ -9,11 +9,11 @@ include_once("controller_log.php");
 class Controller_school_approval extends Controller_log {
 
 	function __construct(){
-        parent::__construct();
-        $this->load->library('Jquery_pagination');
-        $this->load->model('model_school_approval');
-        $this->load->library('pagination');
-    }
+		parent::__construct();
+		$this->load->library('Jquery_pagination');
+		$this->load->model('model_school_approval');
+		$this->load->library('pagination');
+	}
 
 	public function index() {
 		if($this->session->userdata('logged_in') == FALSE){
@@ -21,10 +21,10 @@ class Controller_school_approval extends Controller_log {
 		}
 		$data['titlepage'] = "UPLB OSA GTracer - School Entry Approval"; //title page
 
-	    $this->load->view("header",$data);
-	    $this->load->view("navigation");
-	    $this->load->view("view_school_approval");
-	    $this->load->view("footer");
+		$this->load->view("header",$data);
+		$this->load->view("navigation");
+		$this->load->view("view_school_approval");
+		$this->load->view("footer");
 	
 	}
 
@@ -85,6 +85,51 @@ class Controller_school_approval extends Controller_log {
 		$empno=$this->session->userdata('logged_in')['eno'];
 		$this->add_log($empno, "Approve school entry", "Employee ".$empno." approved the entry of school ".$schoolname.".");
 		return;
+	}
+
+	function sname($str){
+		if($str == "") return true;
+		return(! preg_match("/^[A-Za-zñÑ\s][A-Za-zñÑ0-9\s]+$/i", $str))? FALSE: TRUE;
+	}
+
+	function country_check($str){
+		if($str == "") return true;
+		return(! preg_match("/^[A-Z]{2}$/i", $str))? FALSE: TRUE;
+	}
+
+	function state_check($str){
+		if($str == "" || $str== "-1") return true;
+		return(! preg_match("/^[A-Z]{2}[\-\_][A-Z0-9]{3}$/i", $str))? FALSE: TRUE;
+	}
+
+	public function edit_school(){
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('sname', 'School Name', 'trim|xss_clean|callback_sname');
+		$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean|ucwords|callback_country_check');
+		$this->form_validation->set_rules('state', 'State', 'trim|xss_clean|ucwords|callback_state_check');
+
+		$search['sno'] = $this->input->post('sno');
+		$search['sname'] = $this->input->post('sname');
+		$search['country'] = $this->input->post('country');
+		$search['state'] = $this->input->post('state');
+
+		if ($this->form_validation->run() === FALSE)
+		{
+			// echo "There are some problems";
+			$search['msg'] = validation_errors();
+			$data['titlepage'] = "UPLB OSA GTracer - School Details"; //title page
+
+			$this->load->view("header",$search);
+			$this->load->view("navigation");
+			$this->load->view("view_school_approval", $search);
+			$this->load->view("footer");
+		}
+		else
+		{
+			$this->model_school_approval->edit_school($search);
+			redirect('controller_single/index/school_'.$search['sno'], 'refresh');	// redirect to controller_search_book
+		}
 	}
 
 }

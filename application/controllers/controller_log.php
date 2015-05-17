@@ -131,7 +131,7 @@ class Controller_log extends CI_Controller{
 			echo "<th>Details</th>";
 			echo "<th>Time</th>";
 			foreach ($data['result'] as $row){
-			    echo "<tr><td>".$row->empno."</td>";
+				echo "<tr><td>".$row->empno."</td>";
 				echo "<td>".$row->activity."</td>";
 				echo "<td>".$row->actdetails."</td>";
 				echo "<td>".$row->timeperformed."</td></tr>";
@@ -165,6 +165,16 @@ class Controller_log extends CI_Controller{
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
 		$this->model_logs->add_log($empno, $activity, $actdetails);
+	}
+
+	function get_country(){
+		return $this->model_logs->get_country();
+	}
+
+
+	function get_data($loadid){
+		$array['result']=$this->model_logs->get_data($loadid);
+		echo json_encode($array);
 	}
 
 }

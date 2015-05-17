@@ -142,3 +142,111 @@ function validateEditEmail(){
 	if(msg=="") return true;
 	return false;
 }
+
+function validateSchoolEdit(){
+	if(validateSchoolName() && validateSchoolCountry() && validateSchoolProvinceState()) return true;
+	return false;
+}
+
+function validateSchoolName(){
+	msg="";
+	str=schooledit.sname.value.trim();
+	document.getElementsByName("snameerr")[0].innerHTML=msg;
+	if(str=="") return true;
+	else if (!str.match(/^[A-Za-zñÑ\s][A-Za-zñÑ0-9\s]+$/)){ 
+		msg="Invalid Input: Alphanumeric characters only!";
+		document.getElementsByName("snameerr")[0].innerHTML=msg;
+	}
+	if(msg=="") return true;
+	return false;
+}
+
+function validateSchoolCountry(){
+	msg="";
+	str=schooledit.country.value.trim();
+	document.getElementsByName("saddcountryerr")[0].innerHTML=msg;
+	if(str=="-1"){ 
+		msg="Required!";
+		document.getElementsByName("saddcountryerr")[0].innerHTML=msg;
+	}
+	else if (!str.match(/^[A-Z]{2}$/)){ 
+		msg="Invalid Input: Alpha characters only!";
+		document.getElementsByName("saddcountryerr")[0].innerHTML=msg;
+	}
+	if(msg=="") return true;
+	return false;
+}
+
+function validateSchoolProvinceState(){
+	msg="";
+	str=schooledit.state.value.trim();
+	document.getElementsByName("saddprovinceerr")[0].innerHTML=msg;
+	if(str=="-1") return true;
+	else if (!str.match(/^[A-Z]{2}[\-\_][A-Z0-9]{3}$/)){ 
+		msg="Invalid Input: Alphanumeric (with - and _) characters only!";
+		document.getElementsByName("saddprovinceerr")[0].innerHTML=msg;
+	}
+	if(msg=="") return true;
+	return false;
+}
+
+
+function validateCompanyEdit(){
+	if(validateCompanyName() && validateCompanyType() && validateCompanyCountry() && validateCompanyProvinceState()) return true;
+	return false;
+}
+
+function validateCompanyName(){
+	msg="";
+	str=companyedit.cname.value.trim();
+	document.getElementsByName("cnameerr")[0].innerHTML=msg;
+	if(str=="") return true;
+	else if (!str.match(/^[A-Za-zñÑ\s][A-Za-zñÑ0-9\s]+$/)){ 
+		msg="Invalid Input: Alphanumeric characters only!";
+		document.getElementsByName("cnameerr")[0].innerHTML=msg;
+	}
+	if(msg=="") return true;
+	return false;
+}
+
+function validateCompanyType(){
+	msg="";
+	str=companyedit.ctype.value.trim();
+	document.getElementsByName("ctypeerr")[0].innerHTML=msg;
+	if(str=="") return true;
+	else if (!str.match(/^[01]$/)){ 
+		msg="Invalid Input!";
+		document.getElementsByName("ctypeerr")[0].innerHTML=msg;
+	}
+	if(msg=="") return true;
+	return false;
+}
+
+function validateCompanyCountry(){
+	msg="";
+	str=companyedit.country.value.trim();
+	document.getElementsByName("caddcountryerr")[0].innerHTML=msg;
+	if(str=="-1"){ 
+		msg="Required!";
+		document.getElementsByName("caddcountryerr")[0].innerHTML=msg;
+	}
+	else if (!str.match(/^[A-Z]{2}$/)){ 
+		msg="Invalid Input: Alpha characters only!";
+		document.getElementsByName("caddcountryerr")[0].innerHTML=msg;
+	}
+	if(msg=="") return true;
+	return false;
+}
+
+function validateCompanyProvinceState(){
+	msg="";
+	str=companyedit.state.value.trim();
+	document.getElementsByName("caddprovinceerr")[0].innerHTML=msg;
+	if(str=="-1") return true;
+	else if (!str.match(/^[A-Z]{2}[\-\_][A-Z0-9]{3}$/)){ 
+		msg="Invalid Input: Alphanumeric (with - and _) characters only!";
+		document.getElementsByName("caddprovinceerr")[0].innerHTML=msg;
+	}
+	if(msg=="") return true;
+	return false;
+}

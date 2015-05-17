@@ -68,5 +68,31 @@
 			return;
 		}
 
+		public function get_country(){
+			$this->db->select('alpha_2, name');
+			$this->db->from('meta_country');
+			$this->db->order_by('name', 'asc');
+			$query=$this->db->get();
+			return $query->result();
+		}
+
+
+		public function get_data($loadId){
+			$fieldList='iso_code,name';
+			$table='meta_province';
+			$fieldName='country_code';
+			$orderByField='name';
+			
+			$this->db->select($fieldList);
+			$this->db->from($table);
+			$this->db->where($fieldName, $loadId);
+			if($loadId == "PH"){
+			$this->db->where('type', 'Province');
+			}
+			$this->db->order_by($orderByField, 'asc');
+
+			$query=$this->db->get();
+			return $query->result_array();
+		}
 	}
 ?>

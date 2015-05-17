@@ -1,4 +1,13 @@
 $(document).ready( function() {
+		
+	$(document).on("click", ".clickable-row", function(e) {
+		var ev=e;
+		var button = ev.target;
+		if($(button).hasClass('ban') || $(button).hasClass('admin') || $(button).hasClass('approve') || $(button).hasClass('delete')) {
+			ev.stopPropagation();
+		}	
+		else window.document.location = $(this).data("href");
+	});
 
 	$(document).on("click", ".ban", function(e) {
 		event.preventDefault();
@@ -66,30 +75,16 @@ $(document).ready( function() {
 		});
 	});
 
-	$(".exportlog").click(function(){
-		// event.preventDefault();
-
-		// console.log("export logs");
-		// $.ajax({
-		// 	type: "POST",
-		// 	url: "export_logs",
-		// 	success: function(data){
-		// 		console.log(data);
-		// 	}
-		// });
-		window.document.location = "export_logs";
+	$(document).on("change", ".country", function(){
+		$(".state_dropdown").html("<option value='-1'>Select state</option>");
 	});
-		
-	$(document).ready(function() {
-		$(document).on("click", ".clickable-row", function(e) {
-			var ev=e;
-			var button = ev.target;
-			ev.stopPropagation();
-			if($(button).hasClass('ban') || $(button).hasClass('admin') || $(button).hasClass('approve') || $(button).hasClass('delete')) {
-				ev.stopPropagation();
-			}	
-			else window.document.location = $(this).data("href");
-		});
+
+	$(document).on("blur", ".country", function(){
+		loadCountry();
+	});
+
+	$(".exportlog").click(function(){
+		window.document.location = "export_logs";
 	});
 });
 

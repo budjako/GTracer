@@ -93,4 +93,56 @@ class Controller_company_approval extends Controller_log {
 		return;
 	}
 
+	function cname($str){
+		if($str == "") return true;
+		return(! preg_match("/^[A-Za-zñÑ\s][A-Za-zñÑ0-9\s]+$/i", $str))? FALSE: TRUE;
+	}
+
+	function ctype($str){
+		if($str == "") return true;
+		return(! preg_match("/^[01]$/i", $str))? FALSE: TRUE;
+	}
+
+	function country_check($str){
+		if($str == "") return true;
+		return(! preg_match("/^[A-Z]{2}$/i", $str))? FALSE: TRUE;
+	}
+
+	function state_check($str){
+		if($str == "" || $str== "-1") return true;
+		return(! preg_match("/^[A-Z]{2}[\-\_][A-Z0-9]{3}$/i", $str))? FALSE: TRUE;
+	}
+
+	public function edit_company(){
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('cname', 'Company Name', 'trim|xss_clean|callback_cname');
+		$this->form_validation->set_rules('ctype', 'Company Type', 'trim|xss_clean|callback_ctype');
+		$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean|ucwords|callback_country_check');
+		$this->form_validation->set_rules('state', 'State', 'trim|xss_clean|ucwords|callback_state_check');
+
+		$search['cno'] = $this->input->post('cno');
+		$search['ctype'] = $this->input->post('ctype');
+		$search['cname'] = $this->input->post('cname');
+		$search['country'] = $this->input->post('country');
+		$search['state'] = $this->input->post('state');
+
+		if ($this->form_validation->run() === FALSE)
+		{
+			// echo "There are some problems";
+			$search['msg'] = validation_errors();
+			$data['titlepage'] = "UPLB OSA GTracer - Company Details"; //title page
+
+			$this->load->view("header",$search);
+			$this->load->view("navigation");
+			$this->load->view("view_company_approval", $search);
+			$this->load->view("footer");
+		}
+		else
+		{
+			$this->model_company_approval->edit_company($search);
+			redirect('controller_single/index/company_'.$search['cno'], 'refresh');	// redirect to controller_search_book
+		}
+	}
+
 }
