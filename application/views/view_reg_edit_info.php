@@ -3,22 +3,25 @@
 	$(document).ready( function() {
 		
 		$("#eno").blur(function (){ 
-			if(! validateENo()){
-				$('#enolog').text("");
-				return false;
-			}
-			var eno=$('#eno').val();
-			$.ajax({
-				url: base_url+"controller_login/eno_available/"+eno,
-				type: 'POST',
-
-				success: function(result){
-					$('#enolog').text(result);
-				},
-				error: function(err){
-					$('#enolog').text(err);
+			
+			if($('#eno').val().trim() != ""){
+				if(! validateENo()){
+					$('#enolog').text("");
+					return false;
 				}
-			});
+				var eno=$('#eno').val().trim();
+				$.ajax({
+					url: base_url+"controller_login/eno_available/"+eno,
+					type: 'POST',
+
+					success: function(result){
+						$('#enolog').text(result);
+					},
+					error: function(err){
+						$('#enolog').text(err);
+					}
+				});
+			}
 		});
 	});
 </script>
@@ -56,13 +59,6 @@
 						<div class="col-sm-10">
 							<input class="form-control" type="text" name="lname" onblur="validateEditLname()" value="<?php if(isset($userinfo)) echo $userinfo->family_name; else echo $lname; ?>" />
 							<span name="lnameerr"></span></br>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-2 control-label" for="email" type="email">Email Address</label>
-						<div class="col-sm-10">
-							<input class="form-control" type="email" name="email" onblur="validateEditEmail()" value="<?php if(isset($userinfo)) echo $userinfo->email; else echo $email; ?>"/>
-							<span name="emailerr"></span></br>
 						</div>
 					</div>
 

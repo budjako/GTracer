@@ -72,6 +72,7 @@ class Controller_users extends Controller_log {
 	}
 
 	public function print_users($result, $links){
+		$my_empno=$this->session->userdata('logged_in')['eno'];
 		echo $links;
 		echo "<table class='table table-hover table-bordered' >";
 		echo "<th>Employee Number</th>";
@@ -79,6 +80,7 @@ class Controller_users extends Controller_log {
 		echo "<th>Email Address</th>";
 		echo "<th>Ban/Unban</th>";
 		echo "<th>Set as Admin</th>";
+		echo "<th>Delete Account</th>";
 		foreach ($result as $row){
 			echo "<tr id='".$row->emp_no."' class='clickable-row' data-href='".base_url()."controller_log/index/".$row->emp_no."'><td>".$row->emp_no."</td>";
 			echo "<td>".$row->name."</td>";
@@ -87,7 +89,7 @@ class Controller_users extends Controller_log {
 			if($row->admin == 0){
 				echo "<form method='POST' class='".$row->emp_no."'>";
 				echo "<input type='button' class='ban btn btn-default'";
-					if($row->ban == 0) echo "value='Ban'>";
+					if($row->status == 0) echo "value='Ban'>";
 					else echo "value='Unban'>";
 				echo "</form>";
 			}
@@ -97,10 +99,32 @@ class Controller_users extends Controller_log {
 					<input type='button' class='admin btn btn-default' value='Add as Admin'>
 				</form>";
 			}
+			echo "</td><td>";
+			if($row->emp_no != $my_empno){
+				echo "<form method='POST' class='".$row->emp_no."'>
+					<input type='button' class='delete btn btn-default' value='Delete Account'>
+				</form>";
+			}
 			echo "</td></tr>";
 		} 
 		echo "</table>";
 		echo $links;
+	}
+
+
+	public function delete_acct($empno){
+		if($this->session->userdata('logged_in') == FALSE){
+			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
+		}
+		else if(! $this->session->userdata('logged_in')['is_admin']){
+			redirect('controller_users/index', 'refresh');	// redirect to controller_search_book
+		}
+
+		if($this->model_user->exists($empno)){
+			$this->model_user->delete($empno);
+			$this->add_log($this->session->userdata('logged_in')['eno'], "Delete Staff Account", "Deleted account of employee ".$empno.".");
+		}
+		return;
 	}
 
 	public function ban($empno){

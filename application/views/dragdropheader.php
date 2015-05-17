@@ -17,7 +17,6 @@
 		<script type="text/javascript" src="<?php echo base_url(); ?>mod/js/jquery-2.0.3.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/jquery-ui-1.11.3.custom/external/jquery/jquery.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/jquery-ui-1.11.3.custom/jquery-ui.js"></script>
-		<script src="<?php echo base_url(); ?>mod/js/script.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/dragdrop.js"></script>
 <!--	<script src="<?php echo base_url(); ?>mod/js/highcharts.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/highcharts-more.js"></script>

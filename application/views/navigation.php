@@ -11,8 +11,8 @@
 				<li><a href="<?php echo  base_url(); ?>controller_company_approval"><div class="menu-item">Company Approvals</div></a></li>
 				<li><a href="<?php echo  base_url(); ?>controller_basic_search"><div class="menu-item">Basic Search</div></a></li>
 				<li><a href="<?php echo  base_url(); ?>controller_interactive_search"><div class="menu-item">Interactive Search</div></a></li>
-				<li><a href="<?php echo  base_url(); ?>controller_log"><div class="menu-item">Logs</div></a></li>
 				<li><a href="<?php echo  base_url(); ?>controller_users"><div class="menu-item">Users</div></a></li>
+				<li><a href="<?php echo  base_url(); ?>controller_log"><div class="menu-item">Logs</div></a></li>
 			</ul>
 		</nav>
 	<?php 

@@ -6,7 +6,7 @@
 
 		public function add_user($data){
 			$query=$this->db->query("INSERT INTO staff(emp_no, name, email) VALUES ('".$data["eno"]."','".$data["fname"]." ".$data['lname']."', '".$data['email']."');");
-			$sql="INSERT INTO `log` (`empno`, `activity`, `actdetails`, `time`) VALUES ('".$data["eno"]."', 'Register user', 'Employee ".$data['eno']." information stored. Info[ Employee Number: ".$data['eno'].", Name: ".$data['fname']." ".$data['lname'].", Email: ".$data['email']."]', sysdate(3))";
+			$sql="INSERT INTO `log` (`empno`, `activity`, `actdetails`, `timeperformed`) VALUES ('".$data["eno"]."', 'Register user', 'Employee ".$data['eno']." information stored. Info[ Employee Number: ".$data['eno'].", Name: ".$data['fname']." ".$data['lname'].", Email: ".$data['email']."]', sysdate(3))";
 			$query = $this->db->query($sql) or die(mysql_error());
 			return;
 		}
@@ -43,25 +43,34 @@
 		}
 
 		public function is_banned($empno){
-			$query=$this->db->query("SELECT `ban` from staff where `emp_no`='".$empno."';");
-			if($query->num_rows()==1){
-				if($query->result()[0]->ban == 0){
-					return false;
+			$query=$this->db->query("SELECT `status` from staff where `emp_no`='".$empno."';");
+			if($query->num_rows()==1)
+				if($query->result()[0]->status == 1){
+					return true;
 				}
-				return true;
-			}
-			else{
 				return false;
-			}
+		}
+
+		public function is_deleted($empno){
+			$query=$this->db->query("SELECT `status` from staff where `emp_no`='".$empno."';");
+			if($query->num_rows()==1)
+				if($query->result()[0]->status == 2){
+					return true;
+				}
+				return false;
 		}
 
 		public function add_admin($empno){
-			$query=$this->db->query("UPDATE `staff` SET `ban`=0 where `emp_no`='".$empno."';") or die(mysql_error());
+			$query=$this->db->query("UPDATE `staff` SET `status`=0 where `emp_no`='".$empno."';") or die(mysql_error());
 			$query=$this->db->query("UPDATE `staff` SET `admin`=1 where `emp_no`='".$empno."';") or die(mysql_error());
 		}
 
 		public function ban($empno, $value){
-			$query=$this->db->query("UPDATE `staff` SET `ban`=".$value." where `emp_no`='".$empno."';") or die(mysql_error());
+			$query=$this->db->query("UPDATE `staff` SET `status`=".$value." where `emp_no`='".$empno."';") or die(mysql_error());
+		}
+
+		public function delete($empno){
+			$query=$this->db->query("UPDATE `staff` SET `status`=2 where `emp_no`='".$empno."';") or die(mysql_error());
 		}
 
 		public function exists($empno){
@@ -84,12 +93,12 @@
 			}
 		}
 
-		public function get_user_count(){
+		public function get_user_count_with_del_accts(){
 			$query=$this->db->query("SELECT count(*) FROM `staff`");
 			return $query->result_array()[0]['count(*)'];
 		}
 
-		public function get_user($empno=FALSE){
+		public function get_user_with_del_accts($empno=FALSE){
 			if ($empno === FALSE){
 				$query = $this->db->get('staff');
 				return $query->result_array();
@@ -102,7 +111,7 @@
 			return false;
 		}
 
-		public function get_users_paginate($limit, $start, $sort, $order){
+		public function get_users_paginate_with_del_accts($limit, $start, $sort, $order){
 			// echo "sort: ".$sort."<br>";
 			// echo "order: ".$order."<br>";
 			// echo "limit: ".$limit."<br>";
@@ -112,6 +121,37 @@
 				$query=$this->db->query("SELECT * FROM staff LIMIT ".$start.",".$limit.";");
 			else
 				$query=$this->db->query("SELECT * FROM staff ORDER BY ".$sort." ".$order." LIMIT ".$start.",".$limit.";") or die(mysqli_error());
+			if($query->num_rows()>0){
+				return $query->result();
+			}
+			return false;
+		}
+
+		// NOT INCLUDING DELETED USERS
+
+		public function get_user_count(){
+			$query=$this->db->query("SELECT count(*) FROM `staff` where `status` < 2");
+			return $query->result_array()[0]['count(*)'];
+		}
+
+		public function get_user($empno=FALSE){
+			if ($empno === FALSE){
+				$query = $this->db->get('staff');
+				return $query->result_array();
+			}
+
+			$query=$this->db->query("SELECT * from staff where `empno` = ".$empno."  and `status` < 2");
+			if($query->num_rows()>0){
+				return $query->result();
+			}
+			return false;
+		}
+
+		public function get_users_paginate($limit, $start, $sort, $order){
+			if($order == FALSE)
+				$query=$this->db->query("SELECT * FROM staff where `status` < 2 LIMIT ".$start.",".$limit.";");
+			else
+				$query=$this->db->query("SELECT * FROM staff where `status` < 2 ORDER BY ".$sort." ".$order." LIMIT ".$start.",".$limit.";") or die(mysqli_error());
 			if($query->num_rows()>0){
 				return $query->result();
 			}

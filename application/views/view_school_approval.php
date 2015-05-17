@@ -48,4 +48,3 @@
 	</div>
 </div>
 <script type="text/javascript" src="<?php echo base_url(); ?>mod/js/ajax.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>mod/js/script.js"></script>

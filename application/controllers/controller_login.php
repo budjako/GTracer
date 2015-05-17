@@ -21,10 +21,19 @@ class Controller_login extends Controller_log {
 			redirect('controller_list_alumni', 'refresh');// redirect to controller_search_book
 		}
 
-		if($banned){
+		if($banned == 1){
 			$data['titlepage']="UPLB OSA GTracer - User Ban";
 			$data['header']="Status: Banned";
-			$data['body']="You are currently banned. Please contact any system administrator.<br><a href='".base_url()."controller_login'>Return to login page</a>";
+			$data['body']="You are currently banned. If you think this is an error, please contact any system administrator.<br><a href='".base_url()."controller_login'>Return to login page</a>";
+			$this->load->view("header", $data); 					//displays the header
+			$this->load->view("view_message", $data); 				//displays the home page
+			$this->load->view("footer"); 					//displays the footer
+			return;
+		}
+		else if($banned == 2){
+			$data['titlepage']="UPLB OSA GTracer - Account Deleted";
+			$data['header']="Status: Account Deleted";
+			$data['body']="Your account was deleted. If you think this is an error, please contact any system administrator.<br><a href='".base_url()."controller_login'>Return to login page</a>";
 			$this->load->view("header", $data); 					//displays the header
 			$this->load->view("view_message", $data); 				//displays the home page
 			$this->load->view("footer"); 					//displays the footer
@@ -49,7 +58,6 @@ class Controller_login extends Controller_log {
 			$client->addScope("https://www.googleapis.com/auth/userinfo.email");
 			// $client->setHostedDomain("uplbosa.org");
 			// $client->setHostedDomain("cia.uplbosa.org");
-			// $client->setHostedDomain("gmail.com");
 
 			// Send Client Request
 			$objOAuthService = new Google_Service_Oauth2($client);
@@ -67,6 +75,9 @@ class Controller_login extends Controller_log {
 
 			// Get User Data from Google and store them in $data
 			if ($client->getAccessToken()) {
+				// 	$this->session->unset_userdata('logged_in');
+		 		// $this->session->sess_destroy();
+		 		// redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/0', 'refresh');
 				$userinfo = $objOAuthService->userinfo->get();
 				$data['userinfo'] = $userinfo;
 				$this->session->set_userdata('access_token', $client->getAccessToken());
@@ -171,6 +182,10 @@ class Controller_login extends Controller_log {
 		return $this->model_user->is_banned($eno);		//returns true or false
 	}
 
+	function is_deleted($eno){
+		return $this->model_user->is_deleted($eno);		//returns true or false
+	}
+
 	function eno_available($eno){
 		if(! $this->model_user->exists($eno)){
 			echo "Employee Number is available.";
@@ -181,22 +196,31 @@ class Controller_login extends Controller_log {
 
 	function login($eno, $email, $is_admin){
 		$is_banned=$this->is_banned($eno);
+		$is_deleted=$this->is_deleted($eno);
 		$sess_array = array('eno' => $eno, 'is_admin' => $is_admin, 'is_banned' => $is_banned);
 		//set session with value from database
 		$this->session->set_userdata('logged_in', $sess_array);
-		if($is_banned) $this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Banned).');
-		else $this->add_log($eno, 'Log in', 'Employee '.$eno.' logged in.');
-		// var_dump($this->session->all_userdata());
-		// var_dump($is_banned);
+
 		if($is_banned){
+			$this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Banned).');
 			$eno=$this->session->userdata('logged_in')['eno'];
 			$this->add_log($eno, 'Log out', 'Employee '.$eno.' was forced to logged out  (Status: Banned).');
 	 		$this->session->unset_userdata('logged_in');
 	 		$this->session->sess_destroy();
 	 		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/1', 'refresh');
 		}
-		else redirect('controller_list_alumni', 'refresh');
-		
+		else if($is_deleted){
+			$this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Account Deleted).');
+			$eno=$this->session->userdata('logged_in')['eno'];
+			$this->add_log($eno, 'Log out', 'Employee '.$eno.' was forced to logged out  (Status: Account Deleted).');
+	 		$this->session->unset_userdata('logged_in');
+	 		$this->session->sess_destroy();
+	 		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/2', 'refresh');
+		}
+		else{
+			$this->add_log($eno, 'Log in', 'Employee '.$eno.' logged in.');
+			redirect('controller_list_alumni', 'refresh');
+		}
 	}
 
 	function logout() {
