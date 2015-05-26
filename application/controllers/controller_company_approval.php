@@ -65,7 +65,7 @@ class Controller_company_approval extends Controller_log {
 		echo "<th>Type</th>";
 		echo "<th>Approve</th>";
 		foreach ($result as $row){
-			echo "<tr id='".$row['company_no']."' class='clickable-row' data-href='".base_url()."controller_single/index/company_".$row['company_no']."'><td>".$row['companyname']."</td>";
+			echo "<tr id='".$row['company_no']."' class='clickable-row' data-href='".base_url()."controller_company/index/".$row['company_no']."'><td>".$row['companyname']."</td>";
 			echo "<td>".$row['caddcountry']."</td>";
 			echo "<td>".$row['caddregion']."</td>";
 			echo "<td>".$row['caddprovince']."</td>";
@@ -140,8 +140,11 @@ class Controller_company_approval extends Controller_log {
 		}
 		else
 		{
-			$this->model_company_approval->edit_company($search);
-			redirect('controller_single/index/company_'.$search['cno'], 'refresh');	// redirect to controller_search_book
+			$companyname=$this->model_company_approval->edit_company($search);
+			$empno=$this->session->userdata('logged_in')['eno'];
+			$this->add_log($empno, "Edited company entry", "Employee ".$empno." edited the entry of company ".$companyname.". Info[Company Number: ".$search['cno'].", Company Name: ".$search['cname'].", Country: ".$search['country'].", State/Province: ".$search['state']."] ");
+		
+			redirect('controller_company/index/'.$search['cno'], 'refresh');	// redirect to controller_search_book
 		}
 	}
 

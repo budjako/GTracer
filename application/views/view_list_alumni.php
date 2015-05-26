@@ -1,5 +1,4 @@
 <script type="text/javascript">
-	var base_url = "<?php echo base_url() ?>";
 	window.onload = get_data;
 
 	function get_data(){  

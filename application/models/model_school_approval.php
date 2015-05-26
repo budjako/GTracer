@@ -24,10 +24,12 @@
 			$countryname=$this->get_country_name($details['country']);
 			if($details['state']=="-1"){
 				$query=$this->db->query("UPDATE `school` SET `schoolname`='".$details['sname']."', `saddcountry`='".$countryname."', `saddcountrycode`='".$details['country']."' where `school_no`='".$details['sno']."';") or die(mysqli_error());
+				$query=$this->db->query("DELETE from request where schoolno=".$details['sno']);
 			}
 			else{
 				$statename=$this->get_state_name($details['state']);
 				$query=$this->db->query("UPDATE `school` SET `schoolname`='".$details['sname']."', `saddcountry`='".$countryname."', `saddcountrycode`='".$details['country']."', `saddprovince`='".$statename."', `saddprovincecode`='".$details['state']."' where `school_no`='".$details['sno']."';") or die(mysqli_error());
+				$query=$this->db->query("DELETE from request where schoolno=".$details['sno']);
 			}
 			return;
 		}
@@ -45,6 +47,8 @@
 			$this->db->from('meta_province');
 			$this->db->where('iso_code', $iso_code);
 			$query =  $this->db->get();
+
+			if($query->num_rows()==0) return "";
 			return $query->result()[0]->name;
 		}
 	}

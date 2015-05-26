@@ -168,17 +168,6 @@
 			return false;
 		}
 
-		public function get_school_data($school_no){
-			$query=$this->db->query("SELECT * FROM school WHERE school_no=".$school_no);
-			if(empty($query->result())){
-				return false;
-			}
-			else{
-				// echo "does not exist";
-				return $query->result_array()[0];
-			}
-		}
-
 		public function get_company_data($company_no){
 			$query=$this->db->query("SELECT * FROM company WHERE company_no=".$company_no);
 			if(empty($query->result())){

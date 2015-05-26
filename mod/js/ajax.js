@@ -3,10 +3,50 @@ $(document).ready( function() {
 	$(document).on("click", ".clickable-row", function(e) {
 		var ev=e;
 		var button = ev.target;
-		if($(button).hasClass('ban') || $(button).hasClass('admin') || $(button).hasClass('approve') || $(button).hasClass('delete')) {
+		if($(button).hasClass('ban') || $(button).hasClass('admin') || $(button).hasClass('approve') || $(button).hasClass('delete') || $(button).hasClass('schoolmerge') || $(button).hasClass('companymerge')) {
 			ev.stopPropagation();
 		}	
 		else window.document.location = $(this).data("href");
+	});
+
+	$(document).on("click", ".schoolmerge", function(e) {
+		event.preventDefault();
+
+		var origentry =$('#sno').val();
+		var schoolmerge = $(this).parent()[0].getAttribute('class');
+		var string=origentry+"_"+schoolmerge;
+
+		$.ajax({
+			type: "POST",
+			url: base_url + 'controller_school/merge_school/'+string,
+
+			success: function(data) {
+				window.document.location = base_url + "controller_school/index/"+schoolmerge; 
+			},
+			error: function(err) {
+				console.log("error "+err);
+			}
+		});
+	});
+
+	$(document).on("click", ".companymerge", function(e) {
+		event.preventDefault();
+
+		var origentry =$('#cno').val();
+		var company = $(this).parent()[0].getAttribute('class');
+		var string=origentry+"_"+company;
+
+		$.ajax({
+			type: "POST",
+			url: base_url + 'controller_company/merge_company/'+string,
+
+			success: function(data) {
+				window.document.location = base_url + "controller_company/index/"+company; 
+			},
+			error: function(err) {
+				console.log("error "+err);
+			}
+		});
 	});
 
 	$(document).on("click", ".ban", function(e) {

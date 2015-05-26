@@ -65,7 +65,7 @@ class Controller_school_approval extends Controller_log {
 		echo "<th>Province</th>";
 		echo "<th>Approve</th>";
 		foreach ($result as $row){
-			echo "<tr id='".$row['school_no']."' class='clickable-row' data-href='".base_url()."controller_single/index/school_".$row['school_no']."'><td>".$row['schoolname']."</td>";
+			echo "<tr id='".$row['school_no']."' class='clickable-row' data-href='".base_url()."controller_school/index/".$row['school_no']."'><td>".$row['schoolname']."</td>";
 			echo "<td>".$row['saddcountry']."</td>";
 			echo "<td>".$row['saddregion']."</td>";
 			echo "<td>".$row['saddprovince']."</td>";
@@ -127,8 +127,10 @@ class Controller_school_approval extends Controller_log {
 		}
 		else
 		{
-			$this->model_school_approval->edit_school($search);
-			redirect('controller_single/index/school_'.$search['sno'], 'refresh');	// redirect to controller_search_book
+			$schoolname=$this->model_school_approval->edit_school($search);
+			$empno=$this->session->userdata('logged_in')['eno'];
+			$this->add_log($empno, "Edited school entry", "Employee ".$empno." edited the entry of school ".$schoolname.". Info[School Number: ".$search['sno'].", School Name: ".$search['cname'].", Country: ".$search['country'].", State/Province: ".$search['state']."] ");
+			redirect('controller_school/index/'.$search['sno'], 'refresh');	// redirect to controller_search_book
 		}
 	}
 
