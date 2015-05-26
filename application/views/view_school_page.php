@@ -28,6 +28,7 @@
 
 <div id="content-box" class="content-box clearfix">
 	<div class="inner-content">
+		<?php if(isset($info['school_no'])){ ?>
 		<h3><?php  echo $info['schoolname'];?></h3>
 
 		<p>
@@ -100,8 +101,8 @@
 					</center>
 					<div id='change_here'> </div>";
 			}
-
-		?>
+		}
+		else { echo "<h3>Entry does not exist.</h3>"; } ?>
 	</div>
 </div>
 <script src="<?php echo base_url() ?>mod/js/validate.js"></script>

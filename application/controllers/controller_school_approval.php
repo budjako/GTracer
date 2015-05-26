@@ -129,7 +129,7 @@ class Controller_school_approval extends Controller_log {
 		{
 			$schoolname=$this->model_school_approval->edit_school($search);
 			$empno=$this->session->userdata('logged_in')['eno'];
-			$this->add_log($empno, "Edited school entry", "Employee ".$empno." edited the entry of school ".$schoolname.". Info[School Number: ".$search['sno'].", School Name: ".$search['cname'].", Country: ".$search['country'].", State/Province: ".$search['state']."] ");
+			$this->add_log($empno, "Edited school entry", "Employee ".$empno." edited the entry of school ".$schoolname.". Info[School Number: ".$search['sno'].", School Name: ".$search['sname'].", Country: ".$search['country'].", State/Province: ".$search['state']."] ");
 			redirect('controller_school/index/'.$search['sno'], 'refresh');	// redirect to controller_search_book
 		}
 	}
