@@ -32,6 +32,9 @@
 			<h3>User Information</h3>
 			<p>
 				<?php 
+					// echo "BWAHAHAHHA";
+					// var_dump($userinfo);
+					if(isset($userinfo)) var_dump($userinfo);
 					echo validation_errors();
 					$attrib=array('name' => 'editinfo', 'id' => 'editinfo', 'class' => 'form-horizontal');
 					echo form_open('controller_login/edit_info_form', $attrib);
@@ -61,6 +64,14 @@
 							<span name="lnameerr"></span></br>
 						</div>
 					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="lname">Email</label>
+						<div class="col-sm-10">
+							<input class="form-control" type="hidden" name="email" value="<?php if(isset($userinfo)) echo $userinfo->email; else echo $email; ?>" />
+							<span name="emailerr"></span></br>
+						</div>
+					</div>
+					
 
 					<input type="submit" name="submit" class="button-search col-sm-offset-2 btn btn-default" onclick="return validateEditInfo()" value="Save" />
 				</form>

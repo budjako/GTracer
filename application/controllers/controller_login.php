@@ -41,10 +41,10 @@ class Controller_login extends Controller_log {
 		}
 
 		// Store values in variables from project created in Google Developer Console
-		$client_id = '*****';
-		$client_secret = '*****';
-		$redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
-		$simple_api_key = '*****';
+		// $client_id = '*****';
+		// $client_secret = '*****';
+		// $redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
+		// $simple_api_key = '*****';
 
 		// Create Client Request to access Google API
 		try{
@@ -75,7 +75,7 @@ class Controller_login extends Controller_log {
 
 			// Get User Data from Google and store them in $data
 			if ($client->getAccessToken()) {
-				// 	$this->session->unset_userdata('logged_in');
+					// $this->session->unset_userdata('logged_in');
 		 		// $this->session->sess_destroy();
 		 		// redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/0', 'refresh');
 				$userinfo = $objOAuthService->userinfo->get();
@@ -88,6 +88,7 @@ class Controller_login extends Controller_log {
 					$this->login($eno, $userinfo->email, $this->is_admin($eno));		// if already on database, redirect to home 
 				}
 				else{										// if not on database
+ 		// redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/0', 'refresh');
 					$data['titlepage'] = "UPLB OSA GTracer - Edit User Information"; //title page 
 					$this->load->view("header", $data); 						//displays the header
 					$this->load->view("view_reg_edit_info", $data); 			//displays the home page
@@ -204,7 +205,7 @@ class Controller_login extends Controller_log {
 		if($is_banned){
 			$this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Banned).');
 			$eno=$this->session->userdata('logged_in')['eno'];
-			$this->add_log($eno, 'Log out', 'Employee '.$eno.' was forced to logged out  (Status: Banned).');
+			$this->add_log($eno, 'Log out', 'Employee '.$eno.' was forced to log out  (Status: Banned).');
 	 		$this->session->unset_userdata('logged_in');
 	 		$this->session->sess_destroy();
 	 		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/1', 'refresh');
@@ -212,7 +213,7 @@ class Controller_login extends Controller_log {
 		else if($is_deleted){
 			$this->add_log($eno, 'Log in', 'Employee '.$eno.' attempted to log in (Status: Account Deleted).');
 			$eno=$this->session->userdata('logged_in')['eno'];
-			$this->add_log($eno, 'Log out', 'Employee '.$eno.' was forced to logged out  (Status: Account Deleted).');
+			$this->add_log($eno, 'Log out', 'Employee '.$eno.' was forced to log out  (Status: Account Deleted).');
 	 		$this->session->unset_userdata('logged_in');
 	 		$this->session->sess_destroy();
 	 		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/2', 'refresh');
@@ -226,7 +227,7 @@ class Controller_login extends Controller_log {
 	function logout() {
  	 	//remove all session data
 		$eno=$this->session->userdata('logged_in')['eno'];
-		$this->add_log($eno, 'Log out', 'Employee '.$eno.' logged out.');
+		$this->add_log($eno, 'Log out', 'Employee '.$eno.' log out.');
  		$this->session->unset_userdata('logged_in');
  		$this->session->sess_destroy();
  		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/0', 'refresh');

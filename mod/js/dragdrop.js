@@ -133,7 +133,6 @@ $(document).on("change","input:radio[name ='result-view']", function(){
 });
 
 $(document).on("change","input:radio[name ='mapfactor']", function(){
-	console.log("change mapfactor");
 	$.ajax({
 		url: base_url + "controller_interactive_search/query_map",
 		type: 'POST',
@@ -189,13 +188,12 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 				chart : {
 					events: {
 						drilldown: function (e) {
-							console.log(e);
 							var key = e.point.key;
 							var country;
 							if(typeof e.point.parentcountry !== 'undefined') country=e.point.parentcountry;
 							else country=e.point.key;
 
-							console.log("mapKey: "+'countries/' + country + '/' + key + '-all');	// for countries only 
+							// console.log("mapKey: "+'countries/' + country + '/' + key + '-all');	// for countries only 
 							if (!e.seriesOptions) {
 								var chart = this,
 									mapKey = 'countries/' + country + '/' + key + '-all',			// for countries only
@@ -227,8 +225,8 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 										this.value = getProvinceValue(this.name);
 										this.parentcountry=country;
 									});
-									console.log("new drilldown set");
-									console.log(data);
+									// console.log("new drilldown set");
+									// console.log(data);
 
 									// Hide loading and add series
 									chart.hideLoading();
@@ -327,8 +325,10 @@ $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 			if(graphtype == 'pie'){
 				var values=new Array();
 				for(var i=0; i<result.categories.length; i++){
-					values.push([result.categories[i], parseInt(result.count[i])]);
+					if(result.categories[i]==null) values.push("Not available/applicable", parseInt(result.count[i]))
+					else values.push([result.categories[i], parseInt(result.count[i])]);
 				}
+				console.log(values);
 				$('#change_here_chart').highcharts({
 					chart: {
 						type: 'pie'
@@ -432,7 +432,7 @@ function getValues(){											// getting the query
 		}
 	}
 	$("#values").val(querystring);
-	// console.log(querystring);
+	console.log(querystring);
 	return true;
 }
 
@@ -590,12 +590,12 @@ $(function() {
 			var drags=$(".query").children(".draggable");
 			if(drags.length>1){
 				for(var j=1; j<drags.length; j++){
-					$(drags[j]).remove();
+					if(! $(drags[j]).hasClass(included[0]))
+						$(drags[j]).remove();
 				}
 			}
 		}
 		else{
-			console.log("OUR SAVIOR HAS ARRIVED!");
 			// enable all other fields except those who have a class of includedField
 			var original = $(".original");
 			for(var j=1; j<original.length; j++){
@@ -618,7 +618,6 @@ $(function() {
 		}
 		if(included.length == 0){
 			//enable all
-			console.log("CLEAR!");
 			// enable all other fields except those who have a class of includedField
 			var original = $(".original");
 			for(var j=1; j<original.length; j++){

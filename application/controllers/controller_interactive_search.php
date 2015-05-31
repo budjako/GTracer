@@ -78,16 +78,13 @@ class Controller_interactive_search extends CI_Controller {
 		return false;
 	}
 
-	function create_query($arr, $mapfactor=null){
+	function create_query($arr, $graphingfactor=null, $mapfactor=null){
 		$tables=array();
 		$selected=array();
 		$sql="";
 		$condition=array();
-
-		$selct=0;
-		$graduate=0;
-		$school=0;
-		$company=0;
+		echo $mapfactor;
+		$selct=$graduate=$school=$company=$work=$educationalbg=0;
 		// var_dump($arr);
 
 		// $item as items in array: [0], [1], etc.
@@ -102,6 +99,8 @@ class Controller_interactive_search extends CI_Controller {
 			if($details[0] == "graduate") $graduate=1;
 			if($details[0] == "company") $company=1;
 			if($details[0] == "school") $school=1;
+			if($details[0] == "work") $work=1;
+			if($details[0] == "educationalbg") $educationalbg=1;
 			// echo "$sql<br>";
 			// echo "$selct<br>";
 			$selct++;
@@ -130,7 +129,7 @@ class Controller_interactive_search extends CI_Controller {
 		$sql.=" from ";									// include in from all tables involved
 		$count2=0;
 		$tabcount=count($tables);
-		if(! in_array("graduate", $tables) && $mapfactor == null){
+		if(! in_array("graduate", $tables) && $mapfactor == null && $graphingfactor == null){
 			$sql="distinct ".$sql;
 		}
 		if($mapfactor != null){
@@ -157,7 +156,10 @@ class Controller_interactive_search extends CI_Controller {
 			if($tables[$count2] == "educationalbg") $school=2;
 			$sql.="`".$tables[$count2]."`";
 		}
-		if($company == 1 && $graduate == 1) $sql.=", `work`";
+		if($company == 1 && $graduate == 1){
+			$sql.=", `work`";
+			$work=1;
+		}
 		if($school == 1 && $graduate == 1) $sql.=", `educationalbg`";
 		if(in_array('graduate', $tables)){
 			if(count($tables)>1){							// link by student number
@@ -181,6 +183,9 @@ class Controller_interactive_search extends CI_Controller {
 						$count4++;
 					}
 				}
+				if($work==1){
+					$sql.=" and work.currentjob=1";
+				}
 				if(count($condition)>0){
 					$sql.=" and ";
 				}
@@ -195,10 +200,23 @@ class Controller_interactive_search extends CI_Controller {
 			}
 		}
 		else{
+			$prev=0;
 			// echo "<br>Details unconstrained by an alumni.<br>";
+			// echo $work;
+			// echo $company;
 			if(count($condition)>0) $sql.=" where ";
+			if($work>0 && $company>0){
+				if(count($condition)==0) $sql.=" where ";
+				$prev=1;
+				$sql.="`work`.companyno=`company`.company_no";
+			}
+			if($school>0 && $educationalbg>0){
+				if($prev==0 && count($condition)==0) $sql.=" where ";
+				$prev=1;
+				$sql.="`school`.school_no=`educationalbg`.schoolno";
+			}
 			for($i=0; $i<count($condition); $i++) {
-				if($i>0) $sql.=" and ";
+				if($i>0 || $prev==1) $sql.=" and ";
 				// else $sql.=" where ";
 				$sql.=$condition[$i];
 			}
@@ -379,14 +397,14 @@ class Controller_interactive_search extends CI_Controller {
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		if($str == null){
-			// echo "Empty query";
+			echo "Empty query";
 			return;
 		}
 
 		// LEXICAL ANALYSIS
 
 		$fields=explode("&", $str);
-		// var_dump($fields);
+		var_dump($fields);
 
 		$arr=array();
 		for($i=0; $i<count($fields); $i++) {
@@ -400,10 +418,10 @@ class Controller_interactive_search extends CI_Controller {
 		}
 
 		if(! $arr){
-			// echo "<br><br>Invalid query.";
+			echo "<br><br>Invalid query.";
 			return;
 		}
-
+		// return;
 		// var_dump($arr);
 		$sql="select ";
 		if(count($fields) == 1) $sql.="distinct ";
@@ -412,7 +430,7 @@ class Controller_interactive_search extends CI_Controller {
 		$sort_by=$sort_by[1];
 		$order_by=$this->input->post('order_by');
 		$sql.=" order by ".$sort_by." ".$order_by;
-		// echo "<br>search for: $sql";
+		echo "<br>search for: $sql";
 		// $sql="select distinct educationalbg.class, course from `educationalbg`";
 
 		$config['base_url'] = base_url().'controller_interactive_search/query_table';
@@ -437,6 +455,8 @@ class Controller_interactive_search extends CI_Controller {
 
 	public function print_results($result, $links){
 		echo $links;
+		// var_dump($result);
+		if(! count($result)) echo "<h3>No results.<h3>";
 		// var_dump($result);
 		if($result!=null){
 			$keys=array_keys($result[0]);
@@ -493,7 +513,7 @@ class Controller_interactive_search extends CI_Controller {
 		}
 
 		$sql="select count(*) as `num`, ";
-		$sql.=$this->create_query($arr);
+		$sql.=$this->create_query($arr, $graphingfactor);
 		// echo "no group by sql: ".
 		$sql.=" group by `".$graphingfactor."`";
 		// echo "<br>search for: $sql";
@@ -557,13 +577,9 @@ class Controller_interactive_search extends CI_Controller {
 		else if($mapfactor == "sadd"){
 			$sql.="school.saddcountry as country, school.saddcountrycode as countrycode, school.saddregion as region, school.saddregioncode as regioncode, school.saddprovince as province, school.saddprovincecode as provincecode, ";
 		}
-		$sql.=$this->create_query($arr, $mapfactor);
+		$sql.=$this->create_query($arr, false, $mapfactor);
 		// echo "no group by sql: ".
 		// concatenate where in sql
-		// if($mapfactor == "curadd") $sql.=" group by graduate.curaddcountry, graduate.curaddcountrycode, graduate.curaddregion, graduate.curaddregioncode, graduate.curaddprovince, graduate.curaddprovincecode";
-		// else if($mapfactor == "cadd") $sql.=" group by company.caddcountry, company.caddcountrycode, company.caddregion, company.caddregioncode, company.caddprovince, company.caddprovincecode";
-		// else if($mapfactor == "sadd") $sql.=" group by school.saddcountry, school.saddcountrycode, school.saddregion, school.saddregioncode, school.saddprovince, school.saddprovincecode";
-		// echo "<br>search for: $sql";
 		$sql.=" group by country, countrycode, region, regioncode, province, provincecode";
 
 		// echo $sql;

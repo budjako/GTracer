@@ -1,5 +1,5 @@
 <?php
-	class Model_single extends CI_Model {
+	class Model_alumni extends CI_Model {
 		/* OPTIMIZE QUERIES */
 		public function __construct(){
 			$this->load->database();
@@ -166,17 +166,6 @@
 				return $result;
 			}
 			return false;
-		}
-
-		public function get_company_data($company_no){
-			$query=$this->db->query("SELECT * FROM company WHERE company_no=".$company_no);
-			if(empty($query->result())){
-				return false;
-			}
-			else{
-				// echo "does not exist";
-				return $query->result_array()[0];
-			}
 		}
 	}
 ?>
