@@ -36,15 +36,15 @@
 				<legend>Fields</legend>
 				<fieldset class="fieldcont">
 					<legend>Basic Info</legend>
-					<div class="draggable graduate original"><span class="lbl nongraph view">Student Number</span></div>
-					<div class="draggable graduate original"><span class="lbl view">First Name</span></div>
-					<div class="draggable graduate original"><span class="lbl view">Last Name</span></div>
-					<div class="draggable graduate original"><span class="lbl view">Middle Name</span></div>
-					<div class="draggable graduate original"><span class="lbl view">Sex</span></div>
-					<div class="draggable graduate original"><span class="lbl nongraph view">Birth Date</span></div>
-					<div class="draggable graduate original"><span class="lbl view">Email</span></div>
-					<div class="draggable graduate original"><span class="lbl nongraph view">Mobile No</span></div>
-					<div class="draggable graduate original"><span class="lbl nongraph view">Tel No</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl nongraph view">Student Number</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl view">First Name</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl view">Last Name</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl view">Middle Name</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl view">Sex</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl nongraph view">Birth Date</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl view">Email</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl nongraph view">Mobile No</span></div>
+					<div class="draggable graduate original curadd"><span class="lbl nongraph view">Tel No</span></div>
 				</fieldset>
 				<fieldset class="fieldcont">
 					<legend>Educational Background</legend>

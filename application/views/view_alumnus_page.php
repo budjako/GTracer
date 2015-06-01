@@ -9,6 +9,7 @@
 		</h3>
 
 		<?php
+			// var_dump($info);
 			if($info['basic'] != null){
 				echo "<div id='basic_info'><h4>Basic Information</h4>";
 				echo "<span class='label'>Student Number:</span> <span class='value'>".$info['basic']->student_no."</span></br>";
@@ -34,7 +35,7 @@
 				echo "</div>";
 			}
 
-			if($info['award'] != null){
+			if($info['award']){
 				echo "<div id='award'><h4>Awards</h4>";
 				foreach ($info['award'] as $award) {
 					if($award->awardtitle != null)
@@ -55,7 +56,7 @@
 					echo "<span class='label'>Attended:</span> <span class='value'>".$education->batch."-".$education->class."</span></br>";
 					echo "<span class='label'>Level:</span> <span class='value'>".$education->level."</span></br>";
 					if($education->course != null)
-						echo "<span class='label'>Course:</span> <span class='value'>".$award->course."</span></br>";
+						echo "<span class='label'>Course:</span> <span class='value'>".$education->course."</span></br>";
 				}
 				echo "</div>";
 			}

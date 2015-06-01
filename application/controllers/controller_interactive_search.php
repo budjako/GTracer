@@ -83,7 +83,7 @@ class Controller_interactive_search extends CI_Controller {
 		$selected=array();
 		$sql="";
 		$condition=array();
-		echo $mapfactor;
+		// echo $mapfactor;
 		$selct=$graduate=$school=$company=$work=$educationalbg=0;
 		// var_dump($arr);
 
@@ -136,16 +136,23 @@ class Controller_interactive_search extends CI_Controller {
 			if($mapfactor == "curadd"){
 				if(! in_array("graduate", $tables)){
 					$tables[]="graduate";
+					$graduate=1;
 				}
 			}
 			else if($mapfactor == "cadd"){
 				if(! in_array("company", $tables)){
 					$tables[]="company";
+					$company=1;
+				}
+				if(! in_array("work", $tables)){
+					$tables[]="work";
+					$work=1;
 				}
 			}
 			else if($mapfactor == "sadd"){
 				if(! in_array("school", $tables)){
 					$tables[]="school";
+					$school=1;
 				}
 			}
 		}
@@ -205,12 +212,12 @@ class Controller_interactive_search extends CI_Controller {
 			// echo $work;
 			// echo $company;
 			if(count($condition)>0) $sql.=" where ";
-			if($work>0 && $company>0){
+			if($work>0 && $company>0 && $graduate>0){
 				if(count($condition)==0) $sql.=" where ";
 				$prev=1;
 				$sql.="`work`.companyno=`company`.company_no";
 			}
-			if($school>0 && $educationalbg>0){
+			if($school>0 && $educationalbg>0 && $graduate>0){
 				if($prev==0 && count($condition)==0) $sql.=" where ";
 				$prev=1;
 				$sql.="`school`.school_no=`educationalbg`.schoolno";
@@ -397,14 +404,14 @@ class Controller_interactive_search extends CI_Controller {
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		if($str == null){
-			echo "Empty query";
+			// echo "Empty query";
 			return;
 		}
 
 		// LEXICAL ANALYSIS
 
 		$fields=explode("&", $str);
-		var_dump($fields);
+		// var_dump($fields);
 
 		$arr=array();
 		for($i=0; $i<count($fields); $i++) {
@@ -418,7 +425,7 @@ class Controller_interactive_search extends CI_Controller {
 		}
 
 		if(! $arr){
-			echo "<br><br>Invalid query.";
+			// echo "<br><br>Invalid query.";
 			return;
 		}
 		// return;
@@ -430,7 +437,7 @@ class Controller_interactive_search extends CI_Controller {
 		$sort_by=$sort_by[1];
 		$order_by=$this->input->post('order_by');
 		$sql.=" order by ".$sort_by." ".$order_by;
-		echo "<br>search for: $sql";
+		// echo "<br>search for: $sql";
 		// $sql="select distinct educationalbg.class, course from `educationalbg`";
 
 		$config['base_url'] = base_url().'controller_interactive_search/query_table';
@@ -488,7 +495,7 @@ class Controller_interactive_search extends CI_Controller {
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		if($str == null){
-			echo "Empty query";
+			// echo "Empty query";
 			return;
 		}
 
@@ -605,6 +612,7 @@ class Controller_interactive_search extends CI_Controller {
 				$data['province'][$item['province']]=$item['num'];
 			}
 		}
+		// var_dump($data);
 		echo json_encode($data);
 	}
 

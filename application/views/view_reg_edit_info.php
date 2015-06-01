@@ -34,7 +34,7 @@
 				<?php 
 					// echo "BWAHAHAHHA";
 					// var_dump($userinfo);
-					if(isset($userinfo)) var_dump($userinfo);
+					// if(isset($userinfo)) var_dump($userinfo);
 					echo validation_errors();
 					$attrib=array('name' => 'editinfo', 'id' => 'editinfo', 'class' => 'form-horizontal');
 					echo form_open('controller_login/edit_info_form', $attrib);
@@ -65,7 +65,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label" for="lname">Email</label>
+						<!-- <label class="col-sm-2 control-label" for="lname">Email</label> -->
 						<div class="col-sm-10">
 							<input class="form-control" type="hidden" name="email" value="<?php if(isset($userinfo)) echo $userinfo->email; else echo $email; ?>" />
 							<span name="emailerr"></span></br>

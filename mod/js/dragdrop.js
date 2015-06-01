@@ -6,7 +6,7 @@ $(document).ready(function() {
 		$('#chartspecs').html("");
 		$("#change_here_chart").html("");
 		$('#mapspecs').html("");
-		$("#change_here_map").html("");
+		$("#change_here_map").html("").css("height", 0);
 
 		if($(".query").children(".draggable").length < 1){
 			alert("No query!");
@@ -68,16 +68,33 @@ $(document).ready(function() {
 				alert("No query!");
 				return;
 			}
-			var str="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input><br>";
+			var str="";
 			var drags=$('.query').children('.draggable');
+			var k=0, j=0, l=0;
+			console.log("l: "+l);
+			console.log("k: "+k);
+			console.log("j: "+j);
 			for(var i=0; i<drags.length; i++){
+				if($(drags[i]).hasClass('curadd')){
+					if(l==0){
+						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input><br>";
+						else str+="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input><br>";
+						l=1;
+					}
+				}
 				if($(drags[i]).hasClass('sadd')){
-					if(drags.length == 1) str="<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>";
-					else str+="<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>";
+					if(k==0){
+						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>";
+						else str+="<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>";
+						k=1;
+					}
 				}
 				else if($(drags[i]).hasClass('cadd')){
-					if(drags.length == 1) str="<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>";
-					else str+="<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>";
+					if(j==0){
+						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>";
+						else str+="<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>";
+						j=1;
+					}
 				}
 			}
 			options=$(str);
@@ -307,7 +324,7 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 			});
 		},
 		error: function(err){
-			$("#change_here_map").html("may error "+err);
+			console.log(err);
 		}
 	});
 });
@@ -328,7 +345,7 @@ $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 					if(result.categories[i]==null) values.push("Not available/applicable", parseInt(result.count[i]))
 					else values.push([result.categories[i], parseInt(result.count[i])]);
 				}
-				console.log(values);
+				// console.log(values);
 				$('#change_here_chart').highcharts({
 					chart: {
 						type: 'pie'
@@ -432,7 +449,7 @@ function getValues(){											// getting the query
 		}
 	}
 	$("#values").val(querystring);
-	console.log(querystring);
+	// console.log(querystring);
 	return true;
 }
 
@@ -581,7 +598,7 @@ $(function() {
 		if($.inArray("graduate", included) < 0){
 			// Note: graduate field is always possible 	
 			for(var j=1; j<classTabs.length; j++){
-				if(classTabs[j] != included[0]  || classTabs[j] == "others"){
+				if(classTabs[j] != included[0]){
 					$("."+classTabs[j]+":not(.clone)").css("background", "#ddd");
 					$("."+classTabs[j]+":not(.clone)").draggable("disable");
 				}

@@ -41,10 +41,10 @@ class Controller_login extends Controller_log {
 		}
 
 		// Store values in variables from project created in Google Developer Console
-		// $client_id = '*****';
-		// $client_secret = '*****';
-		// $redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
-		// $simple_api_key = '*****';
+		$client_id = '*****';
+		$client_secret = '*****';
+		$redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
+		$simple_api_key = '*****';
 
 		// Create Client Request to access Google API
 		try{
