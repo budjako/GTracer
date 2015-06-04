@@ -65,6 +65,19 @@
 					<div class="draggable works original cadd"><span class="lbl view">Company Name</span></div>
 				</fieldset>
 				<fieldset class="fieldcont">
+					<legend>Awards</legend>
+					<div class="draggable awards original"><span class="lbl view">Award Title</span></div>
+					<div class="draggable awards original"><span class="lbl view">Awarding Body</span></div>
+					<div class="draggable awards original"><span class="lbl nongraph view">Awarding Date</span></div>
+				</fieldset>
+				<fieldset class="fieldcont">
+					<legend>Grants</legend>
+					<div class="draggable grant original"><span class="lbl view">Grant Name</span></div>
+					<div class="draggable grant original"><span class="lbl view">Grant Awarding Body</span></div>
+					<div class="draggable grant original"><span class="lbl view">Grant Type</span></div>
+					<div class="draggable grant original"><span class="lbl view">Grant Effective Year</span></div>
+				</fieldset>
+				<fieldset class="fieldcont">
 					<legend>Projects</legend>
 					<div class="draggable projects original"><span class="lbl nongraph view">Project Title</span></div>
 					<div class="draggable projects original"><span class="lbl nongraph view">Project Description</span></div>
@@ -78,19 +91,6 @@
 					<div class="draggable publications original"><span class="lbl nongraph view">Publication Description</span></div>
 					<div class="draggable publications original"><span class="lbl nongraph view">Publisher</span></div>
 					<div class="draggable publications original"><span class="lbl nongraph view">Peers</span></div>
-				</fieldset>
-				<fieldset class="fieldcont">
-					<legend>Awards</legend>
-					<div class="draggable awards original"><span class="lbl nongraph view">Award Title</span></div>
-					<div class="draggable awards original"><span class="lbl view">Awarding Body</span></div>
-					<div class="draggable awards original"><span class="lbl nongraph view">Awarding Date</span></div>
-				</fieldset>
-				<fieldset class="fieldcont">
-					<legend>Grants</legend>
-					<div class="draggable grant original"><span class="lbl view">Grant Name</span></div>
-					<div class="draggable grant original"><span class="lbl view">Grant Awarding Body</span></div>
-					<div class="draggable grant original"><span class="lbl view">Grant Type</span></div>
-					<div class="draggable grant original"><span class="lbl view">Grant Effective Year</span></div>
 				</fieldset>
 				<fieldset class="fieldcont">
 					<legend>Others</legend>
