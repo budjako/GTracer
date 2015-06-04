@@ -2,11 +2,11 @@ $(document).ready(function() {
 	$(".submit-query").click(function get_data(event) {
 		event.preventDefault();
 		$("#tablespecs").html("");
-		$("#change_here_table").html("");
+		$("#change_here_table").html("").css("height", "");
 		$('#chartspecs').html("");
-		$("#change_here_chart").html("");
+		$("#change_here_chart").html("").css("height", "");
 		$('#mapspecs').html("");
-		$("#change_here_map").html("").css("height", 0);
+		$("#change_here_map").html("").css("height", "");
 
 		if($(".query").children(".draggable").length < 1){
 			alert("No query!");
@@ -384,6 +384,10 @@ $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 					categories.push(result.categories[i]);
 					counter.push(parseInt(result.count[i]));
 				}
+				console.log(categories.length);
+				console.log(counter.length);
+				console.log("height: "+(categories.length*50+100));
+				$('#change_here_chart').css("height", (categories.length*50+100));
 				$('#change_here_chart').highcharts({
 					chart: {
 						type: 'bar'

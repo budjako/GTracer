@@ -18,13 +18,6 @@
 		<script src="<?php echo base_url(); ?>mod/js/jquery-ui-1.11.3.custom/external/jquery/jquery.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/jquery-ui-1.11.3.custom/jquery-ui.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/dragdrop.js"></script>
-<!--	<script src="<?php echo base_url(); ?>mod/js/highcharts.js"></script>
-		<script src="<?php echo base_url(); ?>mod/js/highcharts-more.js"></script>
-		<script src="<?php echo base_url(); ?>mod/js/map.js"></script>
-		<script src="http://code.highcharts.com/mapdata/index.js?1"></script>
-		<script src="<?php echo base_url(); ?>mod/js/modules/data.js"></script>
-		<script src="<?php echo base_url(); ?>mod/js/modules/drilldown.js"></script>
-		<script src="http://code.highcharts.com/mapdata/custom/world.js"></script> -->
 		<script src="<?php echo base_url(); ?>mod/js/highcharts.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/highcharts-more.js"></script>
 		<script src="<?php echo base_url(); ?>mod/js/map.js"></script>
