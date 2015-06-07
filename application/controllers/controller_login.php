@@ -36,11 +36,6 @@ class Controller_login extends Controller_log {
 		$redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
 		$simple_api_key = '*****';
 
-		$client_id = '924106994495-8p6m5k5jin75i3d5bum3gcov6jbr73tf.apps.googleusercontent.com';
-		$client_secret = 'GQJ_wD12zGZfEWyQsqLkFzA7';
-		$redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
-		$simple_api_key = 'AIzaSyBI4xq-IXkbKlT8h7c_TdMeBWgZ2mWDCv4';
-
 		// Create Client Request to access Google API
 		try{
 			$client = new Google_Client();
