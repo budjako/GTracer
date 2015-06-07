@@ -9,9 +9,17 @@
 			return $query->result_array()[0]['count(*)'];
 		}
 
-		public function get_approval_company($limit, $start){
-			$query=$this->db->query("SELECT c.company_no, c.companyname, c.caddcountry, c.caddregion, c.caddprovince, c.caddcountrycode, c.caddregioncode, c.caddprovincecode, c.companytype FROM request r, company c WHERE r.companyno=c.company_no LIMIT ".$start.",".$limit) or die(mysqli_error());
-			return $query->result_array();
+		public function get_approval_company($limit, $start, $sort, $order){
+			if($order == FALSE)
+				$query=$this->db->query("SELECT c.company_no, c.companyname, c.caddcountry, c.caddregion, c.caddprovince, c.caddcountrycode, c.caddregioncode, c.caddprovincecode, c.companytype FROM request r, company c WHERE r.companyno=c.company_no LIMIT ".$start.",".$limit);
+			else
+				$query=$this->db->query("SELECT c.company_no, c.companyname, c.caddcountry, c.caddregion, c.caddprovince, c.caddcountrycode, c.caddregioncode, c.caddprovincecode, c.companytype FROM request r, company c WHERE r.companyno=c.company_no ORDER BY ".$sort." ".$order." LIMIT ".$start.",".$limit.";") or die(mysqli_error());
+			if($query->num_rows()>0){
+				return $query->result_array();
+			}
+			return false;
+			// $query=$this->db->query("SELECT c.company_no, c.companyname, c.caddcountry, c.caddregion, c.caddprovince, c.caddcountrycode, c.caddregioncode, c.caddprovincecode, c.companytype FROM request r, company c WHERE r.companyno=c.company_no LIMIT ".$start.",".$limit) or die(mysqli_error());
+			// return $query->result_array();
 		}
 
 		public function approve_company($company_no){

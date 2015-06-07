@@ -9,9 +9,15 @@
 			return $query->result_array()[0]['count(*)'];
 		}
 
-		public function get_approval_school($limit, $start){
-			$query=$this->db->query("SELECT s.school_no, s.schoolname, s.saddcountry, s.saddregion, s.saddprovince, s.saddcountrycode, s.saddregioncode, s.saddprovincecode  FROM request r, school s WHERE r.schoolno=s.school_no LIMIT ".$start.",".$limit) or die(mysqli_error());
-			return $query->result_array();
+		public function get_approval_school($limit, $start, $sort, $order){
+			if($order == FALSE)
+				$query=$this->db->query("SELECT s.school_no, s.schoolname, s.saddcountry, s.saddregion, s.saddprovince, s.saddcountrycode, s.saddregioncode, s.saddprovincecode  FROM request r, school s WHERE r.schoolno=s.school_no LIMIT ".$start.",".$limit);
+			else
+				$query=$this->db->query("SELECT s.school_no, s.schoolname, s.saddcountry, s.saddregion, s.saddprovince, s.saddcountrycode, s.saddregioncode, s.saddprovincecode  FROM request r, school s WHERE r.schoolno=s.school_no ORDER BY ".$sort." ".$order." LIMIT ".$start.",".$limit.";") or die(mysqli_error());
+			if($query->num_rows()>0){
+				return $query->result_array();
+			}
+			return false;
 		}
 
 		public function approve_school($school_no){

@@ -16,7 +16,7 @@
 		<div id="change_here_table"></div>
 		<div id="change_here_chart"></div>
 		<div id="change_here_map"></div>
-
+		<div id="scripts"></div>
 		<center>
 			<form name="interactivesearch" id="interactivesearch">
 				<input type="hidden" name="values" id="values"></input>
@@ -102,26 +102,6 @@
 
 			<fieldset class="query ui-droppable">
 				<legend>Query</legend>
-				<!-- <div class="draggable graduate ui-draggable ui-draggable-handle includedField ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
-					<span class="rem opt">X</span>				
-					<span class="caret opt" data-toggle="dropdown"></span>
-					<span class="lbl nongraph view dropdown-toggle" data-toggle="dropdown">Student Number</span>
-					<ul class="dropdown-menu">					
-						<li class="dropdown-item single"><a>Single Constraint</a></li>
-						<li class="dropdown-item and"><a>Multiple Constraints (And)</a></li>					
-						<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>				
-					</ul>
-				</div>
-				<div class="draggable graduate ui-draggable ui-draggable-handle includedField ui-draggable-disabled clone" style="top: 0px; left: 0px; clear: both;">
-					<span class="rem opt">X</span>				
-					<span class="caret opt" data-toggle="dropdown"></span>
-					<span class="lbl view dropdown-toggle" data-toggle="dropdown">Sex</span>
-					<ul class="dropdown-menu">					
-						<li class="dropdown-item single"><a>Single Constraint</a></li>
-						<li class="dropdown-item and"><a>Multiple Constraints (And)</a></li>					
-						<li class="dropdown-item or"><a>Multiple Constraints (Or)</a></li>				
-					</ul>
-				</div> -->
 			</fieldset>
 		</div>
 	</div>

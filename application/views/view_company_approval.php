@@ -1,9 +1,9 @@
 <script type="text/javascript">
-	window.onload=get_data_company();
+	window.onload=get_data("companyname", "asc");
 
-	function get_data_company(){  
+	function get_data(sort, order){  
 		$.ajax({
-			url: base_url+"controller_company_approval/get_company_requests",
+			url: base_url+"controller_company_approval/get_company_requests/"+sort+"_"+order,
 			type: 'POST',
 
 			success: function(result){

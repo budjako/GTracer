@@ -1,9 +1,10 @@
 <script type="text/javascript">
-	window.onload=get_data_school(); 
+	window.onload=get_data("schoolname", "asc");
 
-	function get_data_school(){  
+	function get_data(sort, order){  
 		$.ajax({
-			url: base_url+"controller_school_approval/get_school_requests",
+			url: base_url+"controller_school_approval/get_school_requests/"+sort+"_"+order,
+
 			type: 'POST',
 
 			success: function(result){
@@ -32,7 +33,7 @@
 					item.attr("disabled", "disabled");
 				},
 				error: function(err){
-					$('#change_here_company').html(err);
+					$('#change_here_school').html(err);
 				}
 			});
 		})

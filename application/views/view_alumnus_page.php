@@ -1,12 +1,12 @@
 <div id="content-box" class="content-box clearfix">
 	<div class="inner-content">
-		<h3>
+		<h1>
 			<?php 
 				echo $info['basic']->firstname;
 				echo " ".$info['basic']->midname;
 				echo " ".$info['basic']->lastname;
 			?>
-		</h3>
+		</h1>
 
 		<?php
 			// var_dump($info);
@@ -99,7 +99,7 @@
 					echo "<span class='label'>Date:</span> <span class='value'>".$publication->publicationdate."</span></br>";
 					if($publication->publicationdesc != null)
 						echo "<span class='label'>Description:</span> <span class='value'>".$publication->publicationdesc."</span></br>";
-					if($publication->publicationpeer != null)
+					if($publication->publicationpeers != null)
 						echo "<span class='label'>Peers:</span> <span class='value'>".$publication->publicationpeer."</span></br>";
 				}
 				echo "</div>";

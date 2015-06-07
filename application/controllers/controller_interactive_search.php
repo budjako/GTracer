@@ -400,7 +400,6 @@ class Controller_interactive_search extends CI_Controller {
 		}
 		// echo "POST";
 		// var_dump($this->input->post());
-		$this->input->post('serialised_form');
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		if($str == null){
@@ -435,6 +434,7 @@ class Controller_interactive_search extends CI_Controller {
 		$sql.=$this->create_query($arr);
 		$sort_by=$this->to_table_name($this->input->post('sort_by'));
 		$sort_by=$sort_by[1];
+		// echo $sort_by;
 		$order_by=$this->input->post('order_by');
 		$sql.=" order by ".$sort_by." ".$order_by;
 		// echo "<br>search for: $sql";
@@ -445,6 +445,7 @@ class Controller_interactive_search extends CI_Controller {
 		$config['per_page'] = '20';
 		$config['div'] = '#change_here_table';
 		$config['additional_param']  = 'serialize_form()';
+
 		
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		// echo "<br>Page: $page<br>";
@@ -455,12 +456,12 @@ class Controller_interactive_search extends CI_Controller {
 		//initialize the configuration of the ajax_pagination
 		$this->jquery_pagination->initialize($config);
 		//create links for pagination
-		$data['links'] = $this->jquery_pagination->create_links();
+		$data['links'] = $this->jquery_pagination->create_links($sort_by, $order_by);
 		// var_dump($data['links']);
-		$this->print_results($data['result'],$data['links']);
+		$this->print_results($sort_by, $order_by, $data['result'],$data['links'], $config);
 	}
 
-	public function print_results($result, $links){
+	public function print_results($sort_by, $order_by, $result, $links, $config){
 		echo $links;
 		// var_dump($result);
 		if(! count($result)) echo "<h3>No results.<h3>";
@@ -469,8 +470,30 @@ class Controller_interactive_search extends CI_Controller {
 			$keys=array_keys($result[0]);
 			echo "<table class='table table-hover table-bordered'>";
 			foreach($keys as $key){
+
 				$key_table=$this->to_standard_name($key);
-				echo "<th>".$key_table[1]."</th>";
+				$serialised_form=$config['additional_param'];
+				if($sort_by=="".$key.""){
+					// echo $order_by;
+					if($order_by=="asc"){
+						// echo "<script type='text/javascript'> $(document).ready( function(){ $('#sortby').val('".$key_table[1]."'); $('#orderby').val('asc'); });</script>";
+						echo "<th><a href='javascript:void(0);' onclick=\"$('#sortby').val('".$key_table[1]."'); $('#orderby').val('desc'); console.log('haha1');  $.post('".base_url()."controller_interactive_search/query_table', ".$serialised_form.", function(data){ $('#change_here_table').html(data);  }); return false;\">".$key_table[1]."<span class='caretdown'></span></a></th>";
+						
+					}
+					else if($order_by=="desc"){
+						// echo "<script type='text/javascript'>$('#scripts').html($('#sortby').val('".$key_table[1]."');  $('#orderby').val('asc'); );</script>";
+						
+						// echo "<script type='text/javascript'> $(document).ready( function(){ $('#sortby').val('".$key_table[1]."'); $('#orderby').val('desc'); });</script>";
+						echo "<th><a href='javascript:void(0);' onclick=\"$('#sortby').val('".$key_table[1]."'); $('#orderby').val('asc');console.log('haha2');   $.post('".base_url()."controller_interactive_search/query_table', ".$serialised_form.", function(data){ $('#change_here_table').html(data); }); return false;\">".$key_table[1]."<span class='caretup'></span></a></th>";
+					}
+				}
+				else{
+					
+					// echo "<script type='text/javascript'> $(document).ready( function(){ $('#sortby').val('".$key_table[1]."'); $('#orderby').val('asc'); });</script>";
+					// echo "<script type='text/javascript'>$('#scripts').html($('#sortby').val('".$key."');  $('#orderby').val('desc'); );</script>";
+					echo "<th><a href='javascript:void(0);' onclick=\"$('#sortby').val('".$key_table[1]."'); $('#orderby').val('desc'); console.log('haha3');  $.post('".base_url()."controller_interactive_search/query_table', ".$serialised_form.", function(data){ $('#change_here_table').html(data);  }); return false;\">".$key_table[1]."<span class='caretdown'></span></a></th>";
+				}
+
 			}
 		}
 		foreach ($result as $row){

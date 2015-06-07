@@ -23,13 +23,15 @@ class Controller_list_alumni extends CI_Controller {
 
 	}
 
-	public function get_alumni_data(){
+	public function get_alumni_data($string){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
-		$this->input->post('serialised_form');
-		$sort_by = addslashes($this->input->post('sort_by')); 
-		$order_by = addslashes($this->input->post('order_by')); 
+		// echo $string."<br>";
+		$string=explode("_", $string);
+		$sort_by = addslashes($string[0]); 
+		if($sort_by=="studentno") $sort_by="student_no";
+		$order_by = addslashes($string[1]); 
 		// echo "sort: ".$sort_by."<br>";
 		// echo "order: ".$order_by."<br>";
 
@@ -41,7 +43,8 @@ class Controller_list_alumni extends CI_Controller {
 		$config['additional_param']  = 'serialize_form()';
 
 
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		// echo $page;
 		//fetches data from database.
 		$data['result'] = $this->model_list_alumni->get_alumni_paginate($config['per_page'], $page, $sort_by, $order_by);
 		//display data from database
@@ -52,20 +55,46 @@ class Controller_list_alumni extends CI_Controller {
 		//initialize the configuration of the ajax_pagination
 		$this->jquery_pagination->initialize($config);
 		//create links for pagination
-		$data['links'] = $this->jquery_pagination->create_links();
+		$data['links'] = $this->jquery_pagination->create_links($sort_by, $order_by);
 		// var_dump($data['links']);
-		$this->print_alumni($data['result'],$data['links']);
+		$this->print_alumni($sort_by, $order_by, $data['result'],$data['links']);
 	   
 	}
 
-	public function print_alumni($result, $links){
+	public function print_alumni($sort_by, $order_by, $result, $links){
 		echo $links;
 		echo "<table class='table table-hover table-bordered'>";
-		echo "<th>Student Number</th>";
-		echo "<th>Last Name</th>";
-		echo "<th>First Name</th>";
-		echo "<th>Middle Name</th>";
-		echo "<th>Email Address</th>";
+		if($sort_by=="student_no"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('studentno','desc');>Student Number<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('studentno','asc');>Student Number<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('studentno','desc');>Student Number<span class='caretdown'></span></a></th>";
+
+
+		if($sort_by=="lastname"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('lastname','desc');>Last Name<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('lastname','asc');>Last Name<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('lastname','desc');>Last Name<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="firstname"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('firstname','desc');>First Name<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('firstname','asc');>First Name<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('firstname','desc');>First Name<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="midname"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('midname','desc');>Middle Name<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('midname','asc');>Middle Name<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('midname','desc');>Middle Name<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="email"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('email','desc');>Email Address<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('email','asc');>Email Address<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('email','desc');>Email Address<span class='caretdown'></span></a></th>";
+
 		foreach ($result as $row){
 			echo "<tr id='".$row->student_no."' class='clickable-row' data-href='".base_url()."controller_alumni/index/".$row->student_no."'><td>".$row->student_no."</td>";
 			echo "<td>".$row->lastname."</td>";

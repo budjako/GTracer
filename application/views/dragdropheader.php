@@ -68,7 +68,7 @@
 								<div id="login-button">
 									<?php 
 										if($this->session->userdata('logged_in') == TRUE){
-											echo "<a class='logout' href='".base_url()."controller_login/logout'>Logout</a>";
+											echo "<a class='logout' href='".base_url()."controller_login/logout'>Sign out</a>";
 										}
 									?>
 								</div>

@@ -40,25 +40,26 @@ class Controller_users extends Controller_log {
 		}
 	}
 
-	public function get_users_data() {
+	public function get_users_data($string) {
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
 		}
 		else if(! $this->session->userdata('logged_in')['is_admin']){
 			redirect('controller_users/index', 'refresh');	// redirect to controller_search_book
 		}
-		$this->input->post('serialised_form');
-		$sort_by = addslashes($this->input->post('sort_by')); 
-		$order_by = addslashes($this->input->post('order_by'));
+
+		$string=explode("_", $string);
+		$sort_by = addslashes($string[0]); 
+		if($sort_by=="empno") $sort_by="emp_no";
+		$order_by = addslashes($string[1]); 
 
 		//configuration of the ajax pagination  library.
 		$config['base_url'] = base_url().'controller_users/get_users_data';
 		$config['total_rows'] = $config['total_rows'] = $this->model_user->get_user_count();
 		$config['per_page'] = '20';
 		$config['div'] = '#change_here';
-		$config['additional_param']  = 'serialize_form()';
 
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 		//fetches data from database.
 		$data['result'] = $this->model_user->get_users_paginate($config['per_page'], $page, $sort_by, $order_by);
 		//display data from database
@@ -66,43 +67,51 @@ class Controller_users extends Controller_log {
 		//initialize the configuration of the ajax_pagination
 		$this->jquery_pagination->initialize($config);
 		//create links for pagination
-		$data['links'] = $this->jquery_pagination->create_links();
+		$data['links'] = $this->jquery_pagination->create_links($sort_by, $order_by);
 		// var_dump($data['links']);
-		$this->print_users($data['result'],$data['links']);
+		$this->print_users($sort_by, $order_by, $data['result'],$data['links']);
 	}
 
-	public function print_users($result, $links){
+	public function print_users($sort_by, $order_by, $result, $links){
 		$my_empno=$this->session->userdata('logged_in')['eno'];
 		echo $links;
 		echo "<table class='table table-hover table-bordered' >";
-		echo "<th>Employee Number</th>";
-		echo "<th>Name</th>";
-		echo "<th>Email Address</th>";
-		echo "<th>Ban/Unban</th>";
+
+		if($sort_by=="empno"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('empno','desc');>Employee Number<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('empno','asc');>Employee Number<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('empno','desc');>Employee Number<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="name"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('name','desc');>Name<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('name','asc');>Name<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('name','desc');>Name<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="email"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('email','desc');>Email Address<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('email','asc');>Email Address<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('email','desc');>Email Address<span class='caretdown'></span></a></th>";
+
+		echo "<th>Active</th>";
 		echo "<th>Set as Admin</th>";
-		echo "<th>Delete Account</th>";
 		foreach ($result as $row){
 			echo "<tr id='".$row->emp_no."' class='clickable-row' data-href='".base_url()."controller_log/index/".$row->emp_no."'><td>".$row->emp_no."</td>";
 			echo "<td>".$row->name."</td>";
 			echo "<td>".$row->email."</td><td>";
-			// echo "<form method='POST' action='".base_url()."controller_users/ban/".$row->emp_no."'>";
 			if($row->admin == 0){
 				echo "<form method='POST' class='".$row->emp_no."'>";
-				echo "<input type='button' class='ban btn btn-default'";
-					if($row->status == 0) echo "value='Ban'>";
-					else echo "value='Unban'>";
+				echo "<input type='button' class='active btn btn-default'";
+					if($row->active == 1) echo "value='Deactivate'>";
+					else echo "value='Activate'>";
 				echo "</form>";
 			}
 			echo "</td><td>";
 			if($row->admin == 0){
 				echo "<form method='POST' class='".$row->emp_no."'>
 					<input type='button' class='admin btn btn-default' value='Add as Admin'>
-				</form>";
-			}
-			echo "</td><td>";
-			if($row->emp_no != $my_empno){
-				echo "<form method='POST' class='".$row->emp_no."'>
-					<input type='button' class='delete btn btn-default' value='Delete Account'>
 				</form>";
 			}
 			echo "</td></tr>";
@@ -127,7 +136,7 @@ class Controller_users extends Controller_log {
 		return;
 	}
 
-	public function ban($empno){
+	public function active($empno){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
 		}
@@ -136,14 +145,14 @@ class Controller_users extends Controller_log {
 		}
 		// check if current logged in user is an admin
 		if($this->model_user->exists($empno)){
-			$banned=$this->model_user->is_banned($empno);
-			if($banned){	// currently banned
-				$this->model_user->ban($empno, 0);
-				$this->add_log($this->session->userdata('logged_in')['eno'], "Unban user", "Unbanned employee ".$empno.".");
+			$active=$this->model_user->is_active($empno);
+			if($active){			// currently active
+				$this->model_user->active($empno, 0);
+				$this->add_log($this->session->userdata('logged_in')['eno'], "Deactivated user", "Deactivated employee ".$empno."'s account.");
 			}
 			else{
-				$this->model_user->ban($empno, 1);
-				$this->add_log($this->session->userdata('logged_in')['eno'], "Ban user", "Banned employee ".$empno.".");
+				$this->model_user->active($empno, 1);
+				$this->add_log($this->session->userdata('logged_in')['eno'], "Activated user", "Activated employee ".$empno."'s account.");
 			}
 		}
 	}

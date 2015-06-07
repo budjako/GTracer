@@ -42,35 +42,22 @@
 			}
 		}
 
-		public function is_banned($empno){
-			$query=$this->db->query("SELECT `status` from staff where `emp_no`='".$empno."';");
+		public function is_active($empno){
+			$query=$this->db->query("SELECT `active` from staff where `emp_no`='".$empno."';");
 			if($query->num_rows()==1)
-				if($query->result()[0]->status == 1){
-					return true;
-				}
-				return false;
-		}
-
-		public function is_deleted($empno){
-			$query=$this->db->query("SELECT `status` from staff where `emp_no`='".$empno."';");
-			if($query->num_rows()==1)
-				if($query->result()[0]->status == 2){
+				if($query->result()[0]->active == 1){
 					return true;
 				}
 				return false;
 		}
 
 		public function add_admin($empno){
-			$query=$this->db->query("UPDATE `staff` SET `status`=0 where `emp_no`='".$empno."';") or die(mysql_error());
+			$query=$this->db->query("UPDATE `staff` SET `active`=0 where `emp_no`='".$empno."';") or die(mysql_error());
 			$query=$this->db->query("UPDATE `staff` SET `admin`=1 where `emp_no`='".$empno."';") or die(mysql_error());
 		}
 
-		public function ban($empno, $value){
-			$query=$this->db->query("UPDATE `staff` SET `status`=".$value." where `emp_no`='".$empno."';") or die(mysql_error());
-		}
-
-		public function delete($empno){
-			$query=$this->db->query("UPDATE `staff` SET `status`=2 where `emp_no`='".$empno."';") or die(mysql_error());
+		public function active($empno, $value){
+			$query=$this->db->query("UPDATE `staff` SET `active`=".$value." where `emp_no`='".$empno."';") or die(mysql_error());
 		}
 
 		public function exists($empno){
@@ -127,10 +114,10 @@
 			return false;
 		}
 
-		// NOT INCLUDING DELETED USERS
+		// NOT INCLUDING DEACTIVATED USERS
 
 		public function get_user_count(){
-			$query=$this->db->query("SELECT count(*) FROM `staff` where `status` < 2");
+			$query=$this->db->query("SELECT count(*) FROM `staff` ");
 			return $query->result_array()[0]['count(*)'];
 		}
 
@@ -140,7 +127,7 @@
 				return $query->result_array();
 			}
 
-			$query=$this->db->query("SELECT * from staff where `empno` = ".$empno."  and `status` < 2");
+			$query=$this->db->query("SELECT * from staff where `empno` = ".$empno."  and `active` = 1");
 			if($query->num_rows()>0){
 				return $query->result();
 			}
@@ -149,9 +136,9 @@
 
 		public function get_users_paginate($limit, $start, $sort, $order){
 			if($order == FALSE)
-				$query=$this->db->query("SELECT * FROM staff where `status` < 2 LIMIT ".$start.",".$limit.";");
+				$query=$this->db->query("SELECT * FROM staff  LIMIT ".$start.",".$limit.";");
 			else
-				$query=$this->db->query("SELECT * FROM staff where `status` < 2 ORDER BY ".$sort." ".$order." LIMIT ".$start.",".$limit.";") or die(mysqli_error());
+				$query=$this->db->query("SELECT * FROM staff  ORDER BY ".$sort." ".$order." LIMIT ".$start.",".$limit.";") or die(mysqli_error());
 			if($query->num_rows()>0){
 				return $query->result();
 			}

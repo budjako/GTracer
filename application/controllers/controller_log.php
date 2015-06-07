@@ -35,7 +35,7 @@ class Controller_log extends CI_Controller{
 		}
 	}
 
-	public function get_log_data(){
+	public function get_log_data($string){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
@@ -52,21 +52,17 @@ class Controller_log extends CI_Controller{
 				redirect('controller_login', 'refresh');// redirect to controller_search_book
 			}
 
-			$this->input->post('serialised_form');
-			$sort_by = addslashes($this->input->post('sort_by')); 
-			$order_by = addslashes($this->input->post('order_by')); 
-			// echo "sort: ".$sort_by."<br>";
-			// echo "order: ".$order_by."<br>";
+			$string=explode("_", $string);
+			$sort_by = addslashes($string[0]); 
+			$order_by = addslashes($string[1]); 
 
 			//configuration of the ajax pagination  library.
 			$config['base_url'] = base_url().'controller_log/get_log_data';
 			$config['total_rows'] = $config['total_rows'] = $this->model_logs->get_log_count();
 			$config['per_page'] = '20';
 			$config['div'] = '#change_here';
-			$config['additional_param']  = 'serialize_form()';
 
-
-			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+			$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 			//fetches data from database.
 			$data['result'] = $this->model_logs->get_logs_paginate($config['per_page'], $page, $sort_by, $order_by);
 			//display data from database
@@ -74,13 +70,13 @@ class Controller_log extends CI_Controller{
 			//initialize the configuration of the ajax_pagination
 			$this->jquery_pagination->initialize($config);
 			//create links for pagination
-			$data['links'] = $this->jquery_pagination->create_links();
+			$data['links'] = $this->jquery_pagination->create_links($sort_by, $order_by);
 			// var_dump($data['links']);
 		}
-		$this->print_logs($data);
+		$this->print_logs($sort_by, $order_by, $data);
 	}
 	
-	public function spec_user($empno = FALSE){
+	public function spec_user($string){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to controller_search_book
 		}
@@ -88,12 +84,13 @@ class Controller_log extends CI_Controller{
 			redirect('controller_list_alumni', 'refresh');// redirect to controller_search_book
 		}
 
-		$this->input->post('serialised_form');
 		$empno = $this->input->post('emp_no');
-		$sort_by = addslashes($this->input->post('sort_by')); 
-		$order_by = addslashes($this->input->post('order_by')); 
+		$string=explode("_", $string);
+		$sort_by = addslashes($string[0]); 
+		$order_by = addslashes($string[1]); 
+		$empno = addslashes($string[2]); 
 
-		$result['logs']=$this->model_logs->get_activity($empno);
+		$result['logs']=$this->model_logs->get_logs_paginate(10, 0, $sort_by, $order_by, $empno);
 		if(! $result['logs']){
 			$data['no_logs']=1;
 		}
@@ -103,9 +100,8 @@ class Controller_log extends CI_Controller{
 			$config['total_rows'] = $config['total_rows'] = $this->model_logs->get_log_count($empno);
 			$config['per_page'] = '20';
 			$config['div'] = '#change_here';
-			$config['additional_param']  = 'serialize_form()';
 
-			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+			$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 			// fetches data from database.
 			$data['result'] = $this->model_logs->get_logs_paginate($config['per_page'], $page, $sort_by, $order_by, $empno);
 			//display data from database
@@ -113,23 +109,43 @@ class Controller_log extends CI_Controller{
 			//initialize the configuration of the ajax_pagination
 			$this->jquery_pagination->initialize($config);
 			//create links for pagination
-			$data['links'] = $this->jquery_pagination->create_links();
+			$data['links'] = $this->jquery_pagination->create_links($sort_by, $order_by);
 			// var_dump($data['links']);
 		}
-		$this->print_logs($data);
+		$this->print_logs($sort_by, $order_by, $data);
 	}
 
-	public function print_logs($data){
+	public function print_logs($sort_by, $order_by, $data){
 		if(isset($data['no_logs'])){
 			echo "<h5 class='no-content'>No logs.<h5>";
 		}
 		else{
 			echo $data['links'];
 			echo "<table class='table table-hover table-bordered'>";
-			echo "<th>Employee Number</th>";
-			echo "<th>Activity</th>";
-			echo "<th>Details</th>";
-			echo "<th>Time</th>";
+			if($sort_by=="empno"){
+				if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('empno','desc');>Employee Number<span class='caretdown'></span></a></th>";
+				else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('empno','asc');>Employee Number<span class='caretup'></span></a></th>";
+			}
+			else echo "<th><a href='javascript:void(0);' onclick=get_data('empno','desc');>Employee Number<span class='caretdown'></span></a></th>";
+
+			if($sort_by=="activity"){
+				if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('activity','desc');>Activity<span class='caretdown'></span></a></th>";
+				else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('activity','asc');>Activity<span class='caretup'></span></a></th>";
+			}
+			else echo "<th><a href='javascript:void(0);' onclick=get_data('activity','desc');>Activity<span class='caretdown'></span></a></th>";
+
+			if($sort_by=="actdetails"){
+				if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('actdetails','desc');>Activity Details<span class='caretdown'></span></a></th>";
+				else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('actdetails','asc');>Activity Details<span class='caretup'></span></a></th>";
+			}
+			else echo "<th><a href='javascript:void(0);' onclick=get_data('actdetails','desc');>Activity Details<span class='caretdown'></span></a></th>";
+
+			if($sort_by=="timeperformed"){
+				if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('timeperformed','desc');>Time<span class='caretdown'></span></a></th>";
+				else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('timeperformed','asc');>Time<span class='caretup'></span></a></th>";
+			}
+			else echo "<th><a href='javascript:void(0);' onclick=get_data('timeperformed','desc');>Time<span class='caretdown'></span></a></th>";
+
 			foreach ($data['result'] as $row){
 				echo "<tr><td>".$row->empno."</td>";
 				echo "<td>".$row->activity."</td>";
@@ -142,23 +158,6 @@ class Controller_log extends CI_Controller{
 		}
 	}
 
-	/* This function only shows the log for the current day. */
-	function today(){
-		if($this->model_check_session->check_admin_session() == TRUE){	
-			$today = date("Y-m-d");
-			$this->load->model('model_log');
-			$data['log'] = $this->model_log->get_log($today);
-			$data['parent'] = "Admin";
-			$data['current'] = "View Logs";
-			
-			$this->load->helper(array('form','html'));
-			$this->load->view("view_header",$data);
-			$this->load->view("view_aside");
-			$this->load->view("view_log",$data);
-			$this->load->view("view_footer");
-		}
-	}
-	
 	// sample: $this->add_log("Admin $session_user verified account of $account_number.", "Verify User Account");
 	function add_log($empno, $activity, $actdetails){
 		if($this->session->userdata('logged_in') == FALSE){

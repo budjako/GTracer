@@ -35,7 +35,7 @@ class Jquery_pagination{
 		var $next_link						= '&gt;';
 		var $prev_link						= '&lt;';
 		var $last_link						= '&gt &gt';
-		var $uri_segment					= 3;
+		var $uri_segment					= 4;
 		var $full_tag_open					= "<center class='centersort'><div class='links'>";
 		var $full_tag_close					= '</div></center>';
 		var $first_tag_open					= '';
@@ -57,7 +57,7 @@ class Jquery_pagination{
 		var $postVar						= '';
 		var $additional_param				= '';
 	
-  		 // Added by Sean
+  		// Added by Sean
   		var $anchor_class					= '';
    		var $show_count						= true;
 
@@ -114,156 +114,127 @@ class Jquery_pagination{
 		 * @access        public
 		 * @return        string
 		 */        
-		function create_links()
+		function create_links($sort_by, $order_by)
 		{
-				// If our item count or per-page total is zero there is no need to continue.
-				if ($this->total_rows == 0 OR $this->per_page == 0)
-				{
-				   return '';
-				}
+			// If our item count or per-page total is zero there is no need to continue.
+			if ($this->total_rows == 0 OR $this->per_page == 0) return '';
 
-				// Calculate the total number of pages
-				$num_pages = ceil($this->total_rows / $this->per_page);
+			// Calculate the total number of pages
+			$num_pages = ceil($this->total_rows / $this->per_page);
 
-				// Is there only one page? Hm... nothing more to do here then.
-				if ($num_pages == 1)
-				{
-			$info = "<center class='centersort'><div class='links'>Showing : " . $this->total_rows ."</div></center>";
-						return $info;
-				}
+			// Is there only one page? Hm... nothing more to do here then.
+			if ($num_pages == 1){
+				$info = "<center class='centersort'><div class='links'>Showing : " . $this->total_rows ."</div></center>";
+				return $info;
+			}
 
-				// Determine the current page number.                
-				$CI =& get_instance();        
-				if ($CI->uri->segment($this->uri_segment) != 0)
-				{
-						$this->cur_page = $CI->uri->segment($this->uri_segment);
-						
-						// Prep the current page - no funny business!
-						$this->cur_page = (int) $this->cur_page;
-				}
+			// Determine the current page number.                
+			$CI =& get_instance();        
+			if ($CI->uri->segment($this->uri_segment) != 0){
+				$this->cur_page = $CI->uri->segment($this->uri_segment);
+				// Prep the current page - no funny business!
+				$this->cur_page = (int) $this->cur_page;
+			}
 
-				$this->num_links = (int)$this->num_links;
-				
-				if ($this->num_links < 1)
-				{
-						show_error('Your number of links must be a positive number.');
-				}
+			$this->num_links = (int)$this->num_links;
+			
+			if ($this->num_links < 1) show_error('Your number of links must be a positive number.');
+							
+			if ( ! is_numeric($this->cur_page)) $this->cur_page = 0;
+			
+			// Is the page number beyond the result range?
+			// If so we show the last page
+			if ($this->cur_page > $this->total_rows) $this->cur_page = ($num_pages - 1) * $this->per_page;
+			
+			$uri_page_number = $this->cur_page;
+			$this->cur_page = floor(($this->cur_page/$this->per_page) + 1);
+
+			// Calculate the start and end numbers. These determine
+			// which number to start and end the digit links with
+			$start = (($this->cur_page - $this->num_links) > 0) ? $this->cur_page - ($this->num_links - 1) : 1;
+			$end   = (($this->cur_page + $this->num_links) < $num_pages) ? $this->cur_page + $this->num_links : $num_pages;
+
+			// Add a trailing slash to the base URL if needed
+			$this->base_url = rtrim($this->base_url, '/') .'/';
+
+			  // And here we go...
+			$output = '';
+
+		  // SHOWING LINKS
+			if ($this->show_count){
+				$curr_offset = $CI->uri->segment($this->uri_segment);
+				$info = 'Showing ' . ( $curr_offset + 1 ) . ' to ' ;
+
+				if( ( $curr_offset + $this->per_page ) < ( $this->total_rows -1 ) ) $info .= $curr_offset + $this->per_page;
+				else $info .= $this->total_rows;
+
+				$info .= ' of ' . $this->total_rows . ' | ';
+				$output .= $info;
+			}
+
+			// Render the "First" link
+			if	($this->cur_page > $this->num_links) {
+				$output .= $this->first_tag_open . $this->getAJAXlink($sort_by, $order_by, '' , $this->first_link) . $this->first_tag_close; 
+			}
+
+			// Render the "previous" link
+			if($this->cur_page != 1){
+					$i = $uri_page_number - $this->per_page;
+					if ($i == 0) $i = '';
+					$output .= $this->prev_tag_open 
+									. $this->getAJAXlink($sort_by, $order_by, $i, $this->prev_link )
+									. $this->prev_tag_close;
+			}
+
+			// Write the digit links
+			for ($loop = $start -1; $loop <= $end; $loop++){
+				$i = ($loop * $this->per_page) - $this->per_page;
 								
-				if ( ! is_numeric($this->cur_page))
-				{
-						$this->cur_page = 0;
+				if ($i >= 0){
+					if ($this->cur_page == $loop){
+						$output .= $this->cur_tag_open.$loop.$this->cur_tag_close; // Current page
+					}
+					else{
+						$n = ($i == 0) ? '' : $i;
+						$output .= $this->num_tag_open
+								. $this->getAJAXlink($sort_by, $order_by, $n, $loop )
+								. $this->num_tag_close;
+					}
 				}
-				
-				// Is the page number beyond the result range?
-				// If so we show the last page
-				if ($this->cur_page > $this->total_rows)
-				{
-						$this->cur_page = ($num_pages - 1) * $this->per_page;
-				}
-				
-				$uri_page_number = $this->cur_page;
-				$this->cur_page = floor(($this->cur_page/$this->per_page) + 1);
+			}
 
-				// Calculate the start and end numbers. These determine
-				// which number to start and end the digit links with
-				$start = (($this->cur_page - $this->num_links) > 0) ? $this->cur_page - ($this->num_links - 1) : 1;
-				$end   = (($this->cur_page + $this->num_links) < $num_pages) ? $this->cur_page + $this->num_links : $num_pages;
+			// Render the "next" link
+			if ($this->cur_page < $num_pages){
+				$output .= $this->next_tag_open 
+						. $this->getAJAXlink($sort_by, $order_by, $this->cur_page * $this->per_page , $this->next_link )
+						. $this->next_tag_close;
+			}
 
-				// Add a trailing slash to the base URL if needed
-				$this->base_url = rtrim($this->base_url, '/') .'/';
+			// Render the "Last" link
+			if (($this->cur_page + $this->num_links) < $num_pages){
+				$i = (($num_pages * $this->per_page) - $this->per_page);
+				$output .= $this->last_tag_open . $this->getAJAXlink($sort_by, $order_by, $i, $this->last_link ) . $this->last_tag_close;
+			}
 
-				  // And here we go...
-				$output = '';
+			// Kill double slashes.  Note: Sometimes we can end up with a double slash
+			// in the penultimate link so we'll kill all double slashes.
+			$output = preg_replace("#([^:])//+#", "\\1/", $output);
 
-	  // SHOWING LINKS
-	  if ($this->show_count)
-	  {
-		 $curr_offset = $CI->uri->segment($this->uri_segment);
-		 $info = 'Showing ' . ( $curr_offset + 1 ) . ' to ' ;
-
-		 if( ( $curr_offset + $this->per_page ) < ( $this->total_rows -1 ) )
-			$info .= $curr_offset + $this->per_page;
-		 else
-			$info .= $this->total_rows;
-
-		 $info .= ' of ' . $this->total_rows . ' | ';
-
-		 $output .= $info;
-	  }
-
-				// Render the "First" link
-				if  ($this->cur_page > $this->num_links)
-				{
-						$output .= $this->first_tag_open 
-										. $this->getAJAXlink( '' , $this->first_link)
-										. $this->first_tag_close; 
-				}
-
-				// Render the "previous" link
-				if  ($this->cur_page != 1)
-				{
-						$i = $uri_page_number - $this->per_page;
-						if ($i == 0) $i = '';
-						$output .= $this->prev_tag_open 
-										. $this->getAJAXlink( $i, $this->prev_link )
-										. $this->prev_tag_close;
-				}
-
-				// Write the digit links
-				for ($loop = $start -1; $loop <= $end; $loop++)
-				{
-						$i = ($loop * $this->per_page) - $this->per_page;
-										
-						if ($i >= 0)
-						{
-								if ($this->cur_page == $loop)
-								{
-										$output .= $this->cur_tag_open.$loop.$this->cur_tag_close; // Current page
-								}
-								else
-								{
-										$n = ($i == 0) ? '' : $i;
-										$output .= $this->num_tag_open
-												. $this->getAJAXlink( $n, $loop )
-												. $this->num_tag_close;
-								}
-						}
-				}
-
-				// Render the "next" link
-				if ($this->cur_page < $num_pages)
-				{
-						$output .= $this->next_tag_open 
-								. $this->getAJAXlink( $this->cur_page * $this->per_page , $this->next_link )
-								. $this->next_tag_close;
-				}
-
-				// Render the "Last" link
-				if (($this->cur_page + $this->num_links) < $num_pages)
-				{
-						$i = (($num_pages * $this->per_page) - $this->per_page);
-						$output .= $this->last_tag_open . $this->getAJAXlink( $i, $this->last_link ) . $this->last_tag_close;
-				}
-
-				// Kill double slashes.  Note: Sometimes we can end up with a double slash
-				// in the penultimate link so we'll kill all double slashes.
-				$output = preg_replace("#([^:])//+#", "\\1/", $output);
-
-				// Add the wrapper HTML if exists
-				$output = $this->full_tag_open.$output.$this->full_tag_close;
-				
-				return $output;                
+			// Add the wrapper HTML if exists
+			$output = $this->full_tag_open.$output.$this->full_tag_close;
+			
+			return $output;                
 		}
 
-		function getAJAXlink( $count, $text) {
+		function getAJAXlink($sort_by, $order_by, $count, $text) {
 
 			if( $this->div == '')
 				return '<a href="'. $this->anchor_class . ' ' . $this->base_url . $count . '">'. $text .'</a>';
 				
 			// if( $this->additional_param != '' )
 			// 	$this->additional_param = "{'t' : 't'}";
-
-			$retval = "<a href=\"#\" onclick=\"$.post('". $this->base_url . $count ."', ";
+			$sort_by=str_replace("_", "", $sort_by);
+			$retval = "<a href=\"#\" onclick=\"$.post('". $this->base_url . $sort_by."_".$order_by."/".$count ."', ";
 			if( $this->additional_param != '' ) $retval.=$this->additional_param .", ";
 			$retval.="function(data){ $('". $this->div . "').html(data); }); return false;\">" . $text ."</a>";
 			return $retval;

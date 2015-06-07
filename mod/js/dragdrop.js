@@ -19,24 +19,24 @@ $(document).ready(function() {
 				alert("No query!");
 				return;
 			}
-
-			var str="<span>Sort by \
-					<select id = 'sort_by' name ='sort_by'>";
-			// console.log(str);
 			var drags=$(".query").children(".draggable");
-			for(i=0; i<drags.length; i++){
-				dragval=$(drags[i]).children('.lbl').text();
-				if(i==0) str+="<option value='"+dragval+"' selected='selected'>"+dragval+"</option>";
-				else str+="<option value='"+dragval+"'>"+dragval+"</option>";
-			}
-			str+="</select></span><br><span> \
-					<input type='radio' id='order_by_asc' value='asc' name='order_by'><label for='order_by_asc'>Ascending</label></input> \
-					<input type='radio' id='order_by_desc' value='desc' name='order_by'><label for='order_by_desc'>Descending</label></input> \
-				</span>";
+			var str="<input type='hidden' id='sortby' name='sort_by' value='"+$(drags[0]).children('.lbl').text()+"' required='required' checked='checked'></input><br>\
+				<input type='hidden' id='orderby' name='order_by' value='asc'></input><br>\
+				";
+			$("#tablespecs").append(str);
 
-			// console.log(str);
-			var options=$(str);
-			$("#tablespecs").append(options);
+			$.ajax({
+				url: base_url + "controller_interactive_search/query_table",
+				type: 'POST',
+				data: serialize_form(),
+
+				success: function(result) {
+					$('#change_here_table').html(result);
+				},
+				error: function(err) {
+					$('#change_here_table').html(err);
+				}
+			});
 		}
 		else if($("input:radio[name ='result-view']:checked").val() == "chart"){
 			// get possible graphingfactors
@@ -77,7 +77,7 @@ $(document).ready(function() {
 			for(var i=0; i<drags.length; i++){
 				if($(drags[i]).hasClass('curadd')){
 					if(l==0){
-						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input><br>";
+						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input>";
 						else str+="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input><br>";
 						l=1;
 					}
@@ -110,41 +110,6 @@ function serialize_form()
 }
 
 $(document).on("change","input:radio[name ='result-view']", function(){
-	$("#tablespecs").html("");
-});
-
-$(document).on("change","#sort_by", function(){
-	$.ajax({
-		url: base_url + "controller_interactive_search/query_table",
-		type: 'POST',
-		data: serialize_form(),
-
-		success: function(result) {
-			$('#change_here_table').html(result);
-		},
-		error: function(err) {
-			$('#change_here_table').html(err);
-		}
-	});
-});
-
-$(document).on("change","input:radio[name='order_by']", function(){
-	$.ajax({
-		url: base_url + "controller_interactive_search/query_table",
-		type: 'POST',
-		data: serialize_form(),
-
-		success: function(result) {
-			$('#change_here_table').html(result);
-		},
-		error: function(err) {
-			$('#change_here_table').html(err);
-		}
-	});
-});
-
-$(document).on("change","input:radio[name ='result-view']", function(){
-	$('#chartspecs').html("");
 	$('#chartspecs').html("");
 	$('#mapspecs').html("");
 });

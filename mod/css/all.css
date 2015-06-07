@@ -398,6 +398,21 @@ th {
 	font-family: 'Quicksand';
 }
 
+.content-box .inner-content h4 { 
+	/*width: 100%;*/
+	font-size: 1.5em;
+	/*padding-left: 10px;*/
+	margin: 0;
+	font-family: 'Quicksand';
+}
+
+.content-box .inner-content h1 { 
+	/*width: 100%;*/
+	/*padding-left: 10px;*/
+	margin: 0;
+	font-family: 'Quicksand';
+}
+
 /* menu: start */
 
 .content-menu {
@@ -888,4 +903,38 @@ label {
 .disabled-button{
 	background: #e6e6e6;
 	border-color: #adadad; 
+}
+
+.caretdown {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-top: 10px;
+	vertical-align: middle;
+	border-top: 4px dashed;
+	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
+	float: right;
+}
+
+.caretup {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-top: 10px;
+	vertical-align: middle;
+	border-bottom: 4px dashed;
+	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
+	float: right;
+}
+
+th a{
+	cursor: pointer;
+	color: white;
+	text-decoration: none;
 }
