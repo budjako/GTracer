@@ -42,10 +42,10 @@ class Controller_users extends Controller_log {
 
 	public function get_users_data($string) {
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_login/index', 'refresh');	// redirect to login page
 		}
 		else if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_users/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_users/index', 'refresh');	// redirect to login page
 		}
 
 		$string=explode("_", $string);
@@ -123,10 +123,10 @@ class Controller_users extends Controller_log {
 
 	public function delete_acct($empno){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_login/index', 'refresh');	// redirect to login page
 		}
 		else if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_users/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_users/index', 'refresh');	// redirect to login page
 		}
 
 		if($this->model_user->exists($empno)){
@@ -138,10 +138,10 @@ class Controller_users extends Controller_log {
 
 	public function active($empno){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_login/index', 'refresh');	// redirect to login page
 		}
 		else if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_users/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_users/index', 'refresh');	// redirect to login page
 		}
 		// check if current logged in user is an admin
 		if($this->model_user->exists($empno)){
@@ -159,10 +159,10 @@ class Controller_users extends Controller_log {
 
 	public function admin($empno){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_login/index', 'refresh');	// redirect to login page
 		}
 		else if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_users/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_users/index', 'refresh');	// redirect to login page
 		}
 		if($this->model_user->exists($empno)){
 			$admin=$this->model_user->is_admin($empno);

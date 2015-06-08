@@ -71,9 +71,6 @@ $(document).ready(function() {
 			var str="";
 			var drags=$('.query').children('.draggable');
 			var k=0, j=0, l=0;
-			console.log("l: "+l);
-			console.log("k: "+k);
-			console.log("j: "+j);
 			for(var i=0; i<drags.length; i++){
 				if($(drags[i]).hasClass('curadd')){
 					if(l==0){
@@ -101,6 +98,13 @@ $(document).ready(function() {
 			$("#mapspecs").append("Select mapping factor:<br>");
 			$("#mapspecs").append(options);
 		}
+	});
+
+	$('#current_job').on('change', function(){
+		console.log('hahha');
+		var value=$('#currentjob').val();
+		if(value == 'false') $('#currentjob').val('true');
+		else $('#currentjob').val('false');
 	});
 });
 

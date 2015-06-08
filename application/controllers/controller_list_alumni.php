@@ -25,7 +25,7 @@ class Controller_list_alumni extends CI_Controller {
 
 	public function get_alumni_data($string){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		// echo $string."<br>";
 		$string=explode("_", $string);

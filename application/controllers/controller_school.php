@@ -10,7 +10,7 @@ class Controller_school extends Controller_log {
 
 	function index($string) {
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		
 		$data['info'] = $this->model_school->get_school_data($string);
@@ -28,7 +28,7 @@ class Controller_school extends Controller_log {
 
 	public function get_school_data(){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		$this->input->post('serialised_form');
 		$sort_by = addslashes($this->input->post('sort_by')); 

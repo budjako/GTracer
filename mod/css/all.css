@@ -972,3 +972,9 @@ th a{
 	font-size: 1.2em;
 	font-family: 'Quicksand';
 }
+
+.floatright{
+	float: right;
+	margin-top: 15px;
+
+}

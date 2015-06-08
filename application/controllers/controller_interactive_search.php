@@ -1,4 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/*
+	Controller_interactive_search
+		- controller used in searching for a group of alumnus using a drag and drop interface
+		- fields that can be specified can be seen on the right side of the panel while the 
+*/
 
 class Controller_interactive_search extends CI_Controller {
 	function __construct(){
@@ -10,18 +15,18 @@ class Controller_interactive_search extends CI_Controller {
 
 	function index() {
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');				// redirect to login page
 		}
 		
 		$data['titlepage'] = "UPLB OSA GTracer - Interactive Search"; //title page  
 
-		$this->load->view("dragdropheader", $data); //displays the header
+		$this->load->view("dragdropheader", $data);					//displays the header
 		$this->load->view("navigation");
-		$this->load->view("view_interactive_search"); //displays the home page
-		$this->load->view("footer"); //displays the footer
+		$this->load->view("view_interactive_search");				//displays the home page
+		$this->load->view("footer"); 								//displays the footer
 	}
 
-	function recursive_bracket_parser($str, $i, &$array){	// per character processing -- pass by reference
+	function recursive_bracket_parser($str, $i, &$array){			// per character processing -- pass by reference
 		$len=strlen($str);
 		$retstring=$op="";
 		$tempstring="";
@@ -35,7 +40,7 @@ class Controller_interactive_search extends CI_Controller {
 				continue;
 			}
 			else if (strpos($str, "Or", $i) === $i) {
-				$array[]['Or']=null;					// add new item with or as value(another array)
+				$array[]['Or']=null;								// add new item with or as value(another array)
 				
 				$op='Or';
 				$i+=2;
@@ -51,14 +56,14 @@ class Controller_interactive_search extends CI_Controller {
 				if($op == "Value") $i = $this->recursive_bracket_parser($str, $i+1, $array['Value']);
 				else{
 					if(array_key_exists('Value', $array)){
-						$i = $this->recursive_bracket_parser($str, $i+1, $array[count($array)-2][$op]);
+						$i = $this->recursive_bracket_parser($str, $i+1, $array[count($array)-2][$op]);		
 					}
 					else{
-						$i = $this->recursive_bracket_parser($str, $i+1, $array[count($array)-1][$op]);
+						$i = $this->recursive_bracket_parser($str, $i+1, $array[count($array)-1][$op]);		
 					}
 				}
 			}
-			else if ($str[$i] == ')'){			// end token return to calling function
+			else if ($str[$i] == ')'){								// end token return to calling function
 				$i++;
 				if($tempstring != null){
 					if(!isset($array)) $array=array();
@@ -78,14 +83,13 @@ class Controller_interactive_search extends CI_Controller {
 		return false;
 	}
 
-	function create_query($arr, $graphingfactor=null, $mapfactor=null){
+	function create_query($arr, $currentjob, $graphingfactor=null, $mapfactor=null){
 		$tables=array();
 		$selected=array();
 		$sql="";
 		$condition=array();
-		// echo $mapfactor;
+
 		$selct=$graduate=$school=$company=$work=$educationalbg=0;
-		// var_dump($arr);
 
 		// $item as items in array: [0], [1], etc.
 		$fields=array_keys($arr);
@@ -101,24 +105,20 @@ class Controller_interactive_search extends CI_Controller {
 			if($details[0] == "school") $school=1;
 			if($details[0] == "work") $work=1;
 			if($details[0] == "educationalbg") $educationalbg=1;
-			// echo "$sql<br>";
-			// echo "$selct<br>";
+
 			$selct++;
 			// set conditions
-			// var_dump($arr);
 			if($arr[$item]!=null){
-				if(array_key_exists('Value', $arr[$item])){		// Single Constraint
+				if(array_key_exists('Value', $arr[$item])){					// Single Constraint
 					$val=$this->cond_value($arr[$item]['Value'], $details);
 					$condition[]=$val[0];
 				}
 				else if($arr[$item][0]!=null){
 					if(array_key_exists('Or', $arr[$item][0])){
-						// var_dump($arr[$item][0]['Or']);
 						$condition[]=$this->cond_or($arr[$item][0]['Or'], $details);
 
 					}
 					else if(array_key_exists('And', $arr[$item][0])){
-						// var_dump($arr[$item][0]['And']);
 						$condition[]=$this->cond_and($arr[$item][0]['And'], $details);
 					}
 				}
@@ -126,13 +126,15 @@ class Controller_interactive_search extends CI_Controller {
 			next($arr);	
 		}
 
-		$sql.=" from ";									// include in from all tables involved
+		$sql.=" from ";														// include in from all tables involved
 		$count2=0;
 		$tabcount=count($tables);
+
+		// show only distinct values if query not tied to a user and if the result view type is a table
 		if(! in_array("graduate", $tables) && $mapfactor == null && $graphingfactor == null){
 			$sql="distinct ".$sql;
 		}
-		if($mapfactor != null){
+		if($mapfactor != null){												// if selected result-view type is map 
 			if($mapfactor == "curadd"){
 				if(! in_array("graduate", $tables)){
 					$tables[]="graduate";
@@ -176,22 +178,25 @@ class Controller_interactive_search extends CI_Controller {
 				for($count3=0; $count3<$tabcount; $count3++){
 					if ($tables[$count3] == "company"){
 						if($count4>0) $sql.=" and ";
+						// link company to student
 						$sql.="(graduate.student_no=work.studentno and work.companyno=company.company_no)";
 						$count4++;
 					}
 					else if ($tables[$count3] == "school"){
 						if($count4>0) $sql.=" and ";
+						// link school to student
 						$sql.="(graduate.student_no=educationalbg.studentno and educationalbg.schoolno=school.school_no)";
 						$count4++;
 					}
 					else if($tables[$count3] != "graduate"){
 						if($count4>0) $sql.=" and ";
+						// set student number value
 						$sql.="graduate.student_no=".$tables[$count3].".studentno";
 						$count4++;
 					}
 				}
 				if($work==1){
-					$sql.=" and work.currentjob=1";
+					if($currentjob=='true') $sql.=" and work.currentjob=1";
 				}
 				if(count($condition)>0){
 					$sql.=" and ";
@@ -202,15 +207,12 @@ class Controller_interactive_search extends CI_Controller {
 			}
 			for($i=0; $i<count($condition); $i++) {
 				if($i>0) $sql.=" and ";
-				// else $sql.=" where ";
 				$sql.=$condition[$i];
 			}
 		}
 		else{
 			$prev=0;
 			// echo "<br>Details unconstrained by an alumni.<br>";
-			// echo $work;
-			// echo $company;
 			if(count($condition)>0) $sql.=" where ";
 			if($work>0 && $company>0 && $graduate>0){
 				if(count($condition)==0) $sql.=" where ";
@@ -396,10 +398,11 @@ class Controller_interactive_search extends CI_Controller {
 
 	public function query_table(){					// validate values 
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		// echo "POST";
 		// var_dump($this->input->post());
+		$currentjob=$this->input->post('currentjob');
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		if($str == null){
@@ -431,7 +434,7 @@ class Controller_interactive_search extends CI_Controller {
 		// var_dump($arr);
 		$sql="select ";
 		if(count($fields) == 1) $sql.="distinct ";
-		$sql.=$this->create_query($arr);
+		$sql.=$this->create_query($arr, $currentjob); 
 		$sort_by=$this->to_table_name($this->input->post('sort_by'));
 		$sort_by=$sort_by[1];
 		// echo $sort_by;
@@ -510,11 +513,12 @@ class Controller_interactive_search extends CI_Controller {
 
 	public function query_chart(){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		// echo "POST";
 		$this->input->post('serialised_form');
 		// var_dump($this->input->post());
+		$currentjob=$this->input->post('currentjob');
 		$str = addslashes($this->input->post('values')); 
 		// echo $str;
 		if($str == null){
@@ -543,7 +547,7 @@ class Controller_interactive_search extends CI_Controller {
 		}
 
 		$sql="select count(*) as `num`, ";
-		$sql.=$this->create_query($arr, $graphingfactor);
+		$sql.=$this->create_query($arr, $currentjob, $graphingfactor);
 		// echo "no group by sql: ".
 		$sql.=" group by `".$graphingfactor."`";
 		// echo "<br>search for: $sql";
@@ -568,10 +572,11 @@ class Controller_interactive_search extends CI_Controller {
 
 	public function query_map(){	// results on country level
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		// var_dump($this->input->post());
 		$str = addslashes($this->input->post('values')); 
+		$currentjob=$this->input->post('currentjob');
 		// // echo $str;
 		if($str == null){
 			// echo "Empty query";
@@ -607,7 +612,7 @@ class Controller_interactive_search extends CI_Controller {
 		else if($mapfactor == "sadd"){
 			$sql.="school.saddcountry as country, school.saddcountrycode as countrycode, school.saddregion as region, school.saddregioncode as regioncode, school.saddprovince as province, school.saddprovincecode as provincecode, ";
 		}
-		$sql.=$this->create_query($arr, false, $mapfactor);
+		$sql.=$this->create_query($arr, $currentjob, false, $mapfactor);
 		// echo "no group by sql: ".
 		// concatenate where in sql
 		$sql.=" group by country, countrycode, region, regioncode, province, provincecode";

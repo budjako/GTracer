@@ -11,7 +11,7 @@ class Controller_log extends CI_Controller{
 
 	function index($empno = FALSE){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		else if(! $this->session->userdata('logged_in')['is_admin']){
 			$data['titlepage'] = "UPLB OSA GTracer - Insufficient Privilege"; //title page
@@ -37,10 +37,10 @@ class Controller_log extends CI_Controller{
 
 	public function get_log_data($string){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_log', 'refresh');// redirect to controller_search_book
+			redirect('controller_log', 'refresh');// redirect to login page
 		}
 
 		$result['logs']=$this->model_logs->get_activity();
@@ -49,7 +49,7 @@ class Controller_log extends CI_Controller{
 		}
 		else{
 			if($this->session->userdata('logged_in') == FALSE){
-				redirect('controller_login', 'refresh');// redirect to controller_search_book
+				redirect('controller_login', 'refresh');// redirect to login page
 			}
 
 			$string=explode("_", $string);
@@ -78,10 +78,10 @@ class Controller_log extends CI_Controller{
 	
 	public function spec_user($string){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_list_alumni', 'refresh');// redirect to controller_search_book
+			redirect('controller_list_alumni', 'refresh');// redirect to login page
 		}
 
 		$empno = $this->input->post('emp_no');
@@ -161,7 +161,7 @@ class Controller_log extends CI_Controller{
 	// sample: $this->add_log("Admin $session_user verified account of $account_number.", "Verify User Account");
 	function add_log($empno, $activity, $actdetails){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to controller_search_book
+			redirect('controller_login', 'refresh');// redirect to login page
 		}
 		$this->model_logs->add_log($empno, $activity, $actdetails);
 	}

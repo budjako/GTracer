@@ -25,6 +25,7 @@
 					<input type="radio" name="result-view" id="table" value="table" checked="checked"><label for="table">Table</label></input>
 					<input type="radio" name="result-view" id="chart" value="chart"><label for="chart">Chart</label></input>
 					<input type="radio" name="result-view" id="map" value="map"><label for="map">Map</label></input>
+					<input type="hidden" name="currentjob" id="currentjob" value="false"></input>
 					<div id="tablespecs"></div>
 					<div id="chartspecs"></div>
 					<div id="mapspecs"></div>
@@ -63,6 +64,7 @@
 					<div class="draggable works original"><span class="lbl nongraph view">Employment Start Date</span></div>
 					<div class="draggable works original"><span class="lbl nongraph view">Employment End Date</span></div>
 					<div class="draggable works original cadd"><span class="lbl view">Company Name</span></div>
+					<div class="floatright"><input type="checkbox" id="current_job"></input><label>Current job only?</label></div>
 				</fieldset>
 				<fieldset class="fieldcont">
 					<legend>Awards</legend>

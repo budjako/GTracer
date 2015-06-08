@@ -30,7 +30,7 @@ class Controller_school_approval extends Controller_log {
 
 	public function get_school_requests($string){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_login/index', 'refresh');	// redirect to login page
 		}
 
 		$string=explode("_", $string);
@@ -58,7 +58,7 @@ class Controller_school_approval extends Controller_log {
 
 	public function print_school_requests($sort_by, $order_by, $result, $links){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to controller_search_book
+			redirect('controller_login/index', 'refresh');	// redirect to login page
 		}
 
 		echo $links;
@@ -154,7 +154,7 @@ class Controller_school_approval extends Controller_log {
 			$schoolname=$this->model_school_approval->edit_school($search);
 			$empno=$this->session->userdata('logged_in')['eno'];
 			$this->add_log($empno, "Edited school entry", "Employee ".$empno." edited the entry of school ".$schoolname.". Info[School Number: ".$search['sno'].", School Name: ".$search['sname'].", Country: ".$search['country'].", State/Province: ".$search['state']."] ");
-			redirect('controller_school/index/'.$search['sno'], 'refresh');	// redirect to controller_search_book
+			redirect('controller_school/index/'.$search['sno'], 'refresh');	// redirect to login page
 		}
 	}
 
