@@ -137,7 +137,7 @@
 				$query = $this->db->get('work');
 				return $query->result_array();
 			}
-			$query=$this->db->query("SELECT * from work where studentno = '".$stdno."';");
+			$query=$this->db->query("SELECT * from work where studentno = '".$stdno."' order by currentjob desc, workdateend asc;");
 			if($query->num_rows()>0){
 				$result=$query->result();
 				foreach ($result as $work) {	// get company name

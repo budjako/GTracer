@@ -413,6 +413,14 @@ th {
 	font-family: 'Quicksand';
 }
 
+.content-box .inner-content h5 { 
+	/*width: 100%;*/
+	/*padding-left: 10px;*/
+	margin: 0;
+	font-size: 1.5em;
+	font-family: 'Quicksand';
+}
+
 /* menu: start */
 
 .content-menu {
@@ -771,7 +779,7 @@ body {
 /*@media (min-width: 768px)*/
 .col-sm-2 {
 	float: left;
-	width: 16.66666667%;
+	width: 25%;
 	position: relative;
 	min-height: 1px;
 	padding-right: 15px;
@@ -937,4 +945,30 @@ th a{
 	cursor: pointer;
 	color: white;
 	text-decoration: none;
+}
+#alumni_info {
+	margin-left: 30px;
+}
+
+.alumni_info_sec {
+	margin: 15px;
+}
+
+.alumni_info_sec .label{
+	margin-left: 15px;
+	font-weight: bold;
+	/*margin-top:5px;	*/
+}
+
+.form-group2 {
+	/*border: 1px solid black;
+	border-radius: 5px;*/
+	margin: 8px;
+  margin-left: 40px;
+}
+
+.bold {
+	font-weight: bolder;
+	font-size: 1.2em;
+	font-family: 'Quicksand';
 }
