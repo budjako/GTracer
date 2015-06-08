@@ -1,10 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/*
-	Notes:	
-		*	Edit email restrictions - uplbosa.org
-*/
-
 include_once("controller_log.php");
+
+/*
+	Controller_school_approval
+		- controller used in approving and viewing a new school entry
+		- school details can be viewed by clicking on an entry
+		- if a school is not yet approved, the user can use the merge function which is available when they click on the entry's row
+*/
 
 class Controller_school_approval extends Controller_log {
 
@@ -28,6 +30,7 @@ class Controller_school_approval extends Controller_log {
 	
 	}
 
+	// parameter format: <sort by column>_<ordering> 
 	public function get_school_requests($string){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login/index', 'refresh');	// redirect to login page
@@ -63,6 +66,8 @@ class Controller_school_approval extends Controller_log {
 
 		echo $links;
 		echo "<table class='table table-hover table-bordered' >";
+		// set column header
+		// onclick sets the value for the sorting of data by column
 		if($sort_by=="schoolname"){
 			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('schoolname','desc');>Name<span class='caretdown'></span></a></th>";
 			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('schoolname','asc');>Name<span class='caretup'></span></a></th>";
@@ -104,29 +109,29 @@ class Controller_school_approval extends Controller_log {
 		echo $links;
 	}
 
-	public function school_approve($school_no){
+	public function school_approve($school_no){													// approve a school
 		$schoolname=$this->model_school_approval->approve_school($school_no);
 		$empno=$this->session->userdata('logged_in')['eno'];
 		$this->add_log($empno, "Approve school entry", "Employee ".$empno." approved the entry of school ".$schoolname.".");
 		return;
 	}
 
-	function sname($str){
+	function sname($str){																		// validate school name
 		if($str == "") return true;
 		return(! preg_match("/^[A-Za-zñÑ\s][A-Za-zñÑ0-9\s]+$/i", $str))? FALSE: TRUE;
 	}
 
-	function country_check($str){
+	function country_check($str){																// validate country value
 		if($str == "") return true;
 		return(! preg_match("/^[A-Z]{2}$/i", $str))? FALSE: TRUE;
 	}
 
-	function state_check($str){
+	function state_check($str){																	// validate state value
 		if($str == "" || $str== "-1") return true;
 		return(! preg_match("/^[A-Z]{2}[\-\_][A-Z0-9]{3}$/i", $str))? FALSE: TRUE;
 	}
 
-	public function edit_school(){
+	public function edit_school(){																// edit school handler
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('sname', 'School Name', 'trim|xss_clean|callback_sname');
@@ -151,10 +156,11 @@ class Controller_school_approval extends Controller_log {
 		}
 		else
 		{
-			$schoolname=$this->model_school_approval->edit_school($search);
+			$schoolname=$this->model_school_approval->edit_school($search);						// values checked, update database
 			$empno=$this->session->userdata('logged_in')['eno'];
+			// add log for this transaction
 			$this->add_log($empno, "Edited school entry", "Employee ".$empno." edited the entry of school ".$schoolname.". Info[School Number: ".$search['sno'].", School Name: ".$search['sname'].", Country: ".$search['country'].", State/Province: ".$search['state']."] ");
-			redirect('controller_school/index/'.$search['sno'], 'refresh');	// redirect to login page
+			redirect('controller_school/index/'.$search['sno'], 'refresh');						// redirect to existing school entry page
 		}
 	}
 

@@ -1,5 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+/*
+	Controller_list_alumni
+		- controller used in viewing the list of all graduate
+		- user can be redirected to profile of alumnus by clicking on the alumnus' entry
+*/
 class Controller_list_alumni extends CI_Controller {  
 	function __construct(){
 		parent::__construct();
@@ -23,17 +27,15 @@ class Controller_list_alumni extends CI_Controller {
 
 	}
 
+	// parameter: <sort by chosen field>_<order asc or desc>
 	public function get_alumni_data($string){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to login page
 		}
-		// echo $string."<br>";
 		$string=explode("_", $string);
 		$sort_by = addslashes($string[0]); 
 		if($sort_by=="studentno") $sort_by="student_no";
 		$order_by = addslashes($string[1]); 
-		// echo "sort: ".$sort_by."<br>";
-		// echo "order: ".$order_by."<br>";
 
 		//configuration of the ajax pagination  library.
 		$config['base_url'] = base_url().'controller_list_alumni/get_alumni_data';
@@ -64,6 +66,8 @@ class Controller_list_alumni extends CI_Controller {
 	public function print_alumni($sort_by, $order_by, $result, $links){
 		echo $links;
 		echo "<table class='table table-hover table-bordered'>";
+		// setting table headers
+		// onclick set for sorting by column
 		if($sort_by=="student_no"){
 			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('studentno','desc');>Student Number<span class='caretdown'></span></a></th>";
 			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('studentno','asc');>Student Number<span class='caretup'></span></a></th>";
@@ -106,7 +110,7 @@ class Controller_list_alumni extends CI_Controller {
 		echo $links;
 	}
 	
-	
+	// not used in this case -- save lang >.<
 	function export_logs(){
 		$this->load->dbutil();
 		$this->load->helper('download');

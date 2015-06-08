@@ -1,7 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 include_once("controller_log.php");
-
+/*
+	Controller_school
+		- controller used in viewing the details of a school
+		- school details can be edited with the help of this controller
+		- if a school is not yet approved, the user can use the merge function if the entry for that school already exists.
+		- if a school is merged with an existing school, the previous details of the existing school will be used instead of the new one
+*/
 class Controller_school extends Controller_log {
 	public function __construct() {
 		parent::__construct();
@@ -10,31 +16,29 @@ class Controller_school extends Controller_log {
 
 	function index($string) {
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to login page
+			redirect('controller_login', 'refresh');									// redirect to login page
 		}
 		
 		$data['info'] = $this->model_school->get_school_data($string);
 		$data['list']=$this->get_country();
 		$data['is_approved']=$this->model_school->is_approved($string);
 
-		$data['titlepage'] = "UPLB OSA GTracer - School Page"; //title page 
+		$data['titlepage'] = "UPLB OSA GTracer - School Page"; 							//title page 
 
 		// var_dump($data['list']);
-		$this->load->view("header", $data); //displays the header
+		$this->load->view("header", $data); 											//displays the header
 		$this->load->view("navigation");
-		$this->load->view("view_school_page", $data); //displays the home page
-		$this->load->view("footer"); //displays the footer
+		$this->load->view("view_school_page", $data); 									//displays the home page
+		$this->load->view("footer"); 													//displays the footer
 	}
 
 	public function get_school_data(){
 		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login', 'refresh');// redirect to login page
+			redirect('controller_login', 'refresh');									// redirect to login page
 		}
 		$this->input->post('serialised_form');
 		$sort_by = addslashes($this->input->post('sort_by')); 
 		$order_by = addslashes($this->input->post('order_by')); 
-		// echo "sort: ".$sort_by."<br>";
-		// echo "order: ".$order_by."<br>";
 
 		//configuration of the ajax pagination  library.
 		$config['base_url'] = base_url().'controller_school/get_school_data';
@@ -61,6 +65,7 @@ class Controller_school extends Controller_log {
 	   
 	}
 
+	// print data from db
 	public function print_school($result, $links){
 		echo $links;
 		echo "<table class='table table-hover table-bordered'>";
@@ -86,16 +91,18 @@ class Controller_school extends Controller_log {
 		echo $links;
 	}
 
+	// merge new school entry from existing school entry
 	public function merge_school($string){
 		$tokens=explode("_", $string);
 		$origentry=$tokens[0];
 		$schoolmerge=$tokens[1];
 
-		$origentryname=$this->model_school->get_school_name($origentry);
-		$schoolmergename=$this->model_school->get_school_name($schoolmerge);
+		$origentryname=$this->model_school->get_school_name($origentry);			// school name of existing school
+		$schoolmergename=$this->model_school->get_school_name($schoolmerge);		// school name of current school
 
-		$this->model_school->edit_school($origentry, $schoolmerge);
+		$this->model_school->edit_school($origentry, $schoolmerge);					// merge new entry to existing school entry
 		$empno=$this->session->userdata('logged_in')['eno'];
+		// add log of transaction
 		$this->add_log($empno, "Merged school entry", "Employee ".$empno." merged ".$origentryname." with ".$schoolmergename.".");
 	}
 	

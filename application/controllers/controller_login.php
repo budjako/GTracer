@@ -1,11 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
-	Notes:	
-		*	Edit email restrictions - uplbosa.org
+	Controller_login
+		- controller that enables the user to log in to the system
+		- uses google's oath2 to log in
+		- only users with @uplbosa.org email addresses can log in to the system
 */
 
-require_once APPPATH.'third_party/Google/autoload.php'; // or wherever autoload.php is located
-include_once("controller_log.php");
+require_once APPPATH.'third_party/Google/autoload.php'; // used for logging in
+include_once("controller_log.php");			// to save transactions made
 session_start();
 
 class Controller_login extends Controller_log {
@@ -35,6 +37,7 @@ class Controller_login extends Controller_log {
 		$client_secret = '*****';
 		$redirect_uri = 'http://127.0.0.1/GTracer/controller_login';
 		$simple_api_key = '*****';
+
 		// Create Client Request to access Google API
 		try{
 			$client = new Google_Client();
@@ -64,9 +67,6 @@ class Controller_login extends Controller_log {
 
 			// Get User Data from Google and store them in $data
 			if ($client->getAccessToken()) {
-					// $this->session->unset_userdata('logged_in');
-		 		// $this->session->sess_destroy();
-		 		// redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/0', 'refresh');
 				$userinfo = $objOAuthService->userinfo->get();
 				$data['userinfo'] = $userinfo;
 				$this->session->set_userdata('access_token', $client->getAccessToken());
@@ -77,10 +77,9 @@ class Controller_login extends Controller_log {
 					$this->login($eno, $userinfo->email, $this->is_admin($eno));		// if already on database, redirect to home 
 				}
 				else{										// if not on database
- 		// redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index/0', 'refresh');
 					$data['titlepage'] = "UPLB OSA GTracer - Edit User Information"; //title page 
-					$this->load->view("header", $data); 						//displays the header
-					$this->load->view("view_reg_edit_info", $data); 			//displays the home page
+					$this->load->view("header", $data); 				//displays the header
+					$this->load->view("view_reg_edit_info", $data); 	//displays the home page
 					$this->load->view("footer"); 						//displays the footer 
 				}
 			} 
@@ -91,7 +90,7 @@ class Controller_login extends Controller_log {
 				$data['titlepage'] = "UPLB OSA GTracer - Home"; 		//title page  
 				$this->load->view("header", $data); 					//displays the header
 				$this->load->view("view_login", $data); 				//displays the home page
-				$this->load->view("footer"); 					//displays the footer
+				$this->load->view("footer"); 							//displays the footer
 			}
 		} catch(Google_Auth_Exception $e){
 			$data['header']="Google Login Error";
@@ -104,7 +103,7 @@ class Controller_login extends Controller_log {
 		}
 	}
 
-	public function edit_info_form(){
+	public function edit_info_form(){									// for initial log in, employee number will be asked from the user
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('eno', 'Employee Number', 'trim|required|xss_clean|callback_eno_check');
@@ -122,51 +121,51 @@ class Controller_login extends Controller_log {
 		if (! $this->form_validation->run())
 		{
 			$data['msg'] = validation_errors();
-			$this->load->view("header", $data); 				//displays the header
-			$this->load->view("view_reg_edit_info", $data); 	//displays the home page
+			$this->load->view("header", $data); 						//displays the header
+			$this->load->view("view_reg_edit_info", $data); 			//displays the home page
 			$this->load->view("footer");
 		}
 		else
 		{
-			$this->model_user->add_user($data);						// Save data to database
-			$this->login($data['eno'], $data['email'], 0);								// Log in user 
+			$this->model_user->add_user($data);							// Save data to database
+			$this->login($data['eno'], $data['email'], 0);				// Log in user 
 		}
 	} 
 
-	function eno_check($str){
+	function eno_check($str){											// validate employee number
 		return(! preg_match("/^[0-9]{9}$/i", $str))? FALSE: TRUE;
 	}
 
-	function fname_check($str){
+	function fname_check($str){											// validate first name
 		return(! preg_match("/^[A-Za-zñÑ]{1}[A-Za-zñÑ\s]*\.?((\.\s[A-Za-zñÑ]{2}[A-Za-zñÑ\s]*\.?)|(\s[A-Za-zñÑ][A-Za-zñÑ]{1,2}\.)|(-[A-Za-zñÑ]{1}[A-Za-zñÑ\s]*))*$/i", $str))? FALSE: TRUE;
 	}
 
-	function lname_check($str){
+	function lname_check($str){											// validate last name
 		return(! preg_match("/^([A-Za-zñÑ]){1}([A-Za-zñÑ]){1,}(\s([A-Za-zñÑ]){1,})*(\-([A-Za-zñÑ]){1,}){0,1}$/i", $str))? FALSE: TRUE;
 	}
 
-// EDIT
-	function email_check($str){
+	function email_check($str){											// validate email address
 		return(! preg_match("/^[A-Za-z][A-Za-z-0-9\._]{3,20}@gmail.com$/i", $str))? FALSE: TRUE;
+		// return(! preg_match("/^[A-Za-z][A-Za-z-0-9\._]{3,20}@uplbosa.org$/i", $str))? FALSE: TRUE;
 	}
 
-	function check_email($email){
+	function check_email($email){										// check if email already exists
 		return $this->model_user->check_email($email);
 	}
 
-	function get_eno($email){
+	function get_eno($email){											// gets the employee number from the db given the email address of the user
 		return $this->model_user->get_eno($email);
 	}
 
-	function is_admin($eno){
-		return $this->model_user->is_admin($eno);			//returns true or false
+	function is_admin($eno){											// checks if the user is an admin
+		return $this->model_user->is_admin($eno);						// returns true or false
 	}
 
-	function is_active($eno){
-		return $this->model_user->is_active($eno);		//returns true or false
+	function is_active($eno){											// checks if the user account is activated or deactivated
+		return $this->model_user->is_active($eno);						// returns true or false
 	}
 
-	function eno_available($eno){
+	function eno_available($eno){										// checks if inputted employee number is not yet used
 		if(! $this->model_user->exists($eno)){
 			echo "Employee Number is available.";
 		}
@@ -174,7 +173,7 @@ class Controller_login extends Controller_log {
 		return;
 	}
 
-	function login($eno, $email, $is_admin){
+	function login($eno, $email, $is_admin){							// approved by google's oauth2 log in, now log in to GTracer
 		$is_active=$this->is_active($eno);
 		$sess_array = array('eno' => $eno, 'is_admin' => $is_admin, 'is_active' => $is_active);
 		//set session with value from database
@@ -194,12 +193,13 @@ class Controller_login extends Controller_log {
 		}
 	}
 
-	function logout() {
- 	 	//remove all session data
+	function logout() {													
+ 	 	// remove all session data
 		$eno=$this->session->userdata('logged_in')['eno'];
 		$this->add_log($eno, 'Log out', 'Employee '.$eno.' log out.');
  		$this->session->unset_userdata('logged_in');
  		$this->session->sess_destroy();
+ 		// log out from google as well
  		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index', 'refresh');
 	}
 }

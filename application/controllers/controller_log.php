@@ -1,4 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/*
+	Controller_log
+		- controller used in saving the transactions made by the staff
+		- extended by other classes to be able to use functionalities such as add_log
+*/
 class Controller_log extends CI_Controller{
 	
 	public function __construct()
@@ -9,7 +14,8 @@ class Controller_log extends CI_Controller{
 		$this->load->model('model_logs');
 	}
 
-	function index($empno = FALSE){
+	// view all logs -- if parameter is not false, logs of specific user will be viewed
+	function index($empno = FALSE){		
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to login page
 		}
@@ -35,6 +41,7 @@ class Controller_log extends CI_Controller{
 		}
 	}
 
+	// get all users' logs
 	public function get_log_data($string){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to login page
@@ -76,7 +83,8 @@ class Controller_log extends CI_Controller{
 		$this->print_logs($sort_by, $order_by, $data);
 	}
 	
-	public function spec_user($string){
+	// view logs of specific user -- called from users page
+	public function spec_user($string){		
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to login page
 		}
@@ -122,6 +130,8 @@ class Controller_log extends CI_Controller{
 		else{
 			echo $data['links'];
 			echo "<table class='table table-hover table-bordered'>";
+			// set table headers
+			// onclick set for sorting data by column
 			if($sort_by=="empno"){
 				if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('empno','desc');>Employee Number<span class='caretdown'></span></a></th>";
 				else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('empno','asc');>Employee Number<span class='caretup'></span></a></th>";
@@ -158,7 +168,7 @@ class Controller_log extends CI_Controller{
 		}
 	}
 
-	// sample: $this->add_log("Admin $session_user verified account of $account_number.", "Verify User Account");
+	// used by other classes to log activities made by the staff
 	function add_log($empno, $activity, $actdetails){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');// redirect to login page
@@ -166,10 +176,10 @@ class Controller_log extends CI_Controller{
 		$this->model_logs->add_log($empno, $activity, $actdetails);
 	}
 
+	// used to get country from the database
 	function get_country(){
 		return $this->model_logs->get_country();
 	}
-
 
 	function get_data($loadid){
 		$array['result']=$this->model_logs->get_data($loadid);

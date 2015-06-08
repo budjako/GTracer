@@ -1,4 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/*
+	Controller_page_not_found
+		- page shown when url entered is not valid.
+*/
+
 class Controller_page_not_found extends CI_Controller{
 	
 	function index(){
@@ -16,6 +21,6 @@ class Controller_page_not_found extends CI_Controller{
 		$this->load->view("footer");
 	}
 }
-/* End of file controller_log.php */
-/* Location: ./application/controllers/controller_log.php */
+/* End of file controller_page_not_found.php */
+/* Location: ./application/controllers/controller_page_not_found.php */
 ?>

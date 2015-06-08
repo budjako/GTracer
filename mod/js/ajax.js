@@ -74,20 +74,23 @@ $(document).ready( function() {
 		event.preventDefault();
 
 		var empno = $(this).parent()[0].getAttribute('class');
+		var r = confirm("Are you sure you want to add employee "+empno+" as an admin?");
+		if (r == true) {
+			console.log(r);
+		    $.ajax({
+				type: "POST",
+				url: base_url + 'controller_users/admin/'+empno,
+				data: {empno: empno},
 
-		$.ajax({
-			type: "POST",
-			url: base_url + 'controller_users/admin/'+empno,
-			data: {empno: empno},
-
-			success: function(data) {
-				$('#'+empno+" .active").parent().remove();				//remove ban button
-				$('#'+empno+" .admin").parent().remove();			// remove add admin button
-			},
-			error: function(err) {
-				console.log(err);
-			}
-		});
+				success: function(data) {
+					$('#'+empno+" .active").parent().remove();				//remove ban button
+					$('#'+empno+" .admin").parent().remove();			// remove add admin button
+				},
+				error: function(err) {
+					console.log(err);
+				}
+			});
+		}
 	});
 
 	$(document).on("change", ".country", function(){

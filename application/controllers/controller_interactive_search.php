@@ -2,7 +2,12 @@
 /*
 	Controller_interactive_search
 		- controller used in searching for a group of alumnus using a drag and drop interface
-		- fields that can be specified can be seen on the right side of the panel while the 
+		- fields that can be specified can be seen on the right side of the panel 
+		- results can be viewed in three types: table, chart, map
+
+		query string made from the drag and drop interface has the following format:
+
+		Field Name[:(Val()|And()|Or())&Field Name&Field Name
 */
 
 class Controller_interactive_search extends CI_Controller {

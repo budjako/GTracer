@@ -1,10 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/*
-	Notes:	
-		*	Edit email restrictions - uplbosa.org
-*/
-
 include_once("controller_log.php");
+
+/*
+	Controller_users
+		- controller used in viewing list of all users of the system
+		- user logs can be viewed by clicking on an entry
+*/
 
 class Controller_users extends Controller_log {
 
@@ -16,11 +17,11 @@ class Controller_users extends Controller_log {
     }
 
 	public function index() {
-		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');
+		if($this->session->userdata('logged_in') == FALSE){							// check if the user is logged in
+			redirect('controller_login/index', 'refresh');							// if not, redirect to login page
 		}
-		else if(! $this->session->userdata('logged_in')['is_admin']){
-			$data['titlepage'] = "UPLB OSA GTracer - Insufficient Privilege"; //title page
+		else if(! $this->session->userdata('logged_in')['is_admin']){				// if the user is not an admin, they cannot view the page
+			$data['titlepage'] = "UPLB OSA GTracer - Insufficient Privilege"; 		//title page
 			$data['header'] = "Insufficient Privileges";
 			$data['body'] = "You have insufficient privileges. If you think this is an error, please contact the administrator.";
 			$this->load->view("header", $data);
@@ -28,7 +29,7 @@ class Controller_users extends Controller_log {
 			$this->load->view("view_message", $data);
 			$this->load->view("footer");
 		}
-		else{
+		else{																		// accessible by administrators only
 			$data['titlepage'] = "UPLB OSA GTracer - Users"; //title page
 
 	    	$this->load->helper(array('form','html'));
@@ -40,6 +41,7 @@ class Controller_users extends Controller_log {
 		}
 	}
 
+	// gets the list of users and their corresponding information
 	public function get_users_data($string) {
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login/index', 'refresh');	// redirect to login page
@@ -118,22 +120,6 @@ class Controller_users extends Controller_log {
 		} 
 		echo "</table>";
 		echo $links;
-	}
-
-
-	public function delete_acct($empno){
-		if($this->session->userdata('logged_in') == FALSE){
-			redirect('controller_login/index', 'refresh');	// redirect to login page
-		}
-		else if(! $this->session->userdata('logged_in')['is_admin']){
-			redirect('controller_users/index', 'refresh');	// redirect to login page
-		}
-
-		if($this->model_user->exists($empno)){
-			$this->model_user->delete($empno);
-			$this->add_log($this->session->userdata('logged_in')['eno'], "Delete Staff Account", "Deleted account of employee ".$empno.".");
-		}
-		return;
 	}
 
 	public function active($empno){

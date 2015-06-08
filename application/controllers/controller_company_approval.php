@@ -176,7 +176,7 @@ class Controller_company_approval extends Controller_log {
 			$empno=$this->session->userdata('logged_in')['eno'];
 			$this->add_log($empno, "Edited company entry", "Employee ".$empno." edited the entry of company ".$companyname.". Info[Company Number: ".$search['cno'].", Company Name: ".$search['cname'].", Country: ".$search['country'].", State/Province: ".$search['state']."] ");
 		
-			redirect('controller_company/index/'.$search['cno'], 'refresh');	// redirect to login page
+			redirect('controller_company/index/'.$search['cno'], 'refresh');	// redirect to existing company entry page
 		}
 	}
 
