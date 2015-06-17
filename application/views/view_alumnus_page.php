@@ -1,14 +1,17 @@
+<!--
+	Shows the personal information of an alumni
+-->
+
 <div id="content-box" class="content-box clearfix">
 	<div class="inner-content">
 		<h1>
 			<?php 
-				echo $info['basic']->firstname;
-				echo " ".$info['basic']->midname;
+				echo $info['basic']->firstname;				// Print name of student as header of the page
 				echo " ".$info['basic']->lastname;
 			?>
 		</h1>
 			<?php 
-				if($info['basic'] != null){
+				if($info['basic'] != null){					// other background details of the alumni
 					echo "<br><h5>".$info['basic']->student_no."</h5>";
 					echo "<h5>".$info['basic']->email."</h5>";
 					echo "<h5>".$info['basic']->sex."</h5>";
@@ -16,11 +19,8 @@
 			?>
 		<div id="alumni_info">
 		<?php
-			// var_dump($info);
 
-			if($info['work'] != null){
-				// echo "<fieldset class='fieldcont'>";
-				// echo "<legend>Work Experience</legend>";
+			if($info['work'] != null){						// show the working experience of the alumni if there are any
 				echo "<div class='alumni_info_sec' id='work'><h4>Work Experience</h4>";
 				foreach ($info['work'] as $work) {
 					echo "<div class='form-group2 alumni_info_sec'>";
@@ -51,10 +51,9 @@
 					echo "</div>";
 				}
 				echo "</div>";
-				// echo "</fieldset>";
 			}
 
-			if($info['profexam'] != null){
+			if($info['profexam'] != null){				// show the professional exams taken by the alumni if there are any
 				echo "<div class='alumni_info_sec' id='profexam'><h4>Professional Exams</h4>";
 				foreach ($info['profexam'] as $profexam){ 
 					echo "<div class='form-group2 alumni_info_sec'>";
@@ -66,7 +65,7 @@
 				echo "</div>";
 			}
 
-			if($info['publication'] != null){
+			if($info['publication'] != null){			// show the publications made by the alumni if there are any
 				echo "<div class='alumni_info_sec' id='publication'><h4>Publications</h4>";
 				foreach ($info['publication'] as $publication) {
 					echo "<div class='form-group2 alumni_info_sec'>";
@@ -81,7 +80,7 @@
 				echo "</div>";
 			}
 
-			if($info['assoc'] != null){
+			if($info['assoc'] != null){					// show the associations that the alumni have if there are any
 				echo "<div class='alumni_info_sec' id='assoc'><h4>Associations</h4>";
 				$i=0;
 				echo "<div class='form-group2 alumni_info_sec'>";
@@ -94,7 +93,7 @@
 				echo "</div>";
 			}
 
-			if($info['award']){
+			if($info['award']){							// show the awards received by the alumni if there are any
 				echo "<div class='alumni_info_sec' id='award'><h4>Awards</h4>";
 				foreach ($info['award'] as $award) {
 					echo "<div class='form-group2 alumni_info_sec'>";
@@ -109,7 +108,7 @@
 				echo "</div>";
 			}
 
-			if($info['grant'] != null){
+			if($info['grant'] != null){					// show the grants received by the alumni if there are any
 				echo "<div class='alumni_info_sec' id='grant'><h4>Grants</h4>";
 				foreach ($info['grant'] as $grant) {
 					echo "<div class='form-group2 alumni_info_sec'>";
@@ -125,7 +124,7 @@
 				echo "</div>";
 			}
 
-			if($info['lang'] != null){
+			if($info['lang'] != null){					// show the languages known by the alumni if there are any
 				echo "<div class='alumni_info_sec' id='language'><h4>Languages</h4>";
 				$i=0;
 				echo "<div class='form-group2 alumni_info_sec'>";
@@ -138,7 +137,7 @@
 				echo "</div>";
 			}
 
-			if($info['ability'] != null){
+			if($info['ability'] != null){				// show the abilities specified by the alumni if there are any
 				echo "<div class='alumni_info_sec' id='ability'><h4>Abilities</h4>";
 				$i=0;
 				echo "<div class='form-group2 alumni_info_sec'>";
@@ -151,7 +150,7 @@
 				echo "</div>";
 			}
 
-			if($info['education'] != null){
+			if($info['education'] != null){				// show the educational background by the alumni if there are any specified
 				echo "<div class='alumni_info_sec' id='education'><h4>Educational Background</h4>";
 				foreach ($info['education'] as $education) {
 					echo "<div class='form-group2 alumni_info_sec'>";

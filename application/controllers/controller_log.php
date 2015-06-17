@@ -181,12 +181,10 @@ class Controller_log extends CI_Controller{
 		return $this->model_logs->get_country();
 	}
 
+	// used to get the province/state with respect to the country 
 	function get_data($loadid){
 		$array['result']=$this->model_logs->get_data($loadid);
 		echo json_encode($array);
 	}
 
 }
-/* End of file controller_log.php */
-/* Location: ./application/controllers/controller_log.php */
-?>

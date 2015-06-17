@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	$(".submit-query").click(function get_data(event) {
-		event.preventDefault();
+	$(".submit-query").click(function get_data(event) {									// submit query made in the drag and drop area
+		event.preventDefault();															// prevent default behavior -- redirecting og page after submit
 		$("#tablespecs").html("");
 		$("#change_here_table").html("").css("height", "");
 		$('#chartspecs').html("");
@@ -8,24 +8,24 @@ $(document).ready(function() {
 		$('#mapspecs').html("");
 		$("#change_here_map").html("").css("height", "");
 
-		if($(".query").children(".draggable").length < 1){
-			alert("No query!");
+		if($(".query").children(".draggable").length < 1){								// if query area has no children, there are no fields selected
+			alert("No query!");										
 			return;
 		}
-		getValues();
+		getValues();																	// query area has children so get the values of those children
 
-		if($("input:radio[name ='result-view']:checked").val() == "table"){
+		if($("input:radio[name ='result-view']:checked").val() == "table"){				// selected table as the result vie of the query
 			if($(".query").children(".draggable").length < 1){
 				alert("No query!");
 				return;
 			}
-			var drags=$(".query").children(".draggable");
+			var drags=$(".query").children(".draggable");								// add and set default sort by and order by value to first dragged field ascending
 			var str="<input type='hidden' id='sortby' name='sort_by' value='"+$(drags[0]).children('.lbl').text()+"' required='required' checked='checked'></input><br>\
 				<input type='hidden' id='orderby' name='order_by' value='asc'></input><br>\
 				";
 			$("#tablespecs").append(str);
 
-			$.ajax({
+			$.ajax({																	// query the database
 				url: base_url + "controller_interactive_search/query_table",
 				type: 'POST',
 				data: serialize_form(),
@@ -38,9 +38,9 @@ $(document).ready(function() {
 				}
 			});
 		}
-		else if($("input:radio[name ='result-view']:checked").val() == "chart"){
+		else if($("input:radio[name ='result-view']:checked").val() == "chart"){		// selected chart as the result vie of the query
 			// get possible graphingfactors
-			if($(".query").children(".draggable").length < 1){
+			if($(".query").children(".draggable").length < 1){							// if query area has no children, there are no fields selected
 				alert("No query!");
 				return;
 			}
@@ -48,7 +48,7 @@ $(document).ready(function() {
 			var drags=$(".query").children(".draggable");
 			for(i=0; i<drags.length; i++){
 				if($(drags[i]).children('.lbl').hasClass('nongraph')) continue;
-				dragval=$(drags[i]).children('.lbl').text();
+				dragval=$(drags[i]).children('.lbl').text();							// add form for getting the specifics of querying via chart
 				str+="<input type='radio' name='chartgraphingfactor' id='"+dragval+"' value='"+dragval+"'  required='required'><label for='"+dragval+"'>"+dragval+"</label></input><br>";
 			}
 
@@ -56,6 +56,7 @@ $(document).ready(function() {
 			$("#chartspecs").html("Select graphing factor:<br>");
 			$("#chartspecs").append(options);
 
+			// charts can be viewed in two types: chart and bar
 			str="<input type='radio' name='graphtype' id='pie' value='pie' required='required' checked='checked'><label for='pie'>Pie Chart</label></input><br>\
 				<input type='radio' name='graphtype' id='bar' value='bar'><label for='bar'>Bar Chart</label></input><br>\
 				";
@@ -63,7 +64,7 @@ $(document).ready(function() {
 			$("#chartspecs").append("Select graph type:<br>");
 			$("#chartspecs").append(options);
 		}
-		else if($("input:radio[name ='result-view']:checked").val() == "map"){
+		else if($("input:radio[name ='result-view']:checked").val() == "map"){			// selected map as the result vie of the query
 			if($(".query").children(".draggable").length < 1){
 				alert("No query!");
 				return;
@@ -74,6 +75,7 @@ $(document).ready(function() {
 			for(var i=0; i<drags.length; i++){
 				if($(drags[i]).hasClass('curadd')){
 					if(l==0){
+						// add current address as an option to mapping if the query has a field that is dependent to a graduate
 						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input>";
 						else str+="<input type='radio' name='mapfactor' id='curadd' value='curadd' required='required'><label for='curadd'>Current Address</label></input><br>";
 						l=1;
@@ -81,6 +83,7 @@ $(document).ready(function() {
 				}
 				if($(drags[i]).hasClass('sadd')){
 					if(k==0){
+						// add school address as an option to mapping if the query has a field that is dependent to a school
 						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>";
 						else str+="<input type='radio' name='mapfactor' id='sadd' value='sadd'><label for='sadd'>School Address</label></input><br>";
 						k=1;
@@ -88,6 +91,7 @@ $(document).ready(function() {
 				}
 				else if($(drags[i]).hasClass('cadd')){
 					if(j==0){
+						// add company address as an option to mapping if the query has a field that is dependent to a company
 						if(drags.length == 1) str="<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>";
 						else str+="<input type='radio' name='mapfactor' id='cadd' value='cadd'><label for='cadd'>Company Address</label></input><br>";
 						j=1;
@@ -100,26 +104,29 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#current_job').on('change', function(){
-		console.log('hahha');
+	// option if current job is the only one selected or all jobs related
+	$('#current_job').on('change', function(){	
 		var value=$('#currentjob').val();
 		if(value == 'false') $('#currentjob').val('true');
 		else $('#currentjob').val('false');
 	});
 });
 
-function serialize_form()
-{
+// serializing the form of the specifics of the query
+function serialize_form(){
 	return $("#interactivesearch").serialize();
 }
 
+// change result view type
 $(document).on("change","input:radio[name ='result-view']", function(){
 	$('#chartspecs').html("");
 	$('#mapspecs').html("");
 });
 
+// change mapfactor value
+// view results using a map
 $(document).on("change","input:radio[name ='mapfactor']", function(){
-	$.ajax({
+	$.ajax({																			// ajax call for getting values with respect to map factor
 		url: base_url + "controller_interactive_search/query_map",
 		type: 'POST',
 		data: serialize_form(),
@@ -127,29 +134,27 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 
 		success: function(result) {
 			$('#change_here_map').html(result);
-			var items=$.parseJSON(JSON.stringify(result));
+			var items=$.parseJSON(JSON.stringify(result));								// convert json to array
 			
-
-			var queryres=items['result'];
+			var queryres=items['result'];												
 			var countryvalues=items['country'];
 			var provincevalues=items['province'];
 			var mappath=new Array();
 			var mapCount=0;
 
-			function getQueryValue(countryname){
+			function getQueryValue(countryname){										// get values with respect to country name
 				if(countryvalues[countryname]) return countryvalues[countryname];
 				else return 0;
 			}
 
-			function getProvinceValue(provincename){
+			function getProvinceValue(provincename){									// get values with respect to state or province name
 				if(provincevalues[provincename]) return provincevalues[provincename];
 				else return 0;
 			}
 
 
-			$.each(Highcharts.mapDataIndex, function (mapGroup, maps) {
+			$.each(Highcharts.mapDataIndex, function (mapGroup, maps) {					// iterate through all the maps available on highcharts
 		        if (mapGroup !== "version") {
-		            // mapOptions += '<option class="option-header">' + mapGroup + '</option>';
 		            $.each(maps, function (desc, path) {
 		                mappath.push(path);
 		                mapCount += 1;
@@ -157,16 +162,15 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 		        }
 		    });
 		    $('#change_here_map').css("height", "800px");
-			var data = Highcharts.geojson(Highcharts.maps['custom/world']),         // points to be refered to when setting series
+			var data = Highcharts.geojson(Highcharts.maps['custom/world']),         	// points to be refered to when setting series
 			// Some responsiveness
 			small = $('#change_here_map').width() < 400;
 
-			// console.log(data);
 			// Set drilldown pointers
 			$.each(data, function (i) {
 				this.drilldown = this.properties['hc-key'];    
-				this.key= this.properties['hc-key'],                     			// link to drilldown map
-				this.value = getQueryValue(this.name);                                                     // Non-random bogus data    
+				this.key= this.properties['hc-key'],                     				// link to drilldown map
+				this.value = getQueryValue(this.name);                                  // Non-random bogus data    
 			});
 
 			// Instantiate the map
@@ -179,7 +183,6 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 							if(typeof e.point.parentcountry !== 'undefined') country=e.point.parentcountry;
 							else country=e.point.key;
 
-							// console.log("mapKey: "+'countries/' + country + '/' + key + '-all');	// for countries only 
 							if (!e.seriesOptions) {
 								var chart = this,
 									mapKey = 'countries/' + country + '/' + key + '-all',			// for countries only
@@ -203,16 +206,10 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 
 									// Set a non-random bogus value
 									$.each(data, function (i) {
-										// var temppath = 'countries/' + country + '/' + this.properties['hc-key'] + '-all.js'; 
-										// if($.inArray(temppath, mappath) > -1){
-										// 	this.drilldown = this.properties['hc-key'];    
-										// }
-										this.key= this.properties['hc-key'],                     			// link to drilldown map
+										this.key= this.properties['hc-key'],          // link to drilldown map
 										this.value = getProvinceValue(this.name);
 										this.parentcountry=country;
 									});
-									// console.log("new drilldown set");
-									// console.log(data);
 
 									// Hide loading and add series
 									chart.hideLoading();
@@ -234,16 +231,16 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 				},
 
 				title : {
-					text : 'Query Mapped Results'
+					text : 'Query Mapped Results'										// set title of map
 				},
 
-				legend: small ? {} : {
+				legend: small ? {} : {													// right color range legend
 					layout: 'vertical',
 					align: 'right',
 					verticalAlign: 'middle'
 				},
 
-				colorAxis: {
+				colorAxis: {															// set color range used
 					min: 0,
                     stops: [
                         [0, '#EFEFFF'],
@@ -252,7 +249,7 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
                     ]
 				},
 
-				mapNavigation: {
+				mapNavigation: {														// dragging of map
 					enabled: true,
 					buttonOptions: {
 						verticalAlign: 'bottom'
@@ -269,7 +266,7 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 					}
 				},
 
-				series : [{
+				series : [{																// labels on locations
 					data : data,
 					name: 'World',
 					dataLabels: {
@@ -278,7 +275,7 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 					}
 				}],
 
-				drilldown: {
+				drilldown: {															// drilldown on a country
 					activeDataLabelStyle: {
 						textDecoration: 'none'
 					},
@@ -298,6 +295,8 @@ $(document).on("change","input:radio[name ='mapfactor']", function(){
 	});
 });
 
+// change result view
+// view results via charts 
 $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 	$.ajax({
 		url: base_url + "controller_interactive_search/query_chart",
@@ -308,16 +307,16 @@ $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 		success: function(result) {
 			var factor=result.factor[0];
 			var graphtype=result.graphtype[0];
-			if(graphtype == 'pie'){
+			if(graphtype == 'pie'){														// if chart view type is a pie
 				var values=new Array();
 				for(var i=0; i<result.categories.length; i++){
-					if(result.categories[i]==null) values.push("Not available/applicable", parseInt(result.count[i]))
+					if(result.categories[i]==null) values.push("Not available/applicable", parseInt(result.count[i]))	// null or empty values 
 					else values.push([result.categories[i], parseInt(result.count[i])]);
 				}
 				// console.log(values);
-				$('#change_here_chart').highcharts({
+				$('#change_here_chart').highcharts({									// show results via highcharts - pie
 					chart: {
-						type: 'pie'
+						type: 'pie'														// specify view type
 					},
 					title: {
 						text: factor
@@ -345,7 +344,7 @@ $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 					}]
 				});
 			}
-			else if(graphtype == "bar"){
+			else if(graphtype == "bar"){												// show results via highcharts - bar
 				var categories=new Array();
 				var counter=new Array();
 
@@ -353,9 +352,6 @@ $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 					categories.push(result.categories[i]);
 					counter.push(parseInt(result.count[i]));
 				}
-				console.log(categories.length);
-				console.log(counter.length);
-				console.log("height: "+(categories.length*50+100));
 				$('#change_here_chart').css("height", (categories.length*50+100));
 				$('#change_here_chart').highcharts({
 					chart: {
@@ -398,15 +394,15 @@ $(document).on("change","input:radio[name ='chartgraphingfactor']", function(){
 	});
 });
 
-function getValues(){											// getting the query
-	if(! validateValues()) return false;
-	var children=$(".query").children(".clone");
-	if(children.length==0) return false;
+// get the values from the query made
+function getValues(){											
+	if(! validateValues()) return false;						// check if values supplied is correct
+	var children=$(".query").children(".clone");				// cloned fields -- items in the query area
+	if(children.length==0) return false;						// if there are no items in the query area, return 
 	var querystring="";
 	
-	// console.log(children.length);
-	for(var i=0; i<children.length; i++){
-		if(i>0) querystring+="&";
+	for(var i=0; i<children.length; i++){						// iterate through every item in the query area
+		if(i>0) querystring+="&";								// delimit every item using '&'
 		var child=$(children[i]);
 		querystring+=child.children('.view')[0].innerText;		// field to be shown
 		
@@ -421,33 +417,32 @@ function getValues(){											// getting the query
 			else querystring+=retval+")";
 		}
 	}
-	$("#values").val(querystring);
-	// console.log(querystring);
+	$("#values").val(querystring);								// set the value input field with the id values to query string made 
 	return true;
 }
 
-function operationValues(op, operator){									// within and and or operations --  recursive function
+function operationValues(op, operator){							// within and and or operations --  recursive function
 	var querystring="";
 	var item=$(op);
 	var j=0;
-	if(item.children('.compare').length + item.children('.op').length < 2){
+	if(item.children('.compare').length + item.children('.op').length < 2){		// operations must have at least two values or operation specified
 		alert("For operations, supply at least two possible values (value/operation)");
 		return false;
 	}
 
-	if(item.children('.compare').length > 0){	
+	if(item.children('.compare').length > 0){					// if there are specified values given
 		j=1;
-		for(var i=0; i<item.children('.compare').length; i++){	
-			if(i>0) querystring+=",";
-			querystring+="Val("+item.children('.compare')[i].value+","+item.children('.value')[i].value+")";
+		for(var i=0; i<item.children('.compare').length; i++){	// iterate through values given
+			if(i>0) querystring+=",";							// delimit values given using a comma
+			querystring+="Val("+item.children('.compare')[i].value+","+item.children('.value')[i].value+")";	// values will be specified in the string using Val(<Comparison>,<Value>)
 		}
 	}
-	if(item.children('.op').length > 0){
+	if(item.children('.op').length > 0){						// if operations are specified -- and or or
 		var childop=item.children('.op');
 		if(childop.length > 0){	
 			var val=new Array();
 			for (var l=0; l<childop.length; l++) {
-				val.push(operationValues(childop[l], childop.children('.operator')[0].innerText));
+				val.push(operationValues(childop[l], childop.children('.operator')[0].innerText));				// recursive call for multiple values or operations within 
 			}
 
 			for(var l=0; l<val.length; l++){
@@ -456,33 +451,34 @@ function operationValues(op, operator){									// within and and or operations 
 				querystring+=val[l]+")";
 			}
 
-			if(! querystring) return false;
+			if(! querystring) return false;						
 			j=0;
 		}
 	}
 	return querystring;
 }
 
+// validate values specified in the query area
 function validateValues(){
 	var children=$(".query").children(".clone");
 	for(var i=0; i<children.length; i++){
 		var child=$(children[i]);
 		var querystring=child.children('.view')[0].innerText;
-		if(! querystring.match(/^[A-Za-z0-9_\-\sñÑ]*$/)){
+		if(! querystring.match(/^[A-Za-z0-9_\-\sñÑ]*$/)){				// values supplied
 			alert("Fix Values Query!");
 			return false;
 		}
 		var compare=child.find('.compare');
 		var comparelength=compare.length;
-		if(comparelength > 0){				// single constraint
+		if(comparelength > 0){											// single constraint
 			var value=child.find('.value');
 			for(var j=0; j<comparelength; j++){
-				comparestring=compare[j].value;
+				comparestring=compare[j].value;							// comparison values
 				if(! comparestring.match(/^[A-Za-z0-9_\-\s]*$/)){
 					alert("Fix Values Compare!");
 					return false;
 				}
-				valuestring=value[j].value;
+				valuestring=value[j].value;								// values supplied
 				if(! valuestring.match(/^[A-Za-z0-9_\-\s@\.%ñÑ]*$/)){
 					alert("Fix Values Value!");
 					return false;
@@ -496,6 +492,7 @@ function validateValues(){
 
 // drag and drop css
 $(function() {
+	// comparison types
 	var consinput=
 		"<br>\
 		<select class='compare'>\
@@ -512,19 +509,19 @@ $(function() {
 
 	function handleDropEvent(event, ui){
 		if(! $(ui.draggable).hasClass('clone')){					// not a duplicate of a clone
-			$(ui.draggable).addClass("includedField");
-			$(ui.draggable).draggable("disable");
+			$(ui.draggable).addClass("includedField");				
+			$(ui.draggable).draggable("disable");					// field on field list will be drag disabled
 			var clone = $(ui.draggable).clone();
-			clone.removeClass('original');
-			$(ui.draggable).css("background", "#ddd");
-			clone.children('.lbl').attr("data-toggle", "dropdown");
+			clone.removeClass('original');							// remove original class from cloned item
+			$(ui.draggable).css("background", "#ddd");				// set the color of original color to #ddd
+			clone.children('.lbl').attr("data-toggle", "dropdown");	// label dropdown on 
 			clone.children('.lbl').addClass("dropdown-toggle");
 			var label=clone.children('.lbl').text();
-			var str=
+			var str=												// add X for removing item on the query list
 				"<span class='rem opt'>X</span>\
 				<span class='caret opt' data-toggle='dropdown'></span>";
-			var mod=$(str);
-			str=
+			var mod=$(str);											// add on the clone field
+			str=													// specify constraint values
 				"<ul class='dropdown-menu'>\
 					<li class='dropdown-item single'><a>Single Constraint</li>\
 					<li class='dropdown-item and'><a>Multiple Constraints (And)</a></li>\
@@ -540,16 +537,19 @@ $(function() {
 			if($(ui.draggable).hasClass('draggable')){
 				clone.draggable();
 			}
-			disableUnrelatedFields();
+			disableUnrelatedFields();								
 		}
-		else{													// duplicate of a clone -- sort
+		else{														// duplicate of a clone -- sort
 			var item=$(ui.draggable).detach();
 			item.css('top', 0).css('left', 0).css('clear', 'both');
 			$(this).append(item);
 		}
 	}
 
-	function disableUnrelatedFields(){
+	// disable fields that cannot be related to the currently selected fields
+	// if there is a field from the basic info group of fields, all fields are enabled.
+	// if not, only the graduate fields and the fields that the currently selected field belongs to is enabled 
+	function disableUnrelatedFields(){	
 		var classTabs=['graduate', 'educbg', 'works', 'projects', 'publications', 'awards', 'grant', 'others'];
 		var drags=$(".query").children(".draggable");
 		var included=new Array();
@@ -630,9 +630,10 @@ $(function() {
 		}
 	}
 
-	$(".draggable").draggable({
+	// set divs with class draggable 
+	$(".draggable").draggable({		
 		helper: 'clone',
-		revert: true,
+		revert: true,			
 		revertDuration: 0,
 		drag: function(event, ui) {
 			$(this).css('z-index', 5);
@@ -642,10 +643,13 @@ $(function() {
 		}
 	});
 
+	// set div with class query to be droppable
+	// div in the right side of the page will be droppable
 	$(".query").droppable({
 		drop: handleDropEvent
 	});
 
+	// click on the X added on the draggable field
 	$(document).on('click', '.rem', function(){
 		if($(this).parent().hasClass('clone')){		// enable original
 			var views=$('.view');
@@ -689,14 +693,16 @@ $(function() {
 		single.siblings(".caret").remove();
 	});
 
+	// add conditions that
 	$(document).on('click', '.add-cons', function(){
 		var single=$(consinput);
 		$(this).parent().parent().append(single);
 	});
 
+	// add an and operation
 	$(document).on('click', '.and', function(){
 		var secparent = $(this).parent().parent();
-		if(secparent.hasClass("clone")){						// remove caret and other attributes and classes
+		if(secparent.hasClass("clone")){						// remove caret and other attributes and classes of draggable
 			secparent.children().remove(".caret");
 			secparent.children().remove(".dropdown-menu");
 			secparent.children('.lbl').removeAttr("data-toggle");
@@ -704,16 +710,17 @@ $(function() {
 		}
 		var mod=$("<span class='rem opt'>X</span><span class='caret opt' data-toggle='dropdown'>");
 		var options=$("<ul class='dropdown-menu'><li class='dropdown-item add-cons'><a>Add Constraint</li><li class='dropdown-item or'><a>Multiple Constraints (Or)</a></li></ul>");
-		var andop=$("<div class='op resizable'><span class='lbl operator dropdown-toggle' data-toggle='dropdown'>And</span></div>");
+		var andop=$("<div class='op resizable'><span class='lbl operator dropdown-toggle' data-toggle='dropdown'>And</span></div>");		// and div
 		andop.css("display", "table");
-		andop.prepend(mod);
-		andop.append(options);
-		secparent.append(andop);
+		andop.prepend(mod);										// add the caret and X for removing
+		andop.append(options);									// add dropdown values
+		secparent.append(andop);								// add the and div
 	});
 
+	// add an or operation
 	$(document).on('click', '.or', function(){
 		var secparent = $(this).parent().parent();
-		if(secparent.hasClass("clone")){						// remove caret and other attributes and classes
+		if(secparent.hasClass("clone")){						// remove caret and other attributes and classes of draggable
 			secparent.children().remove(".caret");
 			secparent.children().remove(".caret");
 			secparent.children().remove(".dropdown-menu");
@@ -723,14 +730,15 @@ $(function() {
 
 		var mod=$("<span class='rem opt'>X</span><span class='caret opt' data-toggle='dropdown'>");
 		var options=$("<ul class='dropdown-menu'><li class='dropdown-item add-cons'><a>Add Constraint</li><li class='dropdown-item and'><a>Multiple Constraints (And)</a></li></ul>");
-		var orop=$("<div class='op resizable'><span class='lbl operator dropdown-toggle' data-toggle='dropdown'>Or</span></div>");
+		var orop=$("<div class='op resizable'><span class='lbl operator dropdown-toggle' data-toggle='dropdown'>Or</span></div>");			// or div
 		orop.css("display", "table");
-		orop.prepend(mod);
-		orop.append(options);
-		secparent.append(orop);
+		orop.prepend(mod);										// add the caret and X for removing
+		orop.append(options);									// add dropdown values
+		secparent.append(orop);									// add the or div
 	});
 });
 
+// from bootstrap
 // dropdown js
 
 +function ($) {

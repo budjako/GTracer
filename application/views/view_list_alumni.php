@@ -1,5 +1,8 @@
+<!--
+	Shows the list of all graduates
+-->
 <script type="text/javascript">
-	window.onload = get_data("studentno", "asc");
+	window.onload = get_data("studentno", "asc");				// perform get_data after the page completely loads
 
 	function get_data(sort, order){  
 		$.ajax({

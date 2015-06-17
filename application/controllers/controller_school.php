@@ -32,47 +32,64 @@ class Controller_school extends Controller_log {
 		$this->load->view("footer"); 													//displays the footer
 	}
 
-	public function get_school_data(){
+	public function get_school_data($string){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');									// redirect to login page
 		}
-		$this->input->post('serialised_form');
-		$sort_by = addslashes($this->input->post('sort_by')); 
-		$order_by = addslashes($this->input->post('order_by')); 
+
+		$string=explode("_", $string);
+		$sort_by = addslashes($string[0]); 
+		$order_by = addslashes($string[1]); 
 
 		//configuration of the ajax pagination  library.
 		$config['base_url'] = base_url().'controller_school/get_school_data';
 		$config['total_rows'] = $config['total_rows'] = $this->model_school->get_school_approved_count();
 		$config['per_page'] = '20';
 		$config['div'] = '#change_here';
-		$config['additional_param']  = 'serialize_form()';
 
 
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 		//fetches data from database.
 		$data['result'] = $this->model_school->get_school_approved_paginate($config['per_page'], $page, $sort_by, $order_by);
 		//display data from database
 		
-		ini_set('xdebug.var_display_max_depth', 10);
-		ini_set('xdebug.var_display_max_children', 256);
-		ini_set('xdebug.var_display_max_data', 1024);
 		//initialize the configuration of the ajax_pagination
 		$this->jquery_pagination->initialize($config);
 		//create links for pagination
-		$data['links'] = $this->jquery_pagination->create_links();
+		$data['links'] = $this->jquery_pagination->create_links($sort_by, $order_by);
 		// var_dump($data['links']);
-		$this->print_school($data['result'],$data['links']);
+		$this->print_school($sort_by, $order_by, $data['result'],$data['links']);
 	   
 	}
 
 	// print data from db
-	public function print_school($result, $links){
+	public function print_school($sort_by, $order_by, $result, $links){
 		echo $links;
 		echo "<table class='table table-hover table-bordered'>";
-		echo "<th>School Name</th>";
-		echo "<th>Country</th>";
-		echo "<th>Region</th>";
-		echo "<th>Province</th>";
+		if($sort_by=="schoolname"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('schoolname','desc');>Name<span class='caretdown'></span></a></th>";
+			else echo "<th><a href='javascript:void(0);' onclick=get_data('schoolname','asc');>Name<span class='caretup'></span></a></th>";
+		}
+		else if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('schoolname','desc');>Name<span class='caretup'></span></a></th>";
+
+		if($sort_by=="saddcountry"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('saddcountry','desc');>Country<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('saddcountry','asc');>Country<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('saddcountry','desc');>Country<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="saddregion"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('saddregion','desc');>Region<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('saddregion','asc');>Region<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('saddregion','desc');>Region<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="saddprovince"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('saddprovince','desc');>Province<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('saddprovince','asc');>Province<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('saddprovince','desc');>Province<span class='caretdown'></span></a></th>";
+
 		echo "<th>Merge</th>";
 		foreach ($result as $row){
 			echo "<tr id='".$row->school_no."' class='clickable-row' data-href='".base_url()."controller_school/index/".$row->school_no."'>";

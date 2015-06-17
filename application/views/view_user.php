@@ -1,4 +1,8 @@
-<script type="text/javascript">
+<!--
+	Shows the list of all users of the system.
+-->
+
+<script type="text/javascript">											// perform get_data after the page completely loads
 	window.onload = get_data("empno", "asc");
 
 	function get_data(sort, order){  

@@ -87,12 +87,6 @@ class Controller_list_alumni extends CI_Controller {
 		}
 		else echo "<th><a href='javascript:void(0);' onclick=get_data('firstname','desc');>First Name<span class='caretdown'></span></a></th>";
 
-		if($sort_by=="midname"){
-			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('midname','desc');>Middle Name<span class='caretdown'></span></a></th>";
-			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('midname','asc');>Middle Name<span class='caretup'></span></a></th>";
-		}
-		else echo "<th><a href='javascript:void(0);' onclick=get_data('midname','desc');>Middle Name<span class='caretdown'></span></a></th>";
-
 		if($sort_by=="email"){
 			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('email','desc');>Email Address<span class='caretdown'></span></a></th>";
 			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('email','asc');>Email Address<span class='caretup'></span></a></th>";
@@ -103,7 +97,6 @@ class Controller_list_alumni extends CI_Controller {
 			echo "<tr id='".$row->student_no."' class='clickable-row' data-href='".base_url()."controller_alumni/index/".$row->student_no."'><td>".$row->student_no."</td>";
 			echo "<td>".$row->lastname."</td>";
 			echo "<td>".$row->firstname."</td>";
-			echo "<td>".$row->midname."</td>";
 			echo "<td>".$row->email."</td></tr>";
 		} 
 		echo "</table>";

@@ -1,8 +1,10 @@
+<!-- Page used to ask initial information from the user -->
+
 <script type="text/javascript">
 
 	$(document).ready( function() {
 		
-		$("#eno").blur(function (){ 
+		$("#eno").blur(function (){ 						// ajax call for checking if the employee number already exists
 			
 			if($('#eno').val().trim() != ""){
 				if(! validateENo()){
@@ -32,9 +34,6 @@
 			<h3>User Information</h3>
 			<p>
 				<?php 
-					// echo "BWAHAHAHHA";
-					// var_dump($userinfo);
-					// if(isset($userinfo)) var_dump($userinfo);
 					echo validation_errors();
 					$attrib=array('name' => 'editinfo', 'id' => 'editinfo', 'class' => 'form-horizontal');
 					echo form_open('controller_login/edit_info_form', $attrib);

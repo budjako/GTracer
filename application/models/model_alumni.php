@@ -5,6 +5,7 @@
 			$this->load->database();
 		}
 
+		// main call for getting all alumni data
 		public function get_stud_data($stdno){
 			if(! $this->exists($stdno)) return false;
 
@@ -22,18 +23,19 @@
 			return $info;
 		}
 
+		// check if alumni exists
+		// checks using student number
 		public function exists($stdno){
 			$query=$this->db->get_where('graduate', array("student_no"=>$stdno));
 			if($query->num_rows()==1){
-				// echo "exists";
 				return true;
 			}
 			else{
-				// echo "does not exist";
 				return false;
 			}
 		}
 
+		// get the basic information of the alumnus
 		public function get_stud_basic_info($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('graduate');
@@ -46,6 +48,7 @@
 			return false;
 		}
 
+		// get the abilities of an alumnus
 		public function get_stud_ability($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('ability');
@@ -58,6 +61,7 @@
 			return false;
 		}
 
+		// get the associations or organizations that the alumnus belongs to
 		public function get_stud_assoc($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('association');
@@ -70,6 +74,7 @@
 			return false;
 		}
 
+		// get the awards received by the alumnus
 		public function get_stud_award($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('award');
@@ -81,9 +86,8 @@
 			}
 			return false;
 		}
-
 		
-
+		// get the grants received by the alumnus
 		public function get_stud_grant($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('grant');
@@ -96,6 +100,7 @@
 			return false;
 		}
 
+		// get the list of languages known by the alumnus
 		public function get_stud_lang($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('language');
@@ -108,6 +113,7 @@
 			return false;
 		}
 
+		// get the list of professional exams taken by the alumnus
 		public function get_stud_prof_exam($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('profexam');
@@ -120,6 +126,7 @@
 			return false;
 		}
 
+		// get the publications made by the alumnus
 		public function get_stud_publication($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('publication');
@@ -132,6 +139,7 @@
 			return false;
 		}
 
+		// get the working experience of an alumnus
 		public function get_stud_work($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('work');
@@ -150,6 +158,7 @@
 			return false;
 		}
 
+		// get the educational background of an alumnus
 		public function get_stud_education($stdno=FALSE){
 			if ($stdno === FALSE){
 				$query = $this->db->get('educationalbg');

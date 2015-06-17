@@ -1,27 +1,28 @@
+<!--
+	Shows the details of a company
+
+	If the company is not yet approved, it will show a list of approved companies at the bottom of the page that enables the user to merge the current
+	entry in case it already exists
+-->
+
 <script type="text/javascript">
 	<?php 
 		if(! $is_approved)
-			echo "get_company_data()";
+			echo "get_data('companyname', 'asc')";				// get approved companies list if the current company is not yet approved. sort by company name ascending
 	?>
 
-	function get_company_data(){  
+	function get_data(sort, order){  							// ajax call on getting the list of companies that are already approved
 		$.ajax({
-			url: base_url+"controller_company/get_company_data",
+			url: base_url+"controller_company/get_company_data/"+sort+"_"+order,
 			type: 'POST',
-			data: serialize_form(),
 
-			success: function(result){
+			success: function(result){							// if successful in fetching data, show results
 				$('#change_here').html(result);
 			},
 			error: function(err){
 				$('#change_here').html(err);
 			}
 		});
-	}
-
-	function serialize_form()
-	{
-		return $("#sort_list").serialize();
 	}
 </script>
 
@@ -32,8 +33,7 @@
 		<p>
 
 			<?php 
-				// var_dump($info);
-				echo validation_errors();
+				echo validation_errors();						// show the errors made in the supplied information
 				$attrib=array('name' => 'companyedit', 'id' => 'companyedit', 'class' => 'form-horizontal');
 				echo form_open('controller_company_approval/edit_company', $attrib);
 				if(isset($msg)){
@@ -91,27 +91,8 @@
 			</form>
 		</p>
 		<?php 
-			if(! $is_approved){
+			if(! $is_approved){									// if company is not yet approved, show list
 				echo "<h3>List of Approved Company Entries</h3>
-					<center class='centersort'>
-						<div class='sortform'>
-							<form method='post' id='sort_list' name='sort_list'>
-								<span>Sort by 
-									<select id = 'sort_by' name ='sort_by' onchange = 'get_company_data();'>
-										<option value='companyname' selected='selected'>Company Name</option>
-										<option value='caddcountry'>Country</option>
-										<option value='caddregion'>Region</option>
-										<option value='caddprovince'>Province</option>
-										<option value='companytype'>Type</option>
-									</select>
-								</span><br>
-								<span>	 
-									<input type='radio' id='order_by_asc' onchange = 'get_company_data();' value='asc' name='order_by' checked='checked'><label for='order_by_asc'>Ascending</label></input>
-									<input type='radio' id='order_by_desc' onchange = 'get_company_data();' value='desc' name='order_by'><label for='order_by_desc'>Descending</label></input>
-								</span>
-							</form>
-						</div>
-					</center>
 					<div id='change_here'> </div>";
 			}
 
@@ -125,16 +106,16 @@
 <script type="text/javascript">
 	window.onload=loadCountry();
 
-	function loadCountry(){
+	function loadCountry(){										// load possible country values
 		var country_id=$('.country').val().trim();
 		if(country_id!="-1"){
 			loadData('state',country_id);
 		}else{
-			$(".state_dropdown").html("<option value='-1'>Select state</option>");
+			$(".state_dropdown").html("<option value='-1'>Select state</option>");	
 		}
 	}
 
-	function loadData(loadType,loadId){
+	function loadData(loadType,loadId){							// get state or province values
 		$.ajax({
 			type: "POST",
 			url: base_url + 'controller_log/get_data/'+loadId,

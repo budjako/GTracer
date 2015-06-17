@@ -5,8 +5,9 @@
 
 // BASIC SEARCH
 
+// validate basic search values
 function validateSearch(){
-	if(validateStdNo() && validateFname() && validateMname() && validateLname() && validateEmail()){
+	if(validateStdNo() && validateFname() && validateLname() && validateEmail()){
 		return true;
 	}
 	else{
@@ -40,19 +41,6 @@ function validateFname(){
 	return false;
 }
 
-function validateMname(){
-	msg="";
-	str=basicsearch.mname.value.trim();
-	document.getElementsByName("mnameerr")[0].innerHTML=msg;
-	if(str=="") return true;
-	else if (!str.match(/^([A-Za-zñÑ]){1}([A-Za-zñÑ]){1,}(\s([A-Za-zñÑ]){1,})*(\-([A-Za-zñÑ]){1,}){0,1}$/)){ 
-		msg="Invalid Input: Must be between 2-50 alpha characters!";
-		document.getElementsByName("mnameerr")[0].innerHTML=msg;
-	}
-	if(msg=="") return true;
-	return false;
-}
-
 function validateLname(){
 	msg="";
 	str=basicsearch.lname.value.trim();
@@ -72,8 +60,8 @@ function validateEmail(){
 	document.getElementsByName("emailerr")[0].innerHTML=msg;
 
 	if(str=="") return true;
-	else if (!str.match(/^[A-Za-z][A-Za-z-0-9\._]{3,20}@[A-Za-z0-9]{3,8}\.[A-Za-z]{3,5}(\.[A-Za-z]{2,3}){0,1}$/)){  
-		msg+="Enter valid email. (@uplbosa.org) // update this!";
+	else if (!str.match(/^[A-Za-zñÑ][A-Za-zñÑ\-0-9\._]{3,20}@[A-Za-zñÑ0-9]{3,8}\.[A-Za-zñÑ]{3,5}(\.[A-Za-zñÑ]{2,3}){0,1}$/)){  
+		msg+="Enter valid email.";
 		document.getElementsByName("emailerr")[0].innerHTML=msg;
 	}
 	if(msg=="") return true;
@@ -82,8 +70,9 @@ function validateEmail(){
 
 // EDIT USER INFORMATION
 
+// validate initial information of user
 function validateEditInfo(){
-	if(validateENo() && validateEditFname() && validateEditLname() /*&& validateEditLname()*/){
+	if(validateENo() && validateEditFname() && validateEditLname()){
 		if($("#enolog").text()=="Employee Number is available."){
 			return true;
 		}
@@ -91,6 +80,7 @@ function validateEditInfo(){
 	return false;
 }
 
+// validate employee number
 function validateENo(){
 	msg="";
 	str=editinfo.eno.value.trim();
@@ -104,6 +94,7 @@ function validateENo(){
 	return false;
 }
 
+// validate first name
 function validateEditFname(){
 	msg="";
 	str=editinfo.fname.value.trim();
@@ -117,6 +108,7 @@ function validateEditFname(){
 	return false;
 }
 
+// validate last name
 function validateEditLname(){
 	msg="";
 	str=editinfo.lname.value.trim();
@@ -130,24 +122,13 @@ function validateEditLname(){
 	return false;
 }
 
-function validateEditEmail(){
-	msg="";
-	str=editinfo.email.value.trim();
-	document.getElementsByName("emailerr")[0].innerHTML=msg;
-	if(str=="") return true;
-	else if (!str.match(/^[A-Za-z][A-Za-z-0-9\._]{3,20}@cia.uplbosa.org$/)){
-		msg="Invalid Input: Must be a valid email address that has a domain of cia.uplbosa.org!";
-		document.getElementsByName("emailerr")[0].innerHTML=msg;
-	}
-	if(msg=="") return true;
-	return false;
-}
-
+// validate update values of school details
 function validateSchoolEdit(){
 	if(validateSchoolName() && validateSchoolCountry() && validateSchoolProvinceState()) return true;
 	return false;
 }
 
+//validate school name
 function validateSchoolName(){
 	msg="";
 	str=schooledit.sname.value.trim();
@@ -161,6 +142,7 @@ function validateSchoolName(){
 	return false;
 }
 
+// validate school's country iso code
 function validateSchoolCountry(){
 	msg="";
 	str=schooledit.country.value.trim();
@@ -177,12 +159,14 @@ function validateSchoolCountry(){
 	return false;
 }
 
+
+//validate school's province iso code
 function validateSchoolProvinceState(){
 	msg="";
 	str=schooledit.state.value.trim();
 	document.getElementsByName("saddprovinceerr")[0].innerHTML=msg;
 	if(str=="-1") return true;
-	else if (!str.match(/^[A-Z]{2}[\-\_][A-Z0-9]{3}$/)){ 
+	else if (!str.match(/^[A-Z]{2}[\-\_][A-Z0-9]{2,3}$/)){ 
 		msg="Invalid Input: Alphanumeric (with - and _) characters only!";
 		document.getElementsByName("saddprovinceerr")[0].innerHTML=msg;
 	}
@@ -190,12 +174,13 @@ function validateSchoolProvinceState(){
 	return false;
 }
 
-
+// validate update value of company details
 function validateCompanyEdit(){
 	if(validateCompanyName() && validateCompanyType() && validateCompanyCountry() && validateCompanyProvinceState()) return true;
 	return false;
 }
 
+// validate company name
 function validateCompanyName(){
 	msg="";
 	str=companyedit.cname.value.trim();
@@ -209,6 +194,7 @@ function validateCompanyName(){
 	return false;
 }
 
+// validate company type
 function validateCompanyType(){
 	msg="";
 	str=companyedit.ctype.value.trim();
@@ -222,6 +208,7 @@ function validateCompanyType(){
 	return false;
 }
 
+// validate company's country iso code
 function validateCompanyCountry(){
 	msg="";
 	str=companyedit.country.value.trim();
@@ -238,12 +225,13 @@ function validateCompanyCountry(){
 	return false;
 }
 
+// validate company's state/province iso code
 function validateCompanyProvinceState(){
 	msg="";
 	str=companyedit.state.value.trim();
 	document.getElementsByName("caddprovinceerr")[0].innerHTML=msg;
 	if(str=="-1") return true;
-	else if (!str.match(/^[A-Z]{2}[\-\_][A-Z0-9]{3}$/)){ 
+	else if (!str.match(/^[A-Z]{2}[\-\_][A-Z0-9]{2,3}$/)){ 
 		msg="Invalid Input: Alphanumeric (with - and _) characters only!";
 		document.getElementsByName("caddprovinceerr")[0].innerHTML=msg;
 	}

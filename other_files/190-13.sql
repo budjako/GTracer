@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `190`
+-- Database: `gtracer`
 --
 
 -- --------------------------------------------------------
@@ -17563,7 +17563,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `emp_no` varchar(9) NOT NULL,
   `name` varchar(60) NOT NULL,
   `email` varchar(60) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT '0' COMMENT 'change in the future: status -> 0 - ok, 1 - banned, 2 - deleted',
+  `active` int(1) NOT NULL DEFAULT '0' COMMENT 'active -> 0 - deactivated, 1 - activated',
   `admin` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`emp_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -17572,7 +17572,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
 -- Dumping data for table `staff`
 --
 
-INSERT INTO `staff` (`emp_no`, `name`, `email`, `status`, `admin`) VALUES
+INSERT INTO `staff` (`emp_no`, `name`, `email`, `active`, `admin`) VALUES
 ('000000000', 'Dyanara Dela Rosa', 'budjako@gmail.com', 0, 1),
 ('000382174', 'Macy Burgess', 'temp@uplbosa.org', 0, 1),
 ('000574507', 'Marvin Acosta', 'temp@uplbosa.org', 0, 1),
@@ -18443,7 +18443,7 @@ INSERT INTO `staff` (`emp_no`, `name`, `email`, `status`, `admin`) VALUES
 ('272907134', 'Vernon Hampton', 'temp@uplbosa.org', 0, 0),
 ('273619472', 'Zephr Kirk', 'temp@uplbosa.org', 0, 0),
 ('273658883', 'Kiara Gay', 'temp@uplbosa.org', 0, 0);
-INSERT INTO `staff` (`emp_no`, `name`, `email`, `status`, `admin`) VALUES
+INSERT INTO `staff` (`emp_no`, `name`, `email`, `active`, `admin`) VALUES
 ('274057145', 'Keiko Y. Haley', 'temp@uplbosa.org', 0, 0),
 ('274422269', 'Benjamin X. Gutierrez', 'temp@uplbosa.org', 0, 0),
 ('275524586', 'Ali T. Walls', 'temp@uplbosa.org', 0, 0),
@@ -19315,7 +19315,7 @@ INSERT INTO `staff` (`emp_no`, `name`, `email`, `status`, `admin`) VALUES
 ('587274676', 'Jeanette Lane', 'temp@uplbosa.org', 0, 0),
 ('587344798', 'Malcolm Banks', 'temp@uplbosa.org', 0, 0),
 ('587684154', 'Kylan Scott', 'temp@uplbosa.org', 0, 0);
-INSERT INTO `staff` (`emp_no`, `name`, `email`, `status`, `admin`) VALUES
+INSERT INTO `staff` (`emp_no`, `name`, `email`, `active`, `admin`) VALUES
 ('588144337', 'Carolyn Peters', 'temp@uplbosa.org', 0, 0),
 ('588999221', 'Talon W. Holden', 'temp@uplbosa.org', 0, 0),
 ('589208722', 'Kirby Walls', 'temp@uplbosa.org', 0, 0),
@@ -20183,7 +20183,7 @@ INSERT INTO `staff` (`emp_no`, `name`, `email`, `status`, `admin`) VALUES
 ('858139242', 'Julian Carpenter', 'temp@uplbosa.org', 0, 0),
 ('858367823', 'Macy W. Mclaughlin', 'temp@uplbosa.org', 0, 0),
 ('858630701', 'Holmes H. Hull', 'temp@uplbosa.org', 0, 0);
-INSERT INTO `staff` (`emp_no`, `name`, `email`, `status`, `admin`) VALUES
+INSERT INTO `staff` (`emp_no`, `name`, `email`, `active`, `admin`) VALUES
 ('859493032', 'Lucian Vargas', 'temp@uplbosa.org', 0, 0),
 ('859927927', 'Lunea Q. Mckenzie', 'temp@uplbosa.org', 0, 0),
 ('860605230', 'Hakeem Henry', 'temp@uplbosa.org', 0, 0),

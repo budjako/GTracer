@@ -4,8 +4,8 @@
 			$this->load->database();
 		}
 
+		// set query and return all results
 		public function get_search($search){
-			// var_dump($search);
 			$str="SELECT ";
 			$ctr=0;
 			$param=array();
@@ -29,7 +29,7 @@
 				$param['email']=$search['email'];
 				$ctr++;
 			}
-			// var_dump($param);
+
 			$query = $this->db->get_where('graduate', $param);
 			if($query->num_rows()>0){
 				return $query->result();
@@ -37,8 +37,8 @@
 			return false;
 		}
 
+		// set query and paginate results
 		public function get_search_paginate($search, $limit, $start){
-			// var_dump($search);
 			$str="SELECT ";
 			$ctr=0;
 			$param=array();
@@ -62,7 +62,6 @@
 				$param['email']=$search['email'];
 				$ctr++;
 			}
-			// var_dump($param);
 
 			$query = $this->db->get_where('graduate', $param, $limit, $start);
 			if($query->num_rows()>0){

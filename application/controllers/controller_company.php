@@ -31,42 +31,65 @@ class Controller_company extends Controller_log {
 		$this->load->view("footer"); 											//displays the footer
 	}
 
-	public function get_company_data(){
+	public function get_company_data($string){
 		if($this->session->userdata('logged_in') == FALSE){
 			redirect('controller_login', 'refresh');							
 		}
-		$this->input->post('serialised_form');
-		$sort_by = addslashes($this->input->post('sort_by')); 
-		$order_by = addslashes($this->input->post('order_by')); 
+		$string=explode("_", $string);
+		$sort_by = addslashes($string[0]); 
+		$order_by = addslashes($string[1]); 
 
 		//configuration of the jquery pagination library.
 		$config['base_url'] = base_url().'controller_company/get_company_data';
 		$config['total_rows'] = $config['total_rows'] = $this->model_company->get_company_approved_count();
 		$config['per_page'] = '20';
 		$config['div'] = '#change_here';
-		$config['additional_param']  = 'serialize_form()';
 
-
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 		//fetches data from database.
 		$data['result'] = $this->model_company->get_company_approved_paginate($config['per_page'], $page, $sort_by, $order_by);
 		
 		//initialize the configuration of the ajax_pagination
 		$this->jquery_pagination->initialize($config);
 		//create links for pagination
-		$data['links'] = $this->jquery_pagination->create_links();
-		$this->print_company($data['result'],$data['links']);
+		$data['links'] = $this->jquery_pagination->create_links($sort_by, $order_by);
+		$this->print_company($sort_by, $order_by, $data['result'],$data['links']);
 	   
 	}
 
-	public function print_company($result, $links){								//display data from database
+	public function print_company($sort_by, $order_by, $result, $links){								//display data from database
 		echo $links;
 		echo "<table class='table table-hover table-bordered'>";
-		echo "<th>Company Name</th>";
-		echo "<th>Country</th>";
-		echo "<th>Region</th>";
-		echo "<th>Province</th>";
-		echo "<th>Type</th>";
+		if($sort_by=="companyname"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('companyname','desc');>Name<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('companyname','asc');>Name<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('companyname','desc');>Name<span class='caretup'></span></a></th>";
+
+		if($sort_by=="caddcountry"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('caddcountry','desc');>Country<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('caddcountry','asc');>Country<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('caddcountry','desc');>Country<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="caddregion"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('caddregion','desc');>Region<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('caddregion','asc');>Region<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('caddregion','desc');>Region<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="caddprovince"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('caddprovince','desc');>Province<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('caddprovince','asc');>Province<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('caddprovince','desc');>Province<span class='caretdown'></span></a></th>";
+
+		if($sort_by=="companytype"){
+			if($order_by=="asc") echo "<th><a href='javascript:void(0);' onclick=get_data('companytype','desc');>Type<span class='caretdown'></span></a></th>";
+			else if($order_by=="desc") echo "<th><a href='javascript:void(0);' onclick=get_data('companytype','asc');>Type<span class='caretup'></span></a></th>";
+		}
+		else echo "<th><a href='javascript:void(0);' onclick=get_data('companytype','desc');>Type<span class='caretdown'></span></a></th>";
+
 		echo "<th>Merge</th>";
 		foreach ($result as $row){
 			echo "<tr id='".$row->company_no."' class='clickable-row' data-href='".base_url()."controller_company/index/".$row->company_no."'>";

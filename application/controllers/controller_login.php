@@ -48,7 +48,7 @@ class Controller_login extends Controller_log {
 			$client->setDeveloperKey($simple_api_key);
 			$client->addScope("profile");
 			$client->addScope("https://www.googleapis.com/auth/userinfo.email");
-			// $client->setHostedDomain("uplbosa.org");
+			$client->setHostedDomain("uplbosa.org");
 			// $client->setHostedDomain("cia.uplbosa.org");
 
 			// Send Client Request
@@ -145,8 +145,8 @@ class Controller_login extends Controller_log {
 	}
 
 	function email_check($str){											// validate email address
-		return(! preg_match("/^[A-Za-z][A-Za-z-0-9\._]{3,20}@gmail.com$/i", $str))? FALSE: TRUE;
-		// return(! preg_match("/^[A-Za-z][A-Za-z-0-9\._]{3,20}@uplbosa.org$/i", $str))? FALSE: TRUE;
+		// return(! preg_match("/^[A-Za-z][A-Za-z-0-9\._]{3,20}@gmail.com$/i", $str))? FALSE: TRUE;
+		return(! preg_match("/^[A-Za-z][A-Za-z-0-9\._]{3,20}@uplbosa.org$/i", $str))? FALSE: TRUE;
 	}
 
 	function check_email($email){										// check if email already exists
@@ -203,4 +203,3 @@ class Controller_login extends Controller_log {
  		redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue='.base_url().'controller_login/index', 'refresh');
 	}
 }
-?>

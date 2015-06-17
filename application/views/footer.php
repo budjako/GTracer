@@ -1,3 +1,4 @@
+<!-- Footer used on all pages in the site -->
 					<footer>
 						<div class="footer-svg">
 							<svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1200 80">

@@ -1,16 +1,22 @@
+<!--
+	Shows the details of a school
+
+	If the school is not yet approved, it will show a list of approved schools at the bottom of the page that enables the user to merge the current
+	entry in case it already exists
+-->
+
 <script type="text/javascript">
 	<?php 
 		if(! $is_approved)
-			echo "get_school_data()";
+			echo "get_data('schoolname', 'asc')";					// get approved schools' list if the current school is not yet approved. sort by school name ascending
 	 ?>
 
-	function get_school_data(){  
+	function get_data(sort, order){  								// ajax call on getting the list of schools that are already approved
 		$.ajax({
-			url: base_url+"controller_school/get_school_data",
+			url: base_url+"controller_school/get_school_data/"+sort+"_"+order,
 			type: 'POST',
-			data: serialize_form(),
 
-			success: function(result){
+			success: function(result){								// if successful in fetching data, show results
 				$('#change_here').html(result);
 			},
 			error: function(err){
@@ -19,13 +25,7 @@
 		});
 	}
 
-	function serialize_form()
-	{
-		return $("#sort_list").serialize();
-	}
 </script>
-
-
 <div id="content-box" class="content-box clearfix">
 	<div class="inner-content">
 		<?php if(isset($info['school_no'])){ ?>
@@ -35,7 +35,6 @@
 			<!-- if entry is existing, update other entries using the id of this entry then remove current entry-->
 
 			<?php 
-				// var_dump($info);
 				echo validation_errors();
 				$attrib=array('name' => 'schooledit', 'id' => 'schooledit', 'class' => 'form-horizontal');
 				echo form_open('controller_school_approval/edit_school', $attrib);
@@ -81,24 +80,6 @@
 		<?php 
 			if(! $is_approved){
 				echo "<h3>List of Approved School Entries</h3>
-					<center class='centersort'>
-						<div class='sortform'>
-							<form method='post' id='sort_list' name='sort_list'>
-								<span>Sort by 
-									<select id = 'sort_by' name ='sort_by' onchange = 'get_school_data();'>
-										<option value='schoolname' selected='selected'>School Name</option>
-										<option value='saddcountry'>Country</option>
-										<option value='saddregion'>Region</option>
-										<option value='saddprovince'>Province</option>
-									</select>
-								</span><br>
-								<span>	 
-									<input type='radio' id='order_by_asc' onchange = 'get_school_data();' value='asc' name='order_by' checked='checked'><label for='order_by_asc'>Ascending</label></input>
-									<input type='radio' id='order_by_desc' onchange = 'get_school_data();' value='desc' name='order_by'><label for='order_by_desc'>Descending</label></input>
-								</span>
-							</form>
-						</div>
-					</center>
 					<div id='change_here'> </div>";
 			}
 		}
@@ -110,7 +91,7 @@
 <script type="text/javascript">
 	window.onload=loadCountry();
 
-	function loadCountry(){
+	function loadCountry(){												// load possible country values
 		var country_id=$('.country').val().trim();
 		if(country_id!="-1"){
 			loadData('state',country_id);
@@ -119,7 +100,7 @@
 		}
 	}
 
-	function loadData(loadType,loadId){
+	function loadData(loadType,loadId){									// get state or province values
 		$.ajax({
 			type: "POST",
 			url: base_url + 'controller_log/get_data/'+loadId,

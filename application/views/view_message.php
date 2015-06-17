@@ -1,3 +1,5 @@
+<!-- Page used when there are only a few texts to be shown such as url errors and authentication errors -->
+
 <div id="content-box" 
 	class="<?php
 				if($this->session->userdata('logged_in') == FALSE){
